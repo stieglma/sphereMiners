@@ -143,7 +143,10 @@ public class PhysicsManager {
         for (List<MutableSphere> spheres : spheresPerPlayer.values()) {
             for (MutableSphere sphere : spheres) {
                 double speed = (maxSize - sphere.getSize()) / maxSize * maxSpeed * PART_TICK;
-                sphere.setPosition(sphere.getPosition().add(sphere.getDirection().normalize().mult(speed)));
+                Position tmpPos = sphere.getPosition().add(sphere.getDirection().normalize().mult(speed));
+                double x = tmpPos.getX() % fieldWidth;
+                double y = tmpPos.getY() % fieldHeight;
+                sphere.setPosition(new Position(x, y));
             }
         }
     }
