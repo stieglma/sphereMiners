@@ -15,7 +15,7 @@
   </eAnnotations>
   <modelElement href="Sphere%20Miners.uml#__ss2cCxOEeWvaK2JGTJcvA"/>
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_CeyjkCxPEeWvaK2JGTJcvA" targetItem="_Ce9isCxPEeWvaK2JGTJcvA" sourceItem="_CelvQCxPEeWvaK2JGTJcvA"/>
-  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:GeneralizationVisual" xmi:id="_6lUwICxSEeWvaK2JGTJcvA" sourceAnchor="80.0,0.0" targetAnchor="243.0,264.0" superClass="_CgEV8CxPEeWvaK2JGTJcvA" subClass="_6lV-QCxSEeWvaK2JGTJcvA">
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:GeneralizationVisual" xmi:id="_6lUwICxSEeWvaK2JGTJcvA" sourceAnchor="81.0,0.0" targetAnchor="424.0,264.0" superClass="_CgEV8CxPEeWvaK2JGTJcvA" subClass="_6lV-QCxSEeWvaK2JGTJcvA">
     <modelElement href="Sphere%20Miners.uml#_mrbNgSxSEeWvaK2JGTJcvA"/>
   </edges>
   <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_5ATWQCxWEeWvaK2JGTJcvA" source="_CgEV8CxPEeWvaK2JGTJcvA">
@@ -55,24 +55,24 @@
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_VB7jECxZEeWvaK2JGTJcvA" targetItem="_VB_NcCxZEeWvaK2JGTJcvA" sourceItem="_VB4fwCxZEeWvaK2JGTJcvA"/>
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_VCRhUCxZEeWvaK2JGTJcvA" targetItem="_VCSIYCxZEeWvaK2JGTJcvA" sourceItem="_VCNP4CxZEeWvaK2JGTJcvA"/>
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_VDSN8CxZEeWvaK2JGTJcvA" targetItem="_K5PHJyyhEeWK-qBJoTmIJg" sourceItem="_VDK5MCxZEeWvaK2JGTJcvA"/>
-  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_VDtEsCxZEeWvaK2JGTJcvA" sourceAnchor="233.0,0.0" targetAnchor="0.0,102.0" target="_CgEV8CxPEeWvaK2JGTJcvA" source="_ulHUUSxXEeWvaK2JGTJcvA">
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_VDtEsCxZEeWvaK2JGTJcvA" sourceAnchor="263.0,0.0" targetAnchor="487.0,186.0" target="_CgEV8CxPEeWvaK2JGTJcvA" source="_ulHUUSxXEeWvaK2JGTJcvA">
     <modelElement href="Sphere%20Miners.uml#_VBW7UCxZEeWvaK2JGTJcvA"/>
-    <bendpoints xmi:id="_K-qZoCyhEeWK-qBJoTmIJg" sourceY="-198" targetX="-358" targetY="-6"/>
+    <bendpoints xmi:id="_gWNwkCyiEeWK-qBJoTmIJg" sourceY="-133" targetX="351"/>
     <stereotypes xmi:id="_VDtEsSxZEeWvaK2JGTJcvA" name="Reference">
       <modelElement href="Sphere%20Miners.uml#_VBXiYCxZEeWvaK2JGTJcvA"/>
     </stereotypes>
     <nameVisual xmi:id="_VDtEsixZEeWvaK2JGTJcvA" text="">
-      <visualProperties xmi:id="_TIuwgCx_EeWapP3vpHQOHQ" position="155.0,2.0"/>
+      <visualProperties xmi:id="_TIuwgCx_EeWapP3vpHQOHQ" position="-218.6428571428571,-20.99999999999997"/>
     </nameVisual>
     <sourceRole xmi:id="_VDtEsyxZEeWvaK2JGTJcvA" aggregationKind="NONE" name="">
       <modelElement href="Sphere%20Miners.uml#_VBW7USxZEeWvaK2JGTJcvA"/>
-      <visualProperties xmi:id="_TIuJcCx_EeWapP3vpHQOHQ" position="-19.0,-50.0"/>
+      <visualProperties xmi:id="_TIuJcCx_EeWapP3vpHQOHQ" position="-18.5,-50.0"/>
       <visibility xmi:id="_VDtEtCxZEeWvaK2JGTJcvA" label="+"/>
       <cardinality xmi:id="_VDtEtSxZEeWvaK2JGTJcvA" label="1" max="1" min="1"/>
     </sourceRole>
     <targetRole xmi:id="_VDtEtixZEeWvaK2JGTJcvA" aggregationKind="NONE" name="ais" navigable="true">
       <modelElement href="Sphere%20Miners.uml#_VBL8MSxZEeWvaK2JGTJcvA"/>
-      <visualProperties xmi:id="_TIuwgSx_EeWapP3vpHQOHQ" position="-36.0,40.99999999999994"/>
+      <visualProperties xmi:id="_TIuwgSx_EeWapP3vpHQOHQ" position="1.0,-51.000000000000085"/>
       <stereotypes xmi:id="_LXjTMCx_EeWapP3vpHQOHQ" name="LegacyStyledElement">
         <modelElement href="Sphere%20Miners.uml#_KfKSoCx_EeWapP3vpHQOHQ"/>
       </stereotypes>
@@ -110,24 +110,24 @@
       <cardinality xmi:id="_VEWk-CxZEeWvaK2JGTJcvA" label="1" max="1" min="1"/>
     </targetRole>
   </edges>
-  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_KutKgCx_EeWapP3vpHQOHQ" sourceAnchor="0.0,132.0" targetAnchor="263.0,0.0" target="_ulHUUSxXEeWvaK2JGTJcvA" source="_CgEV8CxPEeWvaK2JGTJcvA">
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_KutKgCx_EeWapP3vpHQOHQ" sourceAnchor="244.0,264.0" targetAnchor="0.0,197.0" target="_ulHUUSxXEeWvaK2JGTJcvA" source="_CgEV8CxPEeWvaK2JGTJcvA">
     <modelElement href="Sphere%20Miners.uml#_Kg5YASx_EeWapP3vpHQOHQ"/>
-    <bendpoints xmi:id="_K-rAsCyhEeWK-qBJoTmIJg" sourceX="-328" targetY="-187"/>
+    <bendpoints xmi:id="_gWNwkSyiEeWK-qBJoTmIJg" sourceY="252" targetX="-331"/>
     <stereotypes xmi:id="_KutKgSx_EeWapP3vpHQOHQ" name="Reference">
       <modelElement href="Sphere%20Miners.uml#_Kg6mICx_EeWapP3vpHQOHQ"/>
     </stereotypes>
     <nameVisual xmi:id="_KutKgix_EeWapP3vpHQOHQ" text="">
-      <visualProperties xmi:id="_TIvXkSx_EeWapP3vpHQOHQ" position="1.0,84.00000000000006"/>
+      <visualProperties xmi:id="_TIvXkSx_EeWapP3vpHQOHQ" position="141.75,1.9999999999999432"/>
     </nameVisual>
     <sourceRole xmi:id="_KutKgyx_EeWapP3vpHQOHQ" aggregationKind="NONE" name="">
       <modelElement href="Sphere%20Miners.uml#_Kg5YAix_EeWapP3vpHQOHQ"/>
-      <visualProperties xmi:id="_TIvXkCx_EeWapP3vpHQOHQ" position="-62.0,2.0"/>
+      <visualProperties xmi:id="_TIvXkCx_EeWapP3vpHQOHQ" position="1.5,1.0"/>
       <visibility xmi:id="_KutKhCx_EeWapP3vpHQOHQ" label="+"/>
       <cardinality xmi:id="_KutKhSx_EeWapP3vpHQOHQ" label="1" max="1" min="1"/>
     </sourceRole>
     <targetRole xmi:id="_KutKhix_EeWapP3vpHQOHQ" aggregationKind="NONE" name="aiMgr" navigable="true">
       <modelElement href="Sphere%20Miners.uml#_KgehQCx_EeWapP3vpHQOHQ"/>
-      <visualProperties xmi:id="_TIv-oCx_EeWapP3vpHQOHQ" position="-97.0,-118.0"/>
+      <visualProperties xmi:id="_TIv-oCx_EeWapP3vpHQOHQ" position="-56.0,1.9999999999999432"/>
       <stereotypes xmi:id="_KutKhyx_EeWapP3vpHQOHQ" name="LegacyStyledElement">
         <modelElement href="Sphere%20Miners.uml#_KgfIUCx_EeWapP3vpHQOHQ"/>
       </stereotypes>
@@ -144,62 +144,68 @@
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_K4I64CyhEeWK-qBJoTmIJg" targetItem="_K4LXLiyhEeWK-qBJoTmIJg" sourceItem="_K4IT0iyhEeWK-qBJoTmIJg"/>
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_K4I64iyhEeWK-qBJoTmIJg" targetItem="_K4LXNyyhEeWK-qBJoTmIJg" sourceItem="_K4I64SyhEeWK-qBJoTmIJg"/>
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_K4Jh8SyhEeWK-qBJoTmIJg" targetItem="_K4LXQCyhEeWK-qBJoTmIJg" sourceItem="_K4Jh8CyhEeWK-qBJoTmIJg"/>
-  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K4KwECyhEeWK-qBJoTmIJg" source="_K4LXICyhEeWK-qBJoTmIJg">
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K4KwECyhEeWK-qBJoTmIJg" sourceAnchor="0.0,58.0" targetAnchor="21.0,29.0" target="_X2RlQCyhEeWK-qBJoTmIJg" source="_K4LXICyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_F8PooCyhEeWK-qBJoTmIJg"/>
+    <bendpoints xmi:id="_gWNwkiyiEeWK-qBJoTmIJg" sourceX="-433" targetY="113"/>
     <stereotypes xmi:id="_K4KwESyhEeWK-qBJoTmIJg" name="Reference">
       <modelElement href="Sphere%20Miners.uml#_F8QPsCyhEeWK-qBJoTmIJg"/>
     </stereotypes>
-    <nameVisual xmi:id="_K4KwEiyhEeWK-qBJoTmIJg" text=""/>
+    <nameVisual xmi:id="_K4KwEiyhEeWK-qBJoTmIJg" text="">
+      <visualProperties xmi:id="_X6mEkCyhEeWK-qBJoTmIJg" position="1.5,-19.499999999999886"/>
+    </nameVisual>
     <sourceRole xmi:id="_K4KwEyyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="">
       <modelElement href="Sphere%20Miners.uml#_F8PooSyhEeWK-qBJoTmIJg"/>
+      <visualProperties xmi:id="_X6ldgCyhEeWK-qBJoTmIJg" position="-46.67857142857133,2.5"/>
       <visibility xmi:id="_K4KwFCyhEeWK-qBJoTmIJg" label="+"/>
       <cardinality xmi:id="_K4KwFSyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </sourceRole>
     <targetRole xmi:id="_K4KwFiyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="ticks" navigable="true">
       <modelElement href="Sphere%20Miners.uml#_F7-i4CyhEeWK-qBJoTmIJg"/>
+      <visualProperties xmi:id="_X6mEkSyhEeWK-qBJoTmIJg" position="0.5,23.500000000000057"/>
+      <stereotypes xmi:id="_WujvQCyhEeWK-qBJoTmIJg" name="LegacyStyledElement"/>
       <visibility xmi:id="_K4KwFyyhEeWK-qBJoTmIJg" label="-"/>
       <cardinality xmi:id="_K4KwGCyhEeWK-qBJoTmIJg" label="1..*" max="-1" min="1"/>
     </targetRole>
   </edges>
-  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K4QPoCyhEeWK-qBJoTmIJg" sourceAnchor="252.0,0.0" targetAnchor="263.0,363.0" target="_ulHUUSxXEeWvaK2JGTJcvA" source="_K4XkaSyhEeWK-qBJoTmIJg">
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K4QPoCyhEeWK-qBJoTmIJg" sourceAnchor="4.0,0.0" targetAnchor="510.0,383.0" target="_ulHUUSxXEeWvaK2JGTJcvA" source="_K4XkaSyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_F8QPtCyhEeWK-qBJoTmIJg"/>
     <stereotypes xmi:id="_K4RdwyyhEeWK-qBJoTmIJg" name="Reference">
       <modelElement href="Sphere%20Miners.uml#_F8Q2wCyhEeWK-qBJoTmIJg"/>
     </stereotypes>
     <nameVisual xmi:id="_K4RdwCyhEeWK-qBJoTmIJg" text="">
-      <visualProperties xmi:id="_K-tc8SyhEeWK-qBJoTmIJg" position="-27.078095614030076,-358.0415715816996"/>
+      <visualProperties xmi:id="_K-tc8SyhEeWK-qBJoTmIJg" position="-88.0,8.0"/>
     </nameVisual>
     <sourceRole xmi:id="_K4RdwSyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="">
       <modelElement href="Sphere%20Miners.uml#_F8QPtSyhEeWK-qBJoTmIJg"/>
-      <visualProperties xmi:id="_K-tc8CyhEeWK-qBJoTmIJg" position="-18.278379328722792,-70.08106292862863"/>
+      <visualProperties xmi:id="_K-tc8CyhEeWK-qBJoTmIJg" position="-18.0,-50.0"/>
       <visibility xmi:id="_K4UhESyhEeWK-qBJoTmIJg" label="+"/>
       <cardinality xmi:id="_K4UhECyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </sourceRole>
     <targetRole xmi:id="_K4RdwiyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="aiMgr" navigable="true">
       <modelElement href="Sphere%20Miners.uml#_F7_J8iyhEeWK-qBJoTmIJg"/>
-      <visualProperties xmi:id="_K-uEACyhEeWK-qBJoTmIJg" position="-38.19246565426488,-682.6014649925146"/>
+      <visualProperties xmi:id="_K-uEACyhEeWK-qBJoTmIJg" position="2.0,1.0"/>
       <visibility xmi:id="_K4VIISyhEeWK-qBJoTmIJg" label="-"/>
       <cardinality xmi:id="_K4VIICyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </targetRole>
   </edges>
-  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K4Q2sCyhEeWK-qBJoTmIJg" sourceAnchor="0.0,132.0" targetAnchor="227.0,144.0" target="_K4LXICyhEeWK-qBJoTmIJg" source="_K4XkaSyhEeWK-qBJoTmIJg">
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K4Q2sCyhEeWK-qBJoTmIJg" sourceAnchor="0.0,122.0" targetAnchor="227.0,117.0" target="_K4LXICyhEeWK-qBJoTmIJg" source="_K4XkaSyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_F8Q2wSyhEeWK-qBJoTmIJg"/>
-    <bendpoints xmi:id="_K-rAsSyhEeWK-qBJoTmIJg" sourceX="-618" targetY="187"/>
+    <bendpoints xmi:id="_gWNwkyyiEeWK-qBJoTmIJg" sourceX="-792" targetY="177"/>
     <stereotypes xmi:id="_K4SE0CyhEeWK-qBJoTmIJg" name="Reference">
       <modelElement href="Sphere%20Miners.uml#_F8Q2wyyhEeWK-qBJoTmIJg"/>
     </stereotypes>
     <nameVisual xmi:id="_K4RdxCyhEeWK-qBJoTmIJg" text="">
-      <visualProperties xmi:id="_K-urESyhEeWK-qBJoTmIJg" position="545.8076539287106,-0.5817014072956681"/>
+      <visualProperties xmi:id="_K-urESyhEeWK-qBJoTmIJg" position="40.499999999999886,-19.999999999999886"/>
     </nameVisual>
     <sourceRole xmi:id="_K4RdxSyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="">
       <modelElement href="Sphere%20Miners.uml#_F8Q2wiyhEeWK-qBJoTmIJg"/>
-      <visualProperties xmi:id="_K-urECyhEeWK-qBJoTmIJg" position="-59.32238201674795,-13.349417676922485"/>
+      <visualProperties xmi:id="_K-urECyhEeWK-qBJoTmIJg" position="-17.5,2.0"/>
       <visibility xmi:id="_K4VIJCyhEeWK-qBJoTmIJg" label="+"/>
       <cardinality xmi:id="_K4VIIyyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </sourceRole>
     <targetRole xmi:id="_K4RdxiyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="simulationView" navigable="true">
       <modelElement href="Sphere%20Miners.uml#_F7_xASyhEeWK-qBJoTmIJg"/>
-      <visualProperties xmi:id="_K-urEiyhEeWK-qBJoTmIJg" position="514.7398466016871,173.6722549806541"/>
+      <visualProperties xmi:id="_K-urEiyhEeWK-qBJoTmIJg" position="0.5,87.00000000000011"/>
       <visibility xmi:id="_K4VIJiyhEeWK-qBJoTmIJg" label="-"/>
       <cardinality xmi:id="_K4VIJSyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </targetRole>
@@ -207,19 +213,25 @@
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_K4Sr4SyhEeWK-qBJoTmIJg" targetItem="_K4XkiiyhEeWK-qBJoTmIJg" sourceItem="_K4Sr4CyhEeWK-qBJoTmIJg"/>
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_K4Sr4yyhEeWK-qBJoTmIJg" targetItem="_K4YLeSyhEeWK-qBJoTmIJg" sourceItem="_K4Sr4iyhEeWK-qBJoTmIJg"/>
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_K4TS8SyhEeWK-qBJoTmIJg" targetItem="_K4YLhyyhEeWK-qBJoTmIJg" sourceItem="_K4TS8CyhEeWK-qBJoTmIJg"/>
-  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K4W9UCyhEeWK-qBJoTmIJg" source="_K4XkaSyhEeWK-qBJoTmIJg">
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K4W9UCyhEeWK-qBJoTmIJg" sourceAnchor="251.0,244.0" targetAnchor="228.0,97.0" target="_aUQOICyiEeWK-qBJoTmIJg" source="_K4XkaSyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_F8QPsSyhEeWK-qBJoTmIJg"/>
+    <bendpoints xmi:id="_gWNwlCyiEeWK-qBJoTmIJg" sourceY="39" targetX="-1161" targetY="776"/>
+    <bendpoints xmi:id="_gWNwlSyiEeWK-qBJoTmIJg" sourceX="1161" sourceY="39" targetY="776"/>
     <stereotypes xmi:id="_K4W9USyhEeWK-qBJoTmIJg" name="Reference">
       <modelElement href="Sphere%20Miners.uml#_F8QPsyyhEeWK-qBJoTmIJg"/>
     </stereotypes>
-    <nameVisual xmi:id="_K4W9UiyhEeWK-qBJoTmIJg" text=""/>
+    <nameVisual xmi:id="_K4W9UiyhEeWK-qBJoTmIJg" text="">
+      <visualProperties xmi:id="_aXnEISyiEeWK-qBJoTmIJg" position="-82.27777777777794,1.9999999999998863"/>
+    </nameVisual>
     <sourceRole xmi:id="_K4W9UyyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="">
       <modelElement href="Sphere%20Miners.uml#_F8QPsiyhEeWK-qBJoTmIJg"/>
+      <visualProperties xmi:id="_aXnEICyiEeWK-qBJoTmIJg" position="255.3888888888889,-12.0"/>
       <visibility xmi:id="_K4W9VCyhEeWK-qBJoTmIJg" label="+"/>
       <cardinality xmi:id="_K4W9VSyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </sourceRole>
     <targetRole xmi:id="_K4W9ViyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="physMgr" navigable="true">
       <modelElement href="Sphere%20Miners.uml#_F7_J8CyhEeWK-qBJoTmIJg"/>
+      <visualProperties xmi:id="_aXnEIiyiEeWK-qBJoTmIJg" position="2.0000000000004547,81.555555555556"/>
       <visibility xmi:id="_K4W9VyyhEeWK-qBJoTmIJg" label="-"/>
       <cardinality xmi:id="_K4W9WCyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </targetRole>
@@ -241,26 +253,29 @@
       <cardinality xmi:id="_K4XkaCyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </targetRole>
   </edges>
-  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:GeneralizationVisual" xmi:id="_K4gHQCyhEeWK-qBJoTmIJg" sourceAnchor="445.0,151.0" targetAnchor="199.0,203.0" dashed="true" superClass="_K5b7YCyhEeWK-qBJoTmIJg" subClass="_K4p4SSyhEeWK-qBJoTmIJg">
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:GeneralizationVisual" xmi:id="_K4gHQCyhEeWK-qBJoTmIJg" sourceAnchor="0.0,121.0" targetAnchor="199.0,203.0" dashed="true" superClass="_K5b7YCyhEeWK-qBJoTmIJg" subClass="_K4p4SSyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_KgGGwCx_EeWapP3vpHQOHQ"/>
-    <bendpoints xmi:id="_K-rnwiyhEeWK-qBJoTmIJg" sourceX="1407" targetY="852"/>
+    <bendpoints xmi:id="_gWOXoiyiEeWK-qBJoTmIJg" sourceX="-1063" targetX="-1645" targetY="1085"/>
+    <bendpoints xmi:id="_gWOXoyyiEeWK-qBJoTmIJg" sourceX="-1063" sourceY="-1057" targetX="-1645" targetY="28"/>
+    <bendpoints xmi:id="_gWOXpCyiEeWK-qBJoTmIJg" sourceX="582" sourceY="-1057" targetY="28"/>
   </edges>
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_K4hVYCyhEeWK-qBJoTmIJg" targetItem="_K4p4dSyhEeWK-qBJoTmIJg" sourceItem="_K4guUCyhEeWK-qBJoTmIJg"/>
-  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K4kYsCyhEeWK-qBJoTmIJg" sourceAnchor="327.0,0.0" targetAnchor="0.0,80.0" target="_K5b7YCyhEeWK-qBJoTmIJg" source="_K5PHECyhEeWK-qBJoTmIJg">
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K4kYsCyhEeWK-qBJoTmIJg" sourceAnchor="472.0,242.0" targetAnchor="399.0,72.0" target="_K5b7YCyhEeWK-qBJoTmIJg" source="_K5PHECyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_F8MlUCyhEeWK-qBJoTmIJg"/>
-    <bendpoints xmi:id="_K-s14CyhEeWK-qBJoTmIJg" sourceY="-265" targetX="-763"/>
+    <bendpoints xmi:id="_gWOXqSyiEeWK-qBJoTmIJg" sourceX="53" targetX="305" targetY="798"/>
+    <bendpoints xmi:id="_gWO-sCyiEeWK-qBJoTmIJg" sourceX="53" sourceY="-798" targetX="305"/>
     <nameVisual xmi:id="_K4ncACyhEeWK-qBJoTmIJg" text="">
-      <visualProperties xmi:id="_K-0xsCyhEeWK-qBJoTmIJg" position="-15.416846249768497,188.16385695290785"/>
+      <visualProperties xmi:id="_K-0xsCyhEeWK-qBJoTmIJg" position="-12.999999999999886,-52.94444444444446"/>
     </nameVisual>
     <sourceRole xmi:id="_K4ncASyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="position" navigable="true">
       <modelElement href="Sphere%20Miners.uml#_F7ZUECyhEeWK-qBJoTmIJg"/>
-      <visualProperties xmi:id="_K-0KoCyhEeWK-qBJoTmIJg" position="-47.13184916815615,-70.81772807573168"/>
+      <visualProperties xmi:id="_K-0KoCyhEeWK-qBJoTmIJg" position="-20.999999999999886,-382.2222222222222"/>
       <visibility xmi:id="_K4oDESyhEeWK-qBJoTmIJg" label="~"/>
       <cardinality xmi:id="_K4oDECyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </sourceRole>
     <targetRole xmi:id="_K4ncAiyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="">
       <modelElement href="Sphere%20Miners.uml#_F8MlUSyhEeWK-qBJoTmIJg"/>
-      <visualProperties xmi:id="_K-0xsSyhEeWK-qBJoTmIJg" position="-781.9804469353353,161.9335963334181"/>
+      <visualProperties xmi:id="_K-0xsSyhEeWK-qBJoTmIJg" position="1.0,-51.500000000000114"/>
       <visibility xmi:id="_K4oDEyyhEeWK-qBJoTmIJg" label="+"/>
       <cardinality xmi:id="_K4oDEiyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </targetRole>
@@ -270,76 +285,77 @@
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_K4mN4yyhEeWK-qBJoTmIJg" targetItem="_K5b7eiyhEeWK-qBJoTmIJg" sourceItem="_K4mN4iyhEeWK-qBJoTmIJg"/>
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_K4m08CyhEeWK-qBJoTmIJg" targetItem="_K5b7gCyhEeWK-qBJoTmIJg" sourceItem="_K4mN5CyhEeWK-qBJoTmIJg"/>
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_K4m08iyhEeWK-qBJoTmIJg" targetItem="_K5b7iCyhEeWK-qBJoTmIJg" sourceItem="_K4m08SyhEeWK-qBJoTmIJg"/>
-  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K4pRMCyhEeWK-qBJoTmIJg" sourceAnchor="445.0,121.0" targetAnchor="235.0,504.0" target="_K5PHECyhEeWK-qBJoTmIJg" source="_K4p4SSyhEeWK-qBJoTmIJg">
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K4pRMCyhEeWK-qBJoTmIJg" sourceAnchor="445.0,121.0" targetAnchor="236.0,484.0" target="_K5PHECyhEeWK-qBJoTmIJg" source="_K4p4SSyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_Kg3i0Cx_EeWapP3vpHQOHQ"/>
-    <bendpoints xmi:id="_K-rnwCyhEeWK-qBJoTmIJg" sourceX="353" targetY="176"/>
+    <bendpoints xmi:id="_gWOXoCyiEeWK-qBJoTmIJg" sourceX="353" targetY="176"/>
     <stereotypes xmi:id="_K4pRMSyhEeWK-qBJoTmIJg" name="Reference">
       <modelElement href="Sphere%20Miners.uml#_Kg4J4Cx_EeWapP3vpHQOHQ"/>
     </stereotypes>
     <nameVisual xmi:id="_K4pRMiyhEeWK-qBJoTmIJg" text="">
-      <visualProperties xmi:id="_K-wgQCyhEeWK-qBJoTmIJg" position="-275.5569085028925,1.2570822601810505"/>
+      <visualProperties xmi:id="_K-wgQCyhEeWK-qBJoTmIJg" position="-47.5,-20.5"/>
     </nameVisual>
     <sourceRole xmi:id="_K4pRMyyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="">
       <modelElement href="Sphere%20Miners.uml#_Kg3i0Sx_EeWapP3vpHQOHQ"/>
-      <visualProperties xmi:id="_K-vSICyhEeWK-qBJoTmIJg" position="42.91193829143225,-12.854393717280573"/>
+      <visualProperties xmi:id="_K-vSICyhEeWK-qBJoTmIJg" position="19.964285714285722,-55.5"/>
       <visibility xmi:id="_K4pRNCyhEeWK-qBJoTmIJg" label="+"/>
       <cardinality xmi:id="_K4pRNSyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </sourceRole>
     <targetRole xmi:id="_K4pRNiyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="position" navigable="true">
       <modelElement href="Sphere%20Miners.uml#_KgXMgCx_EeWapP3vpHQOHQ"/>
-      <visualProperties xmi:id="_K-wgQSyhEeWK-qBJoTmIJg" position="-234.27232907517785,163.68750829646524"/>
+      <visualProperties xmi:id="_K-wgQSyhEeWK-qBJoTmIJg" position="2.5,63.75"/>
       <visibility xmi:id="_K4pRNyyhEeWK-qBJoTmIJg" label="+"/>
       <cardinality xmi:id="_K4pROCyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </targetRole>
   </edges>
-  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K4p4QCyhEeWK-qBJoTmIJg" sourceAnchor="445.0,91.0" targetAnchor="205.0,504.0" target="_K5PHECyhEeWK-qBJoTmIJg" source="_K4p4SSyhEeWK-qBJoTmIJg">
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K4p4QCyhEeWK-qBJoTmIJg" sourceAnchor="445.0,91.0" targetAnchor="206.0,484.0" target="_K5PHECyhEeWK-qBJoTmIJg" source="_K4p4SSyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_Kg4J4Sx_EeWapP3vpHQOHQ"/>
-    <bendpoints xmi:id="_K-rnwSyhEeWK-qBJoTmIJg" sourceX="323" targetY="146"/>
+    <bendpoints xmi:id="_gWOXoSyiEeWK-qBJoTmIJg" sourceX="323" targetY="146"/>
     <stereotypes xmi:id="_K4p4QSyhEeWK-qBJoTmIJg" name="Reference">
       <modelElement href="Sphere%20Miners.uml#_Kg4w8Cx_EeWapP3vpHQOHQ"/>
     </stereotypes>
     <nameVisual xmi:id="_K4p4QiyhEeWK-qBJoTmIJg" text="">
-      <visualProperties xmi:id="_K-xuYCyhEeWK-qBJoTmIJg" position="-245.5569085028925,1.2570822601810505"/>
+      <visualProperties xmi:id="_K-xuYCyhEeWK-qBJoTmIJg" position="-47.5,-59.5"/>
     </nameVisual>
     <sourceRole xmi:id="_K4p4QyyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="">
       <modelElement href="Sphere%20Miners.uml#_Kg4J4ix_EeWapP3vpHQOHQ"/>
-      <visualProperties xmi:id="_K-xHUCyhEeWK-qBJoTmIJg" position="42.91193829143225,-12.854393717280573"/>
+      <visualProperties xmi:id="_K-xHUCyhEeWK-qBJoTmIJg" position="1.0,-50.5"/>
       <visibility xmi:id="_K4p4RCyhEeWK-qBJoTmIJg" label="+"/>
       <cardinality xmi:id="_K4p4RSyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </sourceRole>
     <targetRole xmi:id="_K4p4RiyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="direction" navigable="true">
       <modelElement href="Sphere%20Miners.uml#_KgXzkSx_EeWapP3vpHQOHQ"/>
-      <visualProperties xmi:id="_K-xuYSyhEeWK-qBJoTmIJg" position="-206.59169507059588,133.22127728463897"/>
+      <visualProperties xmi:id="_K-xuYSyhEeWK-qBJoTmIJg" position="2.5,1.0"/>
       <visibility xmi:id="_K4p4RyyhEeWK-qBJoTmIJg" label="+"/>
       <cardinality xmi:id="_K4p4SCyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </targetRole>
   </edges>
-  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K40QUCyhEeWK-qBJoTmIJg" sourceAnchor="185.0,0.0" targetAnchor="0.0,110.0" target="_K5b7YCyhEeWK-qBJoTmIJg" source="_K44hwCyhEeWK-qBJoTmIJg">
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_K40QUCyhEeWK-qBJoTmIJg" sourceAnchor="431.0,129.0" targetAnchor="399.0,102.0" target="_K5b7YCyhEeWK-qBJoTmIJg" source="_K44hwCyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_Kg4w8Sx_EeWapP3vpHQOHQ"/>
-    <bendpoints xmi:id="_K-sO0CyhEeWK-qBJoTmIJg" sourceY="-148" targetX="-345"/>
+    <bendpoints xmi:id="_gWOXpSyiEeWK-qBJoTmIJg" sourceX="187" targetX="275" targetY="285"/>
+    <bendpoints xmi:id="_gWOXpiyiEeWK-qBJoTmIJg" sourceX="187" sourceY="-285" targetX="275"/>
     <stereotypes xmi:id="_K403YyyhEeWK-qBJoTmIJg" name="Reference">
       <modelElement href="Sphere%20Miners.uml#_Kg5YACx_EeWapP3vpHQOHQ"/>
     </stereotypes>
     <nameVisual xmi:id="_K403YCyhEeWK-qBJoTmIJg" text="">
-      <visualProperties xmi:id="_K-zjkCyhEeWK-qBJoTmIJg" position="-16.027864045000456,135.1458980337503"/>
+      <visualProperties xmi:id="_K-zjkCyhEeWK-qBJoTmIJg" position="-43.0,-101.49999999999997"/>
     </nameVisual>
     <sourceRole xmi:id="_K403YSyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="">
       <modelElement href="Sphere%20Miners.uml#_Kg4w8ix_EeWapP3vpHQOHQ"/>
-      <visualProperties xmi:id="_K-yVcCyhEeWK-qBJoTmIJg" position="1.8914855054990767,-67.20889837024595"/>
+      <visualProperties xmi:id="_K-yVcCyhEeWK-qBJoTmIJg" position="1.0,-51.0"/>
       <visibility xmi:id="_K43ToCyhEeWK-qBJoTmIJg" label="+"/>
       <cardinality xmi:id="_K42skCyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </sourceRole>
     <targetRole xmi:id="_K403YiyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="sphere" navigable="true">
       <modelElement href="Sphere%20Miners.uml#_KgaP1Cx_EeWapP3vpHQOHQ"/>
-      <visualProperties xmi:id="_K-zjkSyhEeWK-qBJoTmIJg" position="-366.1085144945009,154.58134488724704"/>
+      <visualProperties xmi:id="_K-zjkSyhEeWK-qBJoTmIJg" position="71.33333333333348,-90.50000000000006"/>
       <visibility xmi:id="_K43ToiyhEeWK-qBJoTmIJg" label="~"/>
       <cardinality xmi:id="_K43ToSyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
     </targetRole>
   </edges>
-  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:GeneralizationVisual" xmi:id="_K40QUSyhEeWK-qBJoTmIJg" sourceAnchor="215.0,0.0" targetAnchor="199.0,203.0" dashed="true" superClass="_K5b7YCyhEeWK-qBJoTmIJg" subClass="_K44hwCyhEeWK-qBJoTmIJg">
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:GeneralizationVisual" xmi:id="_K40QUSyhEeWK-qBJoTmIJg" sourceAnchor="192.0,0.0" targetAnchor="199.0,203.0" dashed="true" superClass="_K5b7YCyhEeWK-qBJoTmIJg" subClass="_K44hwCyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_KgH78yx_EeWapP3vpHQOHQ"/>
-    <bendpoints xmi:id="_K-sO0SyhEeWK-qBJoTmIJg" sourceY="-28" targetX="-514" targetY="27"/>
-    <bendpoints xmi:id="_K-sO0iyhEeWK-qBJoTmIJg" sourceX="514" sourceY="-28" targetY="27"/>
+    <bendpoints xmi:id="_gWOXpyyiEeWK-qBJoTmIJg" sourceY="-27" targetX="49" targetY="28"/>
+    <bendpoints xmi:id="_gWOXqCyiEeWK-qBJoTmIJg" sourceX="-49" sourceY="-27" targetY="28"/>
   </edges>
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_K5BrsSyhEeWK-qBJoTmIJg" targetItem="_K5PHISyhEeWK-qBJoTmIJg" sourceItem="_K5BrsCyhEeWK-qBJoTmIJg"/>
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_K5CSwSyhEeWK-qBJoTmIJg" targetItem="_K5PHMCyhEeWK-qBJoTmIJg" sourceItem="_K5CSwCyhEeWK-qBJoTmIJg"/>
@@ -356,6 +372,30 @@
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_K5MDwSyhEeWK-qBJoTmIJg" targetItem="_K5PHoCyhEeWK-qBJoTmIJg" sourceItem="_K5MDwCyhEeWK-qBJoTmIJg"/>
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_K5MDwyyhEeWK-qBJoTmIJg" targetItem="_K5PHqSyhEeWK-qBJoTmIJg" sourceItem="_K5MDwiyhEeWK-qBJoTmIJg"/>
   <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_LQP44CyhEeWK-qBJoTmIJg" targetItem="_K5PHsiyhEeWK-qBJoTmIJg" sourceItem="_LQHWACyhEeWK-qBJoTmIJg"/>
+  <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_XDCKcSyhEeWK-qBJoTmIJg" targetItem="_XDCKciyhEeWK-qBJoTmIJg" sourceItem="_XDCKcCyhEeWK-qBJoTmIJg"/>
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_XDh5sCyhEeWK-qBJoTmIJg" sourceAnchor="525.0,191.0" targetAnchor="198.0,97.0" target="_aUQOICyiEeWK-qBJoTmIJg" source="_ulHUUSxXEeWvaK2JGTJcvA">
+    <modelElement href="Sphere%20Miners.uml#_XDAVQCyhEeWK-qBJoTmIJg"/>
+    <bendpoints xmi:id="_gWNJgCyiEeWK-qBJoTmIJg" sourceX="1363" targetY="246"/>
+    <stereotypes xmi:id="_XDh5sSyhEeWK-qBJoTmIJg" name="Reference">
+      <modelElement href="Sphere%20Miners.uml#_XDA8UCyhEeWK-qBJoTmIJg"/>
+    </stereotypes>
+    <nameVisual xmi:id="_XDh5siyhEeWK-qBJoTmIJg" text="">
+      <visualProperties xmi:id="_aXl2ACyiEeWK-qBJoTmIJg" position="-43.0,-59.4999999999998"/>
+    </nameVisual>
+    <sourceRole xmi:id="_XDh5syyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="">
+      <modelElement href="Sphere%20Miners.uml#_XDAVQSyhEeWK-qBJoTmIJg"/>
+      <visualProperties xmi:id="_aXlO9iyiEeWK-qBJoTmIJg" position="1.0000000000000142,-50.5"/>
+      <visibility xmi:id="_XDh5tCyhEeWK-qBJoTmIJg" label="+"/>
+      <cardinality xmi:id="_XDh5tSyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
+    </sourceRole>
+    <targetRole xmi:id="_XDh5tiyhEeWK-qBJoTmIJg" aggregationKind="NONE" name="physicsManager" navigable="true">
+      <modelElement href="Sphere%20Miners.uml#_XC-gECyhEeWK-qBJoTmIJg"/>
+      <visualProperties xmi:id="_aXl2ASyiEeWK-qBJoTmIJg" position="2.0,1.0000000000000568"/>
+      <visibility xmi:id="_XDh5tyyhEeWK-qBJoTmIJg" label="-"/>
+      <cardinality xmi:id="_XDh5uCyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
+    </targetRole>
+  </edges>
+  <edges xsi:type="com.yattasolutions.diagrams:ConnectionVisual" xmi:id="_dSyb0SyiEeWK-qBJoTmIJg" targetItem="_dSzp8CyiEeWK-qBJoTmIJg" sourceItem="_dSyb0CyiEeWK-qBJoTmIJg"/>
   <nodes xsi:type="com.yattasolutions.diagrams:CommentVisual" xmi:id="_CelvQCxPEeWvaK2JGTJcvA" sourceConnectionVisual="_CeyjkCxPEeWvaK2JGTJcvA" text="Main class of the program. Creates the model and the View in a new Thread and&#xA;adds the View as Observer to the model." item="_Ce9isCxPEeWvaK2JGTJcvA">
     <modelElement href="Sphere%20Miners.uml#___ugICxOEeWvaK2JGTJcvA"/>
   </nodes>
@@ -394,7 +434,7 @@
   </nodes>
   <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_6lV-QCxSEeWvaK2JGTJcvA" name="DumbAI" generalizations="_6lUwICxSEeWvaK2JGTJcvA">
     <modelElement href="Sphere%20Miners.uml#__-1IQCxOEeWvaK2JGTJcvA"/>
-    <visualProperties xmi:id="_6lV-QSxSEeWvaK2JGTJcvA" position="67.0,549.0" size="-1.0,-1.0"/>
+    <visualProperties xmi:id="_6lV-QSxSEeWvaK2JGTJcvA" position="-842.0,136.0" size="-1.0,-1.0"/>
     <visibility xmi:id="_6lV-QixSEeWvaK2JGTJcvA" label="+"/>
     <operations xmi:id="_6lV-QyxSEeWvaK2JGTJcvA" name="init">
       <modelElement href="Sphere%20Miners.uml#_mrZYUCxSEeWvaK2JGTJcvA"/>
@@ -425,9 +465,9 @@
   <nodes xsi:type="com.yattasolutions.diagrams:CommentVisual" xmi:id="_eL9UkCxXEeWvaK2JGTJcvA" sourceConnectionVisual="_eL9UkSxXEeWvaK2JGTJcvA" text="Set up your AI, initial values for attributes, color of your spheres, ..." item="_CgEV8yxPEeWvaK2JGTJcvA">
     <modelElement href="Sphere%20Miners.uml#_eL8GcCxXEeWvaK2JGTJcvA"/>
   </nodes>
-  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_ulHUUSxXEeWvaK2JGTJcvA" name="AIManager" associationsIn="_KutKgCx_EeWapP3vpHQOHQ _K4QPoCyhEeWK-qBJoTmIJg" associationsOut="_VDtEsCxZEeWvaK2JGTJcvA _VEWk8CxZEeWvaK2JGTJcvA">
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_ulHUUSxXEeWvaK2JGTJcvA" name="AIManager" associationsIn="_KutKgCx_EeWapP3vpHQOHQ _K4QPoCyhEeWK-qBJoTmIJg" associationsOut="_VDtEsCxZEeWvaK2JGTJcvA _VEWk8CxZEeWvaK2JGTJcvA _XDh5sCyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_ulHUUCxXEeWvaK2JGTJcvA"/>
-    <visualProperties xmi:id="_ulHUUixXEeWvaK2JGTJcvA" position="-687.0,549.0" size="-1.0,-1.0"/>
+    <visualProperties xmi:id="_ulHUUixXEeWvaK2JGTJcvA" position="-610.0,85.0" size="-1.0,-1.0"/>
     <stereotypes xmi:id="_VD_YkCxZEeWvaK2JGTJcvA" name="Annotations">
       <modelElement href="Sphere%20Miners.uml#_VAHlMCxZEeWvaK2JGTJcvA"/>
     </stereotypes>
@@ -502,6 +542,14 @@
       <cardinality xmi:id="_o-mvQiyNEeWapP3vpHQOHQ" label="1" max="1" min="1"/>
       <type xmi:id="_o-mvQyyNEeWapP3vpHQOHQ" name="String">
         <modelElement href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </type>
+    </attributes>
+    <attributes xmi:id="_XDD_oCyhEeWK-qBJoTmIJg" name="physicsManager">
+      <modelElement href="Sphere%20Miners.uml#_XC-gECyhEeWK-qBJoTmIJg"/>
+      <visibility xmi:id="_XDD_oSyhEeWK-qBJoTmIJg" label="-"/>
+      <cardinality xmi:id="_XDD_oiyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
+      <type xmi:id="_XDD_oyyhEeWK-qBJoTmIJg" name="PhysicsManager">
+        <modelElement href="Sphere%20Miners.uml#_Kfm-kCx_EeWapP3vpHQOHQ"/>
       </type>
     </attributes>
     <operations xmi:id="_VBca4CxZEeWvaK2JGTJcvA" comments="_VBbMwCxZEeWvaK2JGTJcvA" targetConnectionVisual="_VBbz0CxZEeWvaK2JGTJcvA" name="AIManager">
@@ -658,6 +706,21 @@
         </type>
       </outParameters>
     </operations>
+    <operations xmi:id="_XDCKciyhEeWK-qBJoTmIJg" comments="_XDCKcCyhEeWK-qBJoTmIJg" targetConnectionVisual="_XDCKcSyhEeWK-qBJoTmIJg" name="setPhysicsManager">
+      <modelElement href="Sphere%20Miners.uml#_XC61sCyhEeWK-qBJoTmIJg"/>
+      <stereotypes xmi:id="_XDCKcyyhEeWK-qBJoTmIJg" name="StyledElement">
+        <modelElement href="Sphere%20Miners.uml#_XC8q4CyhEeWK-qBJoTmIJg"/>
+      </stereotypes>
+      <visibility xmi:id="_XDCKdCyhEeWK-qBJoTmIJg" label="+"/>
+      <cardinality xmi:id="_XDCKdSyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
+      <parameters xmi:id="_XDCKdiyhEeWK-qBJoTmIJg" name="physMgr">
+        <modelElement href="Sphere%20Miners.uml#_XC61sSyhEeWK-qBJoTmIJg"/>
+        <cardinality xmi:id="_XDCKdyyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
+        <type xmi:id="_XDCKeCyhEeWK-qBJoTmIJg" name="PhysicsManager">
+          <modelElement href="Sphere%20Miners.uml#_Kfm-kCx_EeWapP3vpHQOHQ"/>
+        </type>
+      </parameters>
+    </operations>
   </nodes>
   <nodes xsi:type="com.yattasolutions.diagrams:CommentVisual" xmi:id="_VBbMwCxZEeWvaK2JGTJcvA" sourceConnectionVisual="_VBbz0CxZEeWvaK2JGTJcvA" text="The constructor of this class. It is responsible for listing the possible&#xA;     * AIs, so they can be displayed in the View and chosen to simulate games.&#xA;     *&#xA;     * @throws ClassNotFoundException Could appear if a class file is deleted&#xA;     *                                in the runtime of this method&#xA;     * @throws MalformedURLException  Could appear if the Constants.AI_LOCATION&#xA;     *                                was malformed&#xA;     * @throws InvalidConfigurationException" item="_VBca4CxZEeWvaK2JGTJcvA">
     <modelElement href="Sphere%20Miners.uml#_VBTQ8CxZEeWvaK2JGTJcvA"/>
@@ -691,7 +754,7 @@
   </nodes>
   <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_CgEV8CxPEeWvaK2JGTJcvA" name="SphereMiners2015" abstractClass="true" associationsIn="_VDtEsCxZEeWvaK2JGTJcvA" associationsOut="_5ATWQCxWEeWvaK2JGTJcvA _KutKgCx_EeWapP3vpHQOHQ" subclassedBy="_6lUwICxSEeWvaK2JGTJcvA">
     <modelElement href="Sphere%20Miners.uml#___DxwCxOEeWvaK2JGTJcvA"/>
-    <visualProperties xmi:id="_CgEV8SxPEeWvaK2JGTJcvA" position="-96.0,230.0" size="-1.0,-1.0"/>
+    <visualProperties xmi:id="_CgEV8SxPEeWvaK2JGTJcvA" position="-1185.0,-234.0" size="-1.0,-1.0"/>
     <visibility xmi:id="_CgEV8ixPEeWvaK2JGTJcvA" label="+"/>
     <attributes xmi:id="_LrqQ4CxREeWvaK2JGTJcvA" name="spheres">
       <modelElement href="Sphere%20Miners.uml#_LrpCwCxREeWvaK2JGTJcvA"/>
@@ -930,7 +993,7 @@
   </nodes>
   <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_K4LXICyhEeWK-qBJoTmIJg" comments="_K4HFsCyhEeWK-qBJoTmIJg" targetConnectionVisual="_K4HswCyhEeWK-qBJoTmIJg" name="GameSimulation" associationsIn="_K4Q2sCyhEeWK-qBJoTmIJg" associationsOut="_K4KwECyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_F7bwUCyhEeWK-qBJoTmIJg"/>
-    <visualProperties xmi:id="_K4LXISyhEeWK-qBJoTmIJg" position="-1521.0,807.0" size="-1.0,-1.0"/>
+    <visualProperties xmi:id="_K4LXISyhEeWK-qBJoTmIJg" position="-1123.0,351.0" size="-1.0,-1.0"/>
     <visibility xmi:id="_K4LXIiyhEeWK-qBJoTmIJg" label="+"/>
     <attributes xmi:id="_K4LXIyyhEeWK-qBJoTmIJg" name="ticks">
       <modelElement href="Sphere%20Miners.uml#_F7-i4CyhEeWK-qBJoTmIJg"/>
@@ -939,8 +1002,8 @@
       </stereotypes>
       <visibility xmi:id="_K4LXJSyhEeWK-qBJoTmIJg" label="-"/>
       <cardinality xmi:id="_K4LXJiyhEeWK-qBJoTmIJg" label="1..*" max="-1" min="1"/>
-      <type xmi:id="_K4LXJyyhEeWK-qBJoTmIJg" name="Tick">
-        <modelElement href="Sphere%20Miners.uml#_F7yVoCyhEeWK-qBJoTmIJg"/>
+      <type xmi:id="_WuXiACyhEeWK-qBJoTmIJg" name="Tick">
+        <modelElement href="Sphere%20Miners.uml#_WuO_ICyhEeWK-qBJoTmIJg"/>
       </type>
     </attributes>
     <operations xmi:id="_K4LXKCyhEeWK-qBJoTmIJg" comments="_K4IT0CyhEeWK-qBJoTmIJg" targetConnectionVisual="_K4IT0SyhEeWK-qBJoTmIJg" name="GameSimulation">
@@ -980,8 +1043,8 @@
       <cardinality xmi:id="_K4LXOSyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
       <outParameters xmi:id="_K4LXOiyhEeWK-qBJoTmIJg">
         <modelElement href="Sphere%20Miners.uml#_F77flCyhEeWK-qBJoTmIJg"/>
-        <type xmi:id="_K4LXOyyhEeWK-qBJoTmIJg" name="Tick">
-          <modelElement href="Sphere%20Miners.uml#_F7yVoCyhEeWK-qBJoTmIJg"/>
+        <type xmi:id="_Wu9X4CyhEeWK-qBJoTmIJg" name="Tick">
+          <modelElement href="Sphere%20Miners.uml#_WuO_ICyhEeWK-qBJoTmIJg"/>
         </type>
       </outParameters>
       <parameters xmi:id="_K4LXPCyhEeWK-qBJoTmIJg" name="numberOfTick">
@@ -1001,15 +1064,15 @@
         <modelElement href="Sphere%20Miners.uml#_F77fkSyhEeWK-qBJoTmIJg"/>
         <keywords xmi:id="_K4LXRCyhEeWK-qBJoTmIJg" keyword="final"/>
         <cardinality xmi:id="_K4LXRSyhEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
-        <type xmi:id="_K4LXRiyhEeWK-qBJoTmIJg" name="Tick">
-          <modelElement href="Sphere%20Miners.uml#_F7yVoCyhEeWK-qBJoTmIJg"/>
+        <type xmi:id="_WuvVcCyhEeWK-qBJoTmIJg" name="Tick">
+          <modelElement href="Sphere%20Miners.uml#_WuO_ICyhEeWK-qBJoTmIJg"/>
         </type>
       </parameters>
     </operations>
   </nodes>
   <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_K4XkaSyhEeWK-qBJoTmIJg" name="Model" associationsOut="_K4QPoCyhEeWK-qBJoTmIJg _K4Q2sCyhEeWK-qBJoTmIJg _K4W9UCyhEeWK-qBJoTmIJg _K4XkYCyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_5TsHUCyNEeWapP3vpHQOHQ"/>
-    <visualProperties xmi:id="_K4XkaiyhEeWK-qBJoTmIJg" position="-676.0,1006.0" size="-1.0,-1.0"/>
+    <visualProperties xmi:id="_K4XkaiyhEeWK-qBJoTmIJg" position="-104.0,523.0" size="-1.0,-1.0"/>
     <visibility xmi:id="_K4XkayyhEeWK-qBJoTmIJg" label="+"/>
     <attributes xmi:id="_K4XkbCyhEeWK-qBJoTmIJg" name="physMgr">
       <modelElement href="Sphere%20Miners.uml#_F7_J8CyhEeWK-qBJoTmIJg"/>
@@ -1161,7 +1224,7 @@
   </nodes>
   <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_K4p4SSyhEeWK-qBJoTmIJg" name="MutableSphere" associationsOut="_K4pRMCyhEeWK-qBJoTmIJg _K4p4QCyhEeWK-qBJoTmIJg" generalizations="_K4gHQCyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_KfN9ACx_EeWapP3vpHQOHQ"/>
-    <visualProperties xmi:id="_K4p4SiyhEeWK-qBJoTmIJg" position="-647.0,1358.0" size="-1.0,-1.0"/>
+    <visualProperties xmi:id="_K4p4SiyhEeWK-qBJoTmIJg" position="-75.0,846.0" size="-1.0,-1.0"/>
     <stereotypes xmi:id="_K4p4SyyhEeWK-qBJoTmIJg" name="LegacyStyledElement">
       <modelElement href="Sphere%20Miners.uml#_F6zeMCyhEeWK-qBJoTmIJg"/>
     </stereotypes>
@@ -1331,7 +1394,7 @@
   </nodes>
   <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_K4ybICyhEeWK-qBJoTmIJg" name="InvalidConfigurationException">
     <modelElement href="Sphere%20Miners.uml#_R1wH4CyOEeWapP3vpHQOHQ"/>
-    <visualProperties xmi:id="_K4ybISyhEeWK-qBJoTmIJg" position="-976.0,981.0" size="-1.0,-1.0"/>
+    <visualProperties xmi:id="_K4ybISyhEeWK-qBJoTmIJg" position="-366.0,833.0" size="-1.0,-1.0"/>
     <stereotypes xmi:id="_K4ybIiyhEeWK-qBJoTmIJg" name="Reference">
       <modelElement href="Sphere%20Miners.uml#_R1wH4SyOEeWapP3vpHQOHQ"/>
     </stereotypes>
@@ -1339,7 +1402,7 @@
   </nodes>
   <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_K44hwCyhEeWK-qBJoTmIJg" name="ImmutableSphere" associationsOut="_K40QUCyhEeWK-qBJoTmIJg" generalizations="_K40QUSyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_KfRAUCx_EeWapP3vpHQOHQ"/>
-    <visualProperties xmi:id="_K44hwSyhEeWK-qBJoTmIJg" position="476.0,712.0" size="-1.0,-1.0"/>
+    <visualProperties xmi:id="_K44hwSyhEeWK-qBJoTmIJg" position="364.0,-63.0" size="-1.0,-1.0"/>
     <keywords xmi:id="_K44hwiyhEeWK-qBJoTmIJg" keyword="static"/>
     <stereotypes xmi:id="_K44hwyyhEeWK-qBJoTmIJg" name="StyledElement">
       <modelElement href="Sphere%20Miners.uml#_F66L4CyhEeWK-qBJoTmIJg"/>
@@ -1542,7 +1605,7 @@
   </nodes>
   <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_K5PHECyhEeWK-qBJoTmIJg" name="Position" associationsIn="_K4pRMCyhEeWK-qBJoTmIJg _K4p4QCyhEeWK-qBJoTmIJg" associationsOut="_K4kYsCyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_KfZjMCx_EeWapP3vpHQOHQ"/>
-    <visualProperties xmi:id="_K5PHESyhEeWK-qBJoTmIJg" position="-84.0,799.0" size="-1.0,-1.0"/>
+    <visualProperties xmi:id="_K5PHESyhEeWK-qBJoTmIJg" position="487.0,307.0" size="-1.0,-1.0"/>
     <visibility xmi:id="_K5PHEiyhEeWK-qBJoTmIJg" label="+"/>
     <attributes xmi:id="_K5PHEyyhEeWK-qBJoTmIJg" defaultValue="1.19209289551e-08" name="DEPS" staticAttribute="true">
       <modelElement href="Sphere%20Miners.uml#_KgcFACx_EeWapP3vpHQOHQ"/>
@@ -1896,7 +1959,7 @@
   </nodes>
   <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:InterfaceVisual" xmi:id="_K5b7YCyhEeWK-qBJoTmIJg" name="Sphere" associationsIn="_K4kYsCyhEeWK-qBJoTmIJg _K40QUCyhEeWK-qBJoTmIJg" subclassedBy="_K4gHQCyhEeWK-qBJoTmIJg _K40QUSyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_Kfj7QCx_EeWapP3vpHQOHQ"/>
-    <visualProperties xmi:id="_K5b7YSyhEeWK-qBJoTmIJg" position="1006.0,454.0" size="-1.0,-1.0"/>
+    <visualProperties xmi:id="_K5b7YSyhEeWK-qBJoTmIJg" position="308.0,-321.0" size="-1.0,-1.0"/>
     <visibility xmi:id="_K5b7YiyhEeWK-qBJoTmIJg" label="+"/>
     <attributes xmi:id="_K5b7YyyhEeWK-qBJoTmIJg" name="direction">
       <modelElement href="Sphere%20Miners.uml#_LWQ9wCxTEeWvaK2JGTJcvA"/>
@@ -1990,5 +2053,112 @@
   </nodes>
   <nodes xsi:type="com.yattasolutions.diagrams:CommentVisual" xmi:id="_LQHWACyhEeWK-qBJoTmIJg" sourceConnectionVisual="_LQP44CyhEeWK-qBJoTmIJg" text="Creates a new {@link Position}.&#xA;     *&#xA;     * @param newX The x-component of the new {@link Position}.&#xA;     * @param newY The y-component of the new {@link Position}." item="_K5PHsiyhEeWK-qBJoTmIJg">
     <modelElement href="Sphere%20Miners.uml#_KgyDQSx_EeWapP3vpHQOHQ"/>
+  </nodes>
+  <nodes xsi:type="com.yattasolutions.diagrams:CommentVisual" xmi:id="_XDCKcCyhEeWK-qBJoTmIJg" sourceConnectionVisual="_XDCKcSyhEeWK-qBJoTmIJg" text="Adds a physicsManager instance to this class&#xA;     * @param physMgr" item="_XDCKciyhEeWK-qBJoTmIJg">
+    <modelElement href="Sphere%20Miners.uml#_XC_uMiyhEeWK-qBJoTmIJg"/>
+  </nodes>
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_X2RlQCyhEeWK-qBJoTmIJg" name="Tick" associationsIn="_K4KwECyhEeWK-qBJoTmIJg">
+    <modelElement href="Sphere%20Miners.uml#_WuO_ICyhEeWK-qBJoTmIJg"/>
+    <visualProperties xmi:id="_X2RlQSyhEeWK-qBJoTmIJg" position="-1577.0,267.0" size="-1.0,-1.0"/>
+    <visibility xmi:id="_X2RlQiyhEeWK-qBJoTmIJg" label="+"/>
+  </nodes>
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_aUQOICyiEeWK-qBJoTmIJg" name="PhysicsManager" associationsIn="_K4W9UCyhEeWK-qBJoTmIJg _XDh5sCyhEeWK-qBJoTmIJg">
+    <modelElement href="Sphere%20Miners.uml#_Kfm-kCx_EeWapP3vpHQOHQ"/>
+    <visualProperties xmi:id="_aUQOISyiEeWK-qBJoTmIJg" position="1080.0,-67.0" size="-1.0,-1.0"/>
+    <visibility xmi:id="_aUQOIiyiEeWK-qBJoTmIJg" label="+"/>
+    <operations xmi:id="_aUQOIyyiEeWK-qBJoTmIJg" name="createInitialTick">
+      <modelElement href="Sphere%20Miners.uml#_aRQkgCyiEeWK-qBJoTmIJg"/>
+      <visibility xmi:id="_aUQOJCyiEeWK-qBJoTmIJg" label="+"/>
+      <cardinality xmi:id="_aUQOJSyiEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
+      <outParameters xmi:id="_aUQOJiyiEeWK-qBJoTmIJg">
+        <modelElement href="Sphere%20Miners.uml#_aRhqQCyiEeWK-qBJoTmIJg"/>
+        <type xmi:id="_aUQOJyyiEeWK-qBJoTmIJg" name="Tick">
+          <modelElement href="Sphere%20Miners.uml#_WuO_ICyhEeWK-qBJoTmIJg"/>
+        </type>
+      </outParameters>
+      <parameters xmi:id="_aUQOKCyiEeWK-qBJoTmIJg" name="ais">
+        <modelElement href="Sphere%20Miners.uml#_aRQkgSyiEeWK-qBJoTmIJg"/>
+        <cardinality xmi:id="_aUQOKSyiEeWK-qBJoTmIJg" label="1..*" max="-1" min="1"/>
+        <type xmi:id="_aUQOKiyiEeWK-qBJoTmIJg" name="String">
+          <modelElement href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </type>
+      </parameters>
+    </operations>
+    <operations xmi:id="_aUQOKyyiEeWK-qBJoTmIJg" name="applyPhysics">
+      <modelElement href="Sphere%20Miners.uml#_aRRLkSyiEeWK-qBJoTmIJg"/>
+      <visibility xmi:id="_aUQOLCyiEeWK-qBJoTmIJg" label="+"/>
+      <cardinality xmi:id="_aUQOLSyiEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
+      <outParameters xmi:id="_aUQOLiyiEeWK-qBJoTmIJg">
+        <modelElement href="Sphere%20Miners.uml#_aRhqQSyiEeWK-qBJoTmIJg"/>
+        <type xmi:id="_aUQOLyyiEeWK-qBJoTmIJg" name="Tick">
+          <modelElement href="Sphere%20Miners.uml#_WuO_ICyhEeWK-qBJoTmIJg"/>
+        </type>
+      </outParameters>
+    </operations>
+    <operations xmi:id="_aUQOMCyiEeWK-qBJoTmIJg" name="getAISpheres">
+      <modelElement href="Sphere%20Miners.uml#_aRRLkiyiEeWK-qBJoTmIJg"/>
+      <visibility xmi:id="_aUQOMSyiEeWK-qBJoTmIJg" label="+"/>
+      <cardinality xmi:id="_aUQOMiyiEeWK-qBJoTmIJg" label="1..*" max="-1" min="1"/>
+      <outParameters xmi:id="_aUQOMyyiEeWK-qBJoTmIJg">
+        <modelElement href="Sphere%20Miners.uml#_aRRyoCyiEeWK-qBJoTmIJg"/>
+        <type xmi:id="_aUQONCyiEeWK-qBJoTmIJg" name="MutableSphere">
+          <modelElement href="Sphere%20Miners.uml#_KfN9ACx_EeWapP3vpHQOHQ"/>
+        </type>
+      </outParameters>
+      <parameters xmi:id="_aUQONSyiEeWK-qBJoTmIJg" name="aiStr">
+        <modelElement href="Sphere%20Miners.uml#_aRRLkyyiEeWK-qBJoTmIJg"/>
+        <cardinality xmi:id="_aUQONiyiEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
+        <type xmi:id="_aUQONyyiEeWK-qBJoTmIJg" name="String">
+          <modelElement href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </type>
+      </parameters>
+    </operations>
+  </nodes>
+  <nodes xsi:type="com.yattasolutions.diagrams:CommentVisual" xmi:id="_dSyb0CyiEeWK-qBJoTmIJg" sourceConnectionVisual="_dSyb0SyiEeWK-qBJoTmIJg" text="This exception should be thrown if the location of an AI is invalid in case&#xA;they should be initialized. An invalid location equals an invalid filename." item="_dSzp8CyiEeWK-qBJoTmIJg">
+    <modelElement href="Sphere%20Miners.uml#_dQk1UCyiEeWK-qBJoTmIJg"/>
+  </nodes>
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_dSzp8CyiEeWK-qBJoTmIJg" comments="_dSyb0CyiEeWK-qBJoTmIJg" targetConnectionVisual="_dSyb0SyiEeWK-qBJoTmIJg" name="InvalidAILocationException">
+    <modelElement href="Sphere%20Miners.uml#_F71Y8CyhEeWK-qBJoTmIJg"/>
+    <visualProperties xmi:id="_dSzp8SyiEeWK-qBJoTmIJg" position="-109.0,1176.0" size="-1.0,-1.0"/>
+    <visibility xmi:id="_dSzp8iyiEeWK-qBJoTmIJg" label="+"/>
+    <attributes xmi:id="_dSzp8yyiEeWK-qBJoTmIJg" defaultValue="1170066104466868734L" name="serialVersionUID" staticAttribute="true">
+      <modelElement href="Sphere%20Miners.uml#_dQkOQSyiEeWK-qBJoTmIJg"/>
+      <visibility xmi:id="_dSzp9CyiEeWK-qBJoTmIJg" label="-"/>
+      <cardinality xmi:id="_dSzp9SyiEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
+      <type xmi:id="_dSzp9iyiEeWK-qBJoTmIJg" name="long">
+        <modelElement href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#long"/>
+      </type>
+    </attributes>
+    <operations xmi:id="_dSzp9yyiEeWK-qBJoTmIJg" name="InvalidAILocationException">
+      <modelElement href="Sphere%20Miners.uml#_dQfVwCyiEeWK-qBJoTmIJg"/>
+      <keywords xmi:id="_dSzp-CyiEeWK-qBJoTmIJg" keyword="create"/>
+      <visibility xmi:id="_dSzp-SyiEeWK-qBJoTmIJg" label="+"/>
+      <cardinality xmi:id="_dSzp-iyiEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
+      <outParameters xmi:id="_dSzp-yyiEeWK-qBJoTmIJg">
+        <modelElement href="Sphere%20Miners.uml#_dQf80SyiEeWK-qBJoTmIJg"/>
+        <type xmi:id="_dSzp_CyiEeWK-qBJoTmIJg" name="InvalidAILocationException">
+          <modelElement href="Sphere%20Miners.uml#_F71Y8CyhEeWK-qBJoTmIJg"/>
+        </type>
+      </outParameters>
+    </operations>
+    <operations xmi:id="_dSzp_SyiEeWK-qBJoTmIJg" name="InvalidAILocationException">
+      <modelElement href="Sphere%20Miners.uml#_dQf80iyiEeWK-qBJoTmIJg"/>
+      <keywords xmi:id="_dSzp_iyiEeWK-qBJoTmIJg" keyword="create"/>
+      <visibility xmi:id="_dSzp_yyiEeWK-qBJoTmIJg" label="+"/>
+      <cardinality xmi:id="_dSzqACyiEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
+      <outParameters xmi:id="_dSzqASyiEeWK-qBJoTmIJg">
+        <modelElement href="Sphere%20Miners.uml#_dQf81iyiEeWK-qBJoTmIJg"/>
+        <type xmi:id="_dSzqAiyiEeWK-qBJoTmIJg" name="InvalidAILocationException">
+          <modelElement href="Sphere%20Miners.uml#_F71Y8CyhEeWK-qBJoTmIJg"/>
+        </type>
+      </outParameters>
+      <parameters xmi:id="_dSzqAyyiEeWK-qBJoTmIJg" name="s">
+        <modelElement href="Sphere%20Miners.uml#_dQf80yyiEeWK-qBJoTmIJg"/>
+        <cardinality xmi:id="_dSzqBCyiEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
+        <type xmi:id="_dSzqBSyiEeWK-qBJoTmIJg" name="String">
+          <modelElement href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+        </type>
+      </parameters>
+    </operations>
   </nodes>
 </com.yattasolutions.uml.diagrams.classifier:ClassDiagram>

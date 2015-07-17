@@ -4,7 +4,7 @@
     <eAnnotations xmi:id="__4P_ICxOEeWvaK2JGTJcvA" source="http://ns.yatta.de/umllab">
       <contents xmi:type="ecore:EAnnotation" xmi:id="__4P_ISxOEeWvaK2JGTJcvA" source="codegen">
         <details xmi:id="__4P_IixOEeWvaK2JGTJcvA" key="codegenDirectory" value="/Sphere Miners/src"/>
-        <details xmi:id="_AGFm0CxPEeWvaK2JGTJcvA" key="AssociatedSourceCode" value="/Sphere Miners/src/ais/DumbAI.java;1161302303/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/main/SphereMiners.java;2389785167/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/ai/SphereMiners2015.java;191653710/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Direction.java;2181631423/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/ai/Sphere.java;141263431/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/ai/AIManager.java;2505240423/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Model.java;410437832/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Position.java;292450691/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/GameSimulation.java;1479578632/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/MutableSphere.java;4017940768/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Sphere.java;988380150/1;"/>
+        <details xmi:id="_AGFm0CxPEeWvaK2JGTJcvA" key="AssociatedSourceCode" value="/Sphere Miners/src/ais/DumbAI.java;1161302303/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/main/SphereMiners.java;2389785167/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/ai/SphereMiners2015.java;191653710/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Direction.java;2181631423/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/ai/Sphere.java;141263431/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/ai/AIManager.java;662022952/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Model.java;410437832/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Position.java;292450691/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/GameSimulation.java;2317915164/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/MutableSphere.java;4017940768/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Sphere.java;988380150/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Tick.java;3520306903/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/physics/PhysicsManager.java;1444445405/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/exceptions/InvalidAILocationException.java;624192103/1;"/>
         <details xmi:id="_bdjHMCxPEeWvaK2JGTJcvA" key="observedFolders" value="/Sphere Miners"/>
       </contents>
       <contents xmi:type="ecore:EAnnotation" xmi:id="_Jh71YCx_EeWapP3vpHQOHQ" source="preferences">
@@ -492,6 +492,7 @@ adds the View as Observer to the model.</body>
                   <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
                   <defaultValue xmi:type="uml:LiteralString" xmi:id="_o-jE4SyNEeWapP3vpHQOHQ" value="&quot;ais&quot;"/>
                 </ownedAttribute>
+                <ownedAttribute xmi:id="_XC-gECyhEeWK-qBJoTmIJg" name="physicsManager" visibility="private" type="_Kfm-kCx_EeWapP3vpHQOHQ" association="_XDAVQCyhEeWK-qBJoTmIJg"/>
                 <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_VBO_gCxZEeWvaK2JGTJcvA" name="AIManager" specification="_VAHlMixZEeWvaK2JGTJcvA">
                   <ownedParameter xmi:id="_RDoHYCyOEeWapP3vpHQOHQ" type="_ulHUUCxXEeWvaK2JGTJcvA" direction="return">
                     <name xsi:nil="true"/>
@@ -593,14 +594,26 @@ adds the View as Observer to the model.</body>
                   <language>java</language>
                   <body>ais.clear();
 
+     for (String ai : aisToPlay) {
+         if (!isValidAi(ai)) {
+             throw new InvalidAILocationException(&quot;AI &quot; + ai + &quot; not found.&quot;);
+         }
+     }
+
      // load ais in discrete thread, so one's able to handle bad constructors.
      ScheduledExecutorService aiLoader = Executors.newSingleThreadScheduledExecutor();
-     aiLoader.invokeAll(FluentIterable.of(aisToPlay).transform(new Function&lt;String, Callable&lt;Void>>() {
-         @Override
-         public Callable&lt;Void> apply(String ai) {
-             return loadAi(ai, loader);
-         }
-     }).toList());
+     try {
+         aiLoader.invokeAll(FluentIterable.of(aisToPlay).transform(new Function&lt;String, Callable&lt;Void>>() {
+             @Override
+             public Callable&lt;Void> apply(String ai) {
+                 return loadAi(ai, loader);
+             }
+         }).toList());
+
+         // pretty bad something interrupted our loading process...
+     } catch (InterruptedException e1) {
+         throw new RuntimeException(); // TODO investigate if this is really necessary
+     }
 
      // wait for ailoader to finish or kill it in case of too long computation times
      try {
@@ -613,13 +626,16 @@ adds the View as Observer to the model.</body>
      }
 
      // if loading was not successful throw an exception
+     // otherwise set the relevant fields in the ai
+     // and call the init method
      for (String aiStr : aisToPlay) {
          SphereMiners2015 ai = ais.get(aiStr);
          if (ai == null) {
              throw new InstantiationException(&quot;The Ais could not be loaded properly.&quot;);
          } else {
              ai.setManager(this);
-             // TODO ai.setSpheres(spheres);
+             ai.setSpheres(physicsManager.getAISpheres(aiStr));
+             ai.init();
          }
      }
  </body>
@@ -736,7 +752,8 @@ adds the View as Observer to the model.</body>
      ais.remove(ai);
      SphereMiners2015 newAi = (SphereMiners2015) cl.newInstance();
      newAi.setManager(this);
-     // TODO newAi.setSpheres(spheres);
+     newAi.setSpheres(physicsManager.getAISpheres(ai));
+     newAi.init();
      ais.put(ai, newAi);
  </body>
                 </ownedBehavior>
@@ -768,6 +785,12 @@ adds the View as Observer to the model.</body>
      }
 
      return fileLoc;
+ </body>
+                </ownedBehavior>
+                <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_XC_uMCyhEeWK-qBJoTmIJg" name="setPhysicsManager" specification="_XC61sCyhEeWK-qBJoTmIJg">
+                  <ownedParameter xmi:id="_XC_uMSyhEeWK-qBJoTmIJg" name="physMgr" type="_Kfm-kCx_EeWapP3vpHQOHQ"/>
+                  <language>java</language>
+                  <body>physicsManager = physMgr;
  </body>
                 </ownedBehavior>
                 <ownedOperation xmi:id="_VAHlMixZEeWvaK2JGTJcvA" name="AIManager" method="_VBO_gCxZEeWvaK2JGTJcvA" raisedException="_VA4aMCxZEeWvaK2JGTJcvA _VAn7gCxZEeWvaK2JGTJcvA _R1wH4CyOEeWapP3vpHQOHQ">
@@ -832,7 +855,7 @@ adds the View as Observer to the model.</body>
                     <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#boolean"/>
                   </ownedParameter>
                 </ownedOperation>
-                <ownedOperation xmi:id="_VARWMSxZEeWvaK2JGTJcvA" name="initializeGameAIs" method="_VBPmkyxZEeWvaK2JGTJcvA" raisedException="_VA5BQSxZEeWvaK2JGTJcvA _VA8EkCxZEeWvaK2JGTJcvA">
+                <ownedOperation xmi:id="_VARWMSxZEeWvaK2JGTJcvA" name="initializeGameAIs" method="_VBPmkyxZEeWvaK2JGTJcvA" raisedException="_VA5BQSxZEeWvaK2JGTJcvA _F71Y8CyhEeWK-qBJoTmIJg">
                   <ownedParameter xmi:id="_VBPmlyxZEeWvaK2JGTJcvA" name="aisToPlay">
                     <eAnnotations xmi:id="_VBPmmCxZEeWvaK2JGTJcvA" source="http://www.eclipse.org/uml2/2.0.0/UML">
                       <details xmi:id="_VBPmmSxZEeWvaK2JGTJcvA" key="final"/>
@@ -902,6 +925,13 @@ adds the View as Observer to the model.</body>
                     <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
                   </ownedParameter>
                 </ownedOperation>
+                <ownedOperation xmi:id="_XC61sCyhEeWK-qBJoTmIJg" name="setPhysicsManager" method="_XC_uMCyhEeWK-qBJoTmIJg">
+                  <ownedComment xmi:id="_XC_uMiyhEeWK-qBJoTmIJg">
+                    <body>Adds a physicsManager instance to this class
+     * @param physMgr</body>
+                  </ownedComment>
+                  <ownedParameter xmi:id="_XC61sSyhEeWK-qBJoTmIJg" name="physMgr" type="_Kfm-kCx_EeWapP3vpHQOHQ"/>
+                </ownedOperation>
               </packagedElement>
               <packagedElement xmi:type="uml:Class" xmi:id="_VA5oUSxZEeWvaK2JGTJcvA" name="InvalidAiLocationException"/>
               <packagedElement xmi:type="uml:Class" xmi:id="_VA6PYSxZEeWvaK2JGTJcvA" name="Team"/>
@@ -919,9 +949,61 @@ adds the View as Observer to the model.</body>
               <packagedElement xmi:type="uml:Association" xmi:id="_Kg5YASx_EeWapP3vpHQOHQ" name="" memberEnd="_Kg5YAix_EeWapP3vpHQOHQ _KgehQCx_EeWapP3vpHQOHQ">
                 <ownedEnd xmi:id="_Kg5YAix_EeWapP3vpHQOHQ" name="" type="___DxwCxOEeWvaK2JGTJcvA" association="_Kg5YASx_EeWapP3vpHQOHQ"/>
               </packagedElement>
+              <packagedElement xmi:type="uml:Association" xmi:id="_XDAVQCyhEeWK-qBJoTmIJg" name="" memberEnd="_XDAVQSyhEeWK-qBJoTmIJg _XC-gECyhEeWK-qBJoTmIJg">
+                <ownedEnd xmi:id="_XDAVQSyhEeWK-qBJoTmIJg" name="" type="_ulHUUCxXEeWvaK2JGTJcvA" association="_XDAVQCyhEeWK-qBJoTmIJg"/>
+              </packagedElement>
             </packagedElement>
             <packagedElement xmi:type="uml:Package" xmi:id="_Ke_6kCx_EeWapP3vpHQOHQ" name="physics">
-              <packagedElement xmi:type="uml:Class" xmi:id="_Kfm-kCx_EeWapP3vpHQOHQ" name="PhysicsManager"/>
+              <packagedElement xmi:type="uml:Class" xmi:id="_Kfm-kCx_EeWapP3vpHQOHQ" name="PhysicsManager">
+                <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_aRiRUCyiEeWK-qBJoTmIJg" name="createInitialTick" specification="_aRQkgCyiEeWK-qBJoTmIJg">
+                  <ownedParameter xmi:id="_aRiRUSyiEeWK-qBJoTmIJg" name="ais">
+                    <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                    <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_aRiRUiyiEeWK-qBJoTmIJg" value="*"/>
+                  </ownedParameter>
+                  <ownedParameter xmi:id="_aRiRUyyiEeWK-qBJoTmIJg" type="_WuO_ICyhEeWK-qBJoTmIJg" direction="return"/>
+                  <language>java</language>
+                  <body>// TODO Auto-generated method stub
+     return null;
+ </body>
+                </ownedBehavior>
+                <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_aRiRVCyiEeWK-qBJoTmIJg" name="applyPhysics" specification="_aRRLkSyiEeWK-qBJoTmIJg">
+                  <ownedParameter xmi:id="_aRiRVSyiEeWK-qBJoTmIJg" type="_WuO_ICyhEeWK-qBJoTmIJg" direction="return"/>
+                  <language>java</language>
+                  <body>// TODO Auto-generated method stub
+     return null;
+ </body>
+                </ownedBehavior>
+                <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_aRi4YCyiEeWK-qBJoTmIJg" name="getAISpheres" specification="_aRRLkiyiEeWK-qBJoTmIJg">
+                  <ownedParameter xmi:id="_aRi4YSyiEeWK-qBJoTmIJg" name="aiStr">
+                    <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                  </ownedParameter>
+                  <ownedParameter xmi:id="_aRi4YiyiEeWK-qBJoTmIJg" type="_KfN9ACx_EeWapP3vpHQOHQ" isOrdered="true" direction="return">
+                    <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_aRi4YyyiEeWK-qBJoTmIJg" value="*"/>
+                  </ownedParameter>
+                  <language>java</language>
+                  <body>// TODO Auto-generated method stub
+     return null;
+ </body>
+                </ownedBehavior>
+                <ownedOperation xmi:id="_aRQkgCyiEeWK-qBJoTmIJg" name="createInitialTick" method="_aRiRUCyiEeWK-qBJoTmIJg">
+                  <ownedParameter xmi:id="_aRQkgSyiEeWK-qBJoTmIJg" name="ais">
+                    <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                    <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_aRRLkCyiEeWK-qBJoTmIJg" value="*"/>
+                  </ownedParameter>
+                  <ownedParameter xmi:id="_aRhqQCyiEeWK-qBJoTmIJg" type="_WuO_ICyhEeWK-qBJoTmIJg" direction="return"/>
+                </ownedOperation>
+                <ownedOperation xmi:id="_aRRLkSyiEeWK-qBJoTmIJg" name="applyPhysics" method="_aRiRVCyiEeWK-qBJoTmIJg">
+                  <ownedParameter xmi:id="_aRhqQSyiEeWK-qBJoTmIJg" type="_WuO_ICyhEeWK-qBJoTmIJg" direction="return"/>
+                </ownedOperation>
+                <ownedOperation xmi:id="_aRRLkiyiEeWK-qBJoTmIJg" name="getAISpheres" method="_aRi4YCyiEeWK-qBJoTmIJg">
+                  <ownedParameter xmi:id="_aRRLkyyiEeWK-qBJoTmIJg" name="aiStr">
+                    <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                  </ownedParameter>
+                  <ownedParameter xmi:id="_aRRyoCyiEeWK-qBJoTmIJg" type="_KfN9ACx_EeWapP3vpHQOHQ" isOrdered="true" direction="return">
+                    <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_aRRyoSyiEeWK-qBJoTmIJg" value="*"/>
+                  </ownedParameter>
+                </ownedOperation>
+              </packagedElement>
             </packagedElement>
             <packagedElement xmi:type="uml:Class" xmi:id="_KfZjMCx_EeWapP3vpHQOHQ" name="Position">
               <ownedAttribute xmi:id="_KgcFACx_EeWapP3vpHQOHQ" name="DEPS" isLeaf="true" isStatic="true" isReadOnly="true">
@@ -1749,27 +1831,31 @@ adds the View as Observer to the model.</body>
               <ownedComment xmi:id="_F8KwICyhEeWK-qBJoTmIJg">
                 <body>This representation of a game can be displayed by the GUI.</body>
               </ownedComment>
-              <ownedAttribute xmi:id="_F7-i4CyhEeWK-qBJoTmIJg" name="ticks" visibility="private" type="_F7yVoCyhEeWK-qBJoTmIJg" isOrdered="true" association="_F8PooCyhEeWK-qBJoTmIJg">
+              <ownedAttribute xmi:id="_F7-i4CyhEeWK-qBJoTmIJg" name="ticks" visibility="private" type="_WuO_ICyhEeWK-qBJoTmIJg" isOrdered="true" association="_F8PooCyhEeWK-qBJoTmIJg">
                 <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_F7-i4SyhEeWK-qBJoTmIJg" value="*"/>
               </ownedAttribute>
               <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_F8FQkCyhEeWK-qBJoTmIJg" name="GameSimulation" specification="_F7cXYCyhEeWK-qBJoTmIJg">
-                <ownedParameter xmi:id="_F8FQkSyhEeWK-qBJoTmIJg" type="_F7bwUCyhEeWK-qBJoTmIJg" direction="return"/>
+                <ownedParameter xmi:id="_F8FQkSyhEeWK-qBJoTmIJg" type="_F7bwUCyhEeWK-qBJoTmIJg" direction="return">
+                  <name xsi:nil="true"/>
+                </ownedParameter>
                 <language>java</language>
                 <body>ticks = new ArrayList&lt;>();
  </body>
               </ownedBehavior>
               <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_F8FQkiyhEeWK-qBJoTmIJg" name="GameSimulation" specification="_F7c-cSyhEeWK-qBJoTmIJg">
                 <ownedParameter xmi:id="_F8FQkyyhEeWK-qBJoTmIJg" name="simulationList" type="_9O8IoCxQEeWvaK2JGTJcvA"/>
-                <ownedParameter xmi:id="_F8FQlCyhEeWK-qBJoTmIJg" type="_F7bwUCyhEeWK-qBJoTmIJg" direction="return"/>
+                <ownedParameter xmi:id="_F8FQlCyhEeWK-qBJoTmIJg" type="_F7bwUCyhEeWK-qBJoTmIJg" direction="return">
+                  <name xsi:nil="true"/>
+                </ownedParameter>
                 <language>java</language>
                 <body>Preconditions.checkNotNull(simulationList);
      ticks = simulationList;
  </body>
               </ownedBehavior>
               <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_F8FQlSyhEeWK-qBJoTmIJg" name="addInstance" specification="_F77fkCyhEeWK-qBJoTmIJg">
-                <ownedParameter xmi:id="_F8F3oCyhEeWK-qBJoTmIJg" name="tick" type="_F7yVoCyhEeWK-qBJoTmIJg">
-                  <eAnnotations xmi:id="_F8F3oSyhEeWK-qBJoTmIJg" source="http://www.eclipse.org/uml2/2.0.0/UML">
-                    <details xmi:id="_F8F3oiyhEeWK-qBJoTmIJg" key="final"/>
+                <ownedParameter xmi:id="_WuWT4CyhEeWK-qBJoTmIJg" name="tick" type="_WuO_ICyhEeWK-qBJoTmIJg">
+                  <eAnnotations xmi:id="_WuWT4SyhEeWK-qBJoTmIJg" source="http://www.eclipse.org/uml2/2.0.0/UML">
+                    <details xmi:id="_WuWT4iyhEeWK-qBJoTmIJg" key="final"/>
                   </eAnnotations>
                 </ownedParameter>
                 <language>java</language>
@@ -1777,13 +1863,13 @@ adds the View as Observer to the model.</body>
  </body>
               </ownedBehavior>
               <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_F8F3oyyhEeWK-qBJoTmIJg" name="getTick" specification="_F7dlgSyhEeWK-qBJoTmIJg">
-                <ownedParameter xmi:id="_F8F3pCyhEeWK-qBJoTmIJg" name="numberOfTick">
-                  <eAnnotations xmi:id="_F8F3pSyhEeWK-qBJoTmIJg" source="http://www.eclipse.org/uml2/2.0.0/UML">
-                    <details xmi:id="_F8F3piyhEeWK-qBJoTmIJg" key="final"/>
+                <ownedParameter xmi:id="_WuWT4yyhEeWK-qBJoTmIJg" name="numberOfTick">
+                  <eAnnotations xmi:id="_WuWT5CyhEeWK-qBJoTmIJg" source="http://www.eclipse.org/uml2/2.0.0/UML">
+                    <details xmi:id="_WuWT5SyhEeWK-qBJoTmIJg" key="final"/>
                   </eAnnotations>
                   <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
                 </ownedParameter>
-                <ownedParameter xmi:id="_F8F3pyyhEeWK-qBJoTmIJg" type="_F7yVoCyhEeWK-qBJoTmIJg" direction="return"/>
+                <ownedParameter xmi:id="_WuWT5iyhEeWK-qBJoTmIJg" type="_WuO_ICyhEeWK-qBJoTmIJg" direction="return"/>
                 <language>java</language>
                 <body>if (numberOfTick &lt; 0 || numberOfTick > ticks.size()) {
          return null;
@@ -1828,7 +1914,7 @@ adds the View as Observer to the model.</body>
                   </eAnnotations>
                   <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
                 </ownedParameter>
-                <ownedParameter xmi:id="_F77flCyhEeWK-qBJoTmIJg" type="_F7yVoCyhEeWK-qBJoTmIJg" direction="return"/>
+                <ownedParameter xmi:id="_F77flCyhEeWK-qBJoTmIJg" type="_WuO_ICyhEeWK-qBJoTmIJg" direction="return"/>
               </ownedOperation>
               <ownedOperation xmi:id="_F77fkCyhEeWK-qBJoTmIJg" name="addInstance" method="_F8FQlSyhEeWK-qBJoTmIJg">
                 <ownedComment xmi:id="_F8KwIyyhEeWK-qBJoTmIJg">
@@ -1839,7 +1925,7 @@ adds the View as Observer to the model.</body>
      *             If the tick-parameter is invalid (e.g. null) this exception
      *             will be thrown to prevent an invalid state.</body>
                 </ownedComment>
-                <ownedParameter xmi:id="_F77fkSyhEeWK-qBJoTmIJg" name="tick" type="_F7yVoCyhEeWK-qBJoTmIJg">
+                <ownedParameter xmi:id="_F77fkSyhEeWK-qBJoTmIJg" name="tick" type="_WuO_ICyhEeWK-qBJoTmIJg">
                   <eAnnotations xmi:id="_F77fkiyhEeWK-qBJoTmIJg" source="http://www.eclipse.org/uml2/2.0.0/UML">
                     <details xmi:id="_F77fkyyhEeWK-qBJoTmIJg" key="final"/>
                   </eAnnotations>
@@ -1864,9 +1950,50 @@ adds the View as Observer to the model.</body>
             <packagedElement xmi:type="uml:Association" xmi:id="_F8Q2xCyhEeWK-qBJoTmIJg" name="" memberEnd="_F8Q2xSyhEeWK-qBJoTmIJg _F7_xAyyhEeWK-qBJoTmIJg">
               <ownedEnd xmi:id="_F8Q2xSyhEeWK-qBJoTmIJg" name="" type="_5TsHUCyNEeWapP3vpHQOHQ" association="_F8Q2xCyhEeWK-qBJoTmIJg"/>
             </packagedElement>
+            <packagedElement xmi:type="uml:Class" xmi:id="_WuO_ICyhEeWK-qBJoTmIJg" name="Tick"/>
           </packagedElement>
           <packagedElement xmi:type="uml:Package" xmi:id="_F6t-oCyhEeWK-qBJoTmIJg" name="exceptions">
-            <packagedElement xmi:type="uml:Class" xmi:id="_F71Y8CyhEeWK-qBJoTmIJg" name="InvalidAILocationException"/>
+            <packagedElement xmi:type="uml:Class" xmi:id="_F71Y8CyhEeWK-qBJoTmIJg" name="InvalidAILocationException" isLeaf="true">
+              <ownedComment xmi:id="_dQk1UCyiEeWK-qBJoTmIJg">
+                <body>This exception should be thrown if the location of an AI is invalid in case
+they should be initialized. An invalid location equals an invalid filename.</body>
+              </ownedComment>
+              <generalization xmi:id="_dQkOQCyiEeWK-qBJoTmIJg" general="_dQjnMCyiEeWK-qBJoTmIJg"/>
+              <ownedAttribute xmi:id="_dQkOQSyiEeWK-qBJoTmIJg" name="serialVersionUID" visibility="private" isLeaf="true" isStatic="true" isReadOnly="true">
+                <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#long"/>
+                <defaultValue xmi:type="uml:LiteralString" xmi:id="_dQkOQiyiEeWK-qBJoTmIJg" value="1170066104466868734L"/>
+              </ownedAttribute>
+              <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_dQkOQyyiEeWK-qBJoTmIJg" name="InvalidAILocationException" specification="_dQfVwCyiEeWK-qBJoTmIJg">
+                <ownedParameter xmi:id="_dQkORCyiEeWK-qBJoTmIJg" type="_F71Y8CyhEeWK-qBJoTmIJg" direction="return"/>
+                <language>java</language>
+                <body>super();
+ </body>
+              </ownedBehavior>
+              <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_dQkORSyiEeWK-qBJoTmIJg" name="InvalidAILocationException" specification="_dQf80iyiEeWK-qBJoTmIJg">
+                <ownedParameter xmi:id="_dQkORiyiEeWK-qBJoTmIJg" name="s">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                </ownedParameter>
+                <ownedParameter xmi:id="_dQkORyyiEeWK-qBJoTmIJg" type="_F71Y8CyhEeWK-qBJoTmIJg" direction="return"/>
+                <language>java</language>
+                <body>super(s);
+ </body>
+              </ownedBehavior>
+              <ownedOperation xmi:id="_dQfVwCyiEeWK-qBJoTmIJg" name="InvalidAILocationException" method="_dQkOQyyiEeWK-qBJoTmIJg">
+                <eAnnotations xmi:id="_dQfVwSyiEeWK-qBJoTmIJg" source="http://www.eclipse.org/uml2/2.0.0/UML">
+                  <details xmi:id="_dQf80CyiEeWK-qBJoTmIJg" key="create"/>
+                </eAnnotations>
+                <ownedParameter xmi:id="_dQf80SyiEeWK-qBJoTmIJg" type="_F71Y8CyhEeWK-qBJoTmIJg" direction="return"/>
+              </ownedOperation>
+              <ownedOperation xmi:id="_dQf80iyiEeWK-qBJoTmIJg" name="InvalidAILocationException" method="_dQkORSyiEeWK-qBJoTmIJg">
+                <eAnnotations xmi:id="_dQf81CyiEeWK-qBJoTmIJg" source="http://www.eclipse.org/uml2/2.0.0/UML">
+                  <details xmi:id="_dQf81SyiEeWK-qBJoTmIJg" key="create"/>
+                </eAnnotations>
+                <ownedParameter xmi:id="_dQf80yyiEeWK-qBJoTmIJg" name="s">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                </ownedParameter>
+                <ownedParameter xmi:id="_dQf81iyiEeWK-qBJoTmIJg" type="_F71Y8CyhEeWK-qBJoTmIJg" direction="return"/>
+              </ownedOperation>
+            </packagedElement>
           </packagedElement>
         </packagedElement>
       </packagedElement>
@@ -1917,6 +2044,7 @@ adds the View as Observer to the model.</body>
         <packagedElement xmi:type="uml:Class" xmi:id="_VA_H4CxZEeWvaK2JGTJcvA" name="IllegalAccessException"/>
         <packagedElement xmi:type="uml:Class" xmi:id="_KgUJMCx_EeWapP3vpHQOHQ" name="Object"/>
         <packagedElement xmi:type="uml:Interface" xmi:id="_JmK-sCyLEeWapP3vpHQOHQ" name="Runnable"/>
+        <packagedElement xmi:type="uml:Class" xmi:id="_dQjnMCyiEeWK-qBJoTmIJg" name="Exception"/>
       </packagedElement>
       <packagedElement xmi:type="uml:Package" xmi:id="_VACssyxZEeWvaK2JGTJcvA" name="net">
         <packagedElement xmi:type="uml:Class" xmi:id="_VAn7gCxZEeWvaK2JGTJcvA" name="MalformedURLException"/>
@@ -2266,7 +2394,6 @@ adds the View as Observer to the model.</body>
   <UMLLabProfile:Reference xmi:id="_F7yVoSyhEeWK-qBJoTmIJg" base_Element="_F7yVoCyhEeWK-qBJoTmIJg"/>
   <UMLLabProfile:Reference xmi:id="_F70K0CyhEeWK-qBJoTmIJg" base_Element="_F7zjwCyhEeWK-qBJoTmIJg"/>
   <UMLLabProfile:Reference xmi:id="_F70x4SyhEeWK-qBJoTmIJg" base_Element="_F70x4CyhEeWK-qBJoTmIJg"/>
-  <UMLLabProfile:Reference xmi:id="_F71Y8SyhEeWK-qBJoTmIJg" base_Element="_F71Y8CyhEeWK-qBJoTmIJg"/>
   <UMLLabProfile:Reference xmi:id="_F731MSyhEeWK-qBJoTmIJg" base_Element="_F731MCyhEeWK-qBJoTmIJg"/>
   <UMLLabProfile:LegacyStyledElement xmi:id="_F7-i4iyhEeWK-qBJoTmIJg" base_Element="_F7-i4CyhEeWK-qBJoTmIJg"/>
   <UMLLabProfile:LegacyStyledElement xmi:id="_F7_J8SyhEeWK-qBJoTmIJg" base_Element="_F7_J8CyhEeWK-qBJoTmIJg"/>
@@ -2306,4 +2433,7 @@ adds the View as Observer to the model.</body>
   <UMLLabProfile:Reference xmi:id="_F8Q2wCyhEeWK-qBJoTmIJg" base_Element="_F8QPtCyhEeWK-qBJoTmIJg"/>
   <UMLLabProfile:Reference xmi:id="_F8Q2wyyhEeWK-qBJoTmIJg" base_Element="_F8Q2wSyhEeWK-qBJoTmIJg"/>
   <UMLLabProfile:Reference xmi:id="_F8Rd0CyhEeWK-qBJoTmIJg" base_Element="_F8Q2xCyhEeWK-qBJoTmIJg"/>
+  <UMLLabProfile:StyledElement xmi:id="_XC8q4CyhEeWK-qBJoTmIJg" base_Element="_XC61sCyhEeWK-qBJoTmIJg"/>
+  <UMLLabProfile:Reference xmi:id="_XDA8UCyhEeWK-qBJoTmIJg" base_Element="_XDAVQCyhEeWK-qBJoTmIJg"/>
+  <UMLLabProfile:Reference xmi:id="_dQjnMSyiEeWK-qBJoTmIJg" base_Element="_dQjnMCyiEeWK-qBJoTmIJg"/>
 </xmi:XMI>
