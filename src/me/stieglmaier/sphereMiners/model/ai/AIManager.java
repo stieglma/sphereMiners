@@ -69,14 +69,14 @@ public final class AIManager {
     /**
      * path to location with stored ais.
      */
-    private static final String AI_FILELOCATION = getAIPath();
+    private final String AI_FILELOCATION = getAIPath();
 
     @Option(name="location", description="In which folder should the framework search for ais?"
             + " (Base is the root of the project/ the folder where the jar file is located)")
-    private static final String AI_FOLDER_NAME = "ais";
+    private String AI_FOLDER_NAME = "ais";
 
     @Option(name="timeout", description="Timeout for the computation done by the ais in milliseconds")
-    public static final int AI_TIME = 50;
+    private int AI_TIME = 50;
 
     /**
      * The constructor of this class. It is responsible for listing the possible
@@ -109,7 +109,7 @@ public final class AIManager {
      *                                      (Will never happen a standard java charset is used)
      * @ return The file location of the ai.
      */
-    public static String getAIPath() {
+    public String getAIPath() {
         String fileLoc = null;
         try {
             fileLoc = URLDecoder.decode(AIManager.class.getProtectionDomain()
@@ -276,8 +276,8 @@ public final class AIManager {
             if (ai == null) {
                 throw new InstantiationException("The Ais could not be loaded properly.");
             } else {
-                ai.setManager(this);
-                ai.setSpheres(physicsManager.getAISpheres(aiStr));
+                ai.setName(aiStr);
+                ai.setManager(physicsManager);
                 ai.init();
             }
         }
@@ -406,8 +406,8 @@ public final class AIManager {
         Class<?> cl = loader.loadClass(ais.get(ai).getClass().getName());
         ais.remove(ai);
         SphereMiners2015 newAi = (SphereMiners2015) cl.newInstance();
-        newAi.setManager(this);
-        newAi.setSpheres(physicsManager.getAISpheres(ai));
+        newAi.setName(ai);
+        newAi.setManager(physicsManager);
         newAi.init();
         ais.put(ai, newAi);
     }

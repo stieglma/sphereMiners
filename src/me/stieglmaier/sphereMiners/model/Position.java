@@ -33,7 +33,7 @@ public class Position {
      * @param newY The y-component of the new {@link Position}.
      */
     public Position(final double newX, final double newY) {
-        Preconditions.checkArgument(Double.isNaN(newX) || Double.isNaN(newY),
+        Preconditions.checkArgument(!(Double.isNaN(newX) || Double.isNaN(newY)),
                                     "The parameters have to be in the range of a double. x: ");
         this.x = newX;
         this.y = newY;
@@ -142,7 +142,7 @@ public class Position {
      * @return The double result.
      * @throws IllegalArgumentException if the given Position is null this exception will be thrown.
      */
-    public double calcDist(final Position p) {
+    public double dist(final Position p) {
         Preconditions.checkNotNull(p);
         Position dif = this.sub(p);
         return dif.length();
@@ -153,7 +153,7 @@ public class Position {
      *
      * @return the normalized-vector of this {@link Vector}.
      */
-    public Position createNormalized() {
+    public Position normalize() {
         double len = length();
         if (len < DEPS) {
             return new Position();
@@ -181,11 +181,11 @@ public class Position {
      * @param v The other Position.
      * @return The angle between the two Positions in degrees.
      */
-    public double calcAngleDeg(final Position v) {
+    public double angleDeg(final Position v) {
         if (this.equals(new Position()) || v.equals(new Position())) {
             throw new IllegalArgumentException("The Positions must not be zero.");
         }
-        double val = createNormalized().scalarProduct(v.createNormalized());
+        double val = normalize().scalarProduct(v.normalize());
         if (val < -1) {
             val = -1;
         } else if (val > 1) {
@@ -204,22 +204,22 @@ public class Position {
      * @param v The other Position.
      * @return The angle in degrees.
      */
-    public double calcAngleDegOriented(final Position v) {
+    public double angleDegOriented(final Position v) {
         if (this.equals(new Position()) || v.equals(new Position())) {
             throw new IllegalArgumentException("The Positions must not be zero.");
         }
 
-        double angleBetween = this.calcAngleDeg(v);
+        double angleBetween = this.angleDeg(v);
         if (angleBetween < DEPS) {
             return 0;
         }
 
-        double angleThis = this.calcAngleDeg(new Position(1, 0));
+        double angleThis = this.angleDeg(new Position(1, 0));
         if (y < -DEPS) {
             angleThis = 360 - angleThis;
         }
 
-        double angleV = v.calcAngleDeg(new Position(1, 0));
+        double angleV = v.angleDeg(new Position(1, 0));
         if (v.getY() < -DEPS) {
             angleV = 360 - angleV;
         }
@@ -302,8 +302,6 @@ public class Position {
      */
     @Override
     public String toString() {
-
         return "(" + x + ", " + y + ")";
-
     }
 }

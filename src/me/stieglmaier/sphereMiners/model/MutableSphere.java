@@ -19,7 +19,7 @@ import com.google.common.collect.Lists;
 public class MutableSphere implements Sphere {
 
     private Position position;
-    private Position direction;
+    private Position direction = new Position();
 
     @Option(name="initialSize", description="The initial size for a sphere "
             + "with which a player starts.")
@@ -123,7 +123,7 @@ public class MutableSphere implements Sphere {
      */
     @Override
     public boolean canBeMergedWidth(Sphere otherSphere) {
-        return position.calcDist(otherSphere.getPosition()) <= maxMergeDist
+        return position.dist(otherSphere.getPosition()) <= maxMergeDist
                 // TODO more constraints on size?
                 && size > otherSphere.getSize();
     }
@@ -133,6 +133,20 @@ public class MutableSphere implements Sphere {
      */
     public Sphere toImmutableSphere() {
         return new ImmutableSphere(this);
+    }
+
+    public Sphere immutableCopy() {
+        MutableSphere newSphere = new MutableSphere();
+        newSphere.size = size;
+        newSphere.direction = direction;
+        newSphere.position = position;
+        newSphere.maxMergeDist = maxMergeDist;
+        newSphere.minSplittingsize = minSplittingsize;
+        return newSphere.toImmutableSphere();
+    }
+
+    public String toString() {
+        return "Sphere (" + size + ") at " + position;
     }
 
     private static class ImmutableSphere implements Sphere {

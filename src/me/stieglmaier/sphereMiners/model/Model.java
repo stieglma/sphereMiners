@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
-import com.google.common.base.Preconditions;
-
 import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
 import me.stieglmaier.sphereMiners.model.ai.AIManager;
 import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
+
+import com.google.common.base.Preconditions;
 
 public class Model extends Observable {
 
@@ -53,7 +53,17 @@ public class Model extends Observable {
         this.aiMgr = Preconditions.checkNotNull(ai);
 
         aiMgr.setPhysicsManager(physMgr);
+        physMgr.setAIManager(aiMgr);
     }
+
+    public static int[] toPrimitive(Integer[] IntegerArray) {
+        
+        int[] result = new int[IntegerArray.length];
+        for (int i = 0; i < IntegerArray.length; i++) {
+                result[i] = IntegerArray[i].intValue();
+        }
+        return result;
+}
 
     /**
      * {@inheritDoc}
@@ -119,7 +129,15 @@ public class Model extends Observable {
 
                         // calculates the tick based on the AI moves.
                         // adds the finished tick.
-                        simulationView.addInstance(physMgr.applyPhysics());
+                        try {
+                            simulationView.addInstance(physMgr.applyPhysics());
+                        } catch (IllegalArgumentException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
                     }
                 }
             });

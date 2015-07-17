@@ -3,17 +3,41 @@ package me.stieglmaier.sphereMiners.model.ai;
 import me.stieglmaier.sphereMiners.model.MutableSphere;
 import me.stieglmaier.sphereMiners.model.Position;
 import me.stieglmaier.sphereMiners.model.Sphere;
+import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import org.sosy_lab.common.Pair;
+
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 
 public abstract class SphereMiners2015 {
-    protected List<MutableSphere> spheres;
+    /** All owned spheres */
+    protected FluentIterable<Sphere> ownSpheres;
+
     private Function<Void, Void> actualTurn;
-    private AIManager aiMgr;
+    private PhysicsManager physMgr;
+    private String aiName;
+    private Map<String, List<MutableSphere>> allSpheres;
+    private FluentIterable<Pair<Sphere, MutableSphere>> sphereMap;
+
+    /**
+     * A predicate that finds a certain counterpart in fluentiterables filled
+     * with pairs (unfortunately there is no fluent map implementation)
+     */
+    private static final Predicate<Pair<Sphere, MutableSphere>> equalIfFirstPartMatches(Sphere sphere) {
+        return new Predicate<Pair<Sphere, MutableSphere>>() {
+            @Override
+            public boolean apply(Pair<Sphere, MutableSphere> pair) {
+                return pair.getFirst() == sphere;
+            }
+        };
+    }
 
     /**
      * Set up your AI, initial values for attributes, color of your spheres, ...
@@ -30,40 +54,78 @@ public abstract class SphereMiners2015 {
      */
     protected abstract void playTurn();
 
-    protected final void changeMoveDirection(final Map<MutableSphere, Position> sphere) {
+    /**
+     * Changes the moving direction of a Sphere instantly, there is no kind of
+     * friction or acceleration in between. However the speed cannot be changed
+     * with this method, as it is dependant on the size of the Sphere and cannot
+     * be set by a player.
+     *
+     * Executing this method prevents you from executing {@link SphereMiners2015#split(Sphere)}
+     * and {@link SphereMiners2015#merge(Sphere, Sphere)} in this turn. The last
+     * called method of these will be executed.
+     */
+    protected final void changeMoveDirection(final Map<Sphere, Position> spheres) {
         actualTurn = new Function<Void, Void>() {
             @Override
             public Void apply(Void arg0) {
-                throw new UnsupportedOperationException("not implemented");
-            }
-        };
-    }
-
-    protected final void split(Sphere sphere) {
-        actualTurn = new Function<Void, Void>() {
-            @Override
-            public Void apply(Void arg0) {
-                spheres.remove(sphere);
-                spheres.addAll(sphere.split());
-                return null;
-            }
-        };
-    }
-
-    protected final void merge(Sphere sphere1, Sphere sphere2) {
-        actualTurn = new Function<Void, Void>() {
-            @Override
-            public Void apply(Void arg0) {
-                if (sphere1.canBeMergedWidth(sphere2)) {
-                    spheres.remove(sphere2);
-                    sphere1.merge(sphere2);
+                for (Entry<Sphere, Position> entry : spheres.entrySet()) {
+                    sphereMap.firstMatch(equalIfFirstPartMatches(entry.getKey()))
+                             .get()
+                             .getSecond()
+                             .setPosition(entry.getValue());
                 }
                 return null;
             }
         };
     }
 
-    // TODO implement this operation
+    /**
+     * Splits the given sphere to two equally (half) sized ones.
+     *
+     * Executing this method prevents you from executing {@link SphereMiners2015#changeMoveDirection(Map)}
+     * and {@link SphereMiners2015#merge(Sphere, Sphere)} in this turn. The last
+     * called method of these will be executed.
+     */
+    protected final void split(Sphere sphere) {
+        actualTurn = new Function<Void, Void>() {
+            @Override
+            public Void apply(Void arg0) {
+                // lists cannot be changed directly therefore we need the phyiscsmanager here
+                physMgr.split(sphereMap.firstMatch(equalIfFirstPartMatches(sphere))
+                                       .get().getSecond(),
+                              aiName);
+                return null;
+            }
+        };
+    }
+
+    /**
+     * Merges the given spheres to one that has the accumulated size of both.
+     *
+     * Executing this method prevents you from executing {@link SphereMiners2015#changeMoveDirection(Map)}
+     * and {@link SphereMiners2015#split(Sphere)} in this turn. The last
+     * called method of these will be executed.
+     */
+    protected final void merge(Sphere sphere1, Sphere sphere2) {
+        actualTurn = new Function<Void, Void>() {
+            @Override
+            public Void apply(Void arg0) {
+                // lists cannot be changed directly therefore we need the phyiscsmanager here
+                physMgr.merge(sphereMap.firstMatch(equalIfFirstPartMatches(sphere1))
+                                       .get().getSecond(),
+                              sphereMap.firstMatch(equalIfFirstPartMatches(sphere2))
+                                       .get().getSecond(),
+                              aiName);
+                return null;
+            }
+        };
+    }
+
+    /**
+     * Returns the enemies surrounding the given sphere in a certain distance.
+     * @param sphere
+     * @return
+     */
     protected final Set<MutableSphere> getSurroundingEnemies(Sphere sphere) {
         // TODO implement this operation
         throw new UnsupportedOperationException("not implemented");
@@ -80,11 +142,24 @@ public abstract class SphereMiners2015 {
     /**
      * Package private, this should only be called and set by AImanager!
      */
-    void setManager(AIManager mgr) {
-        aiMgr = mgr;
+    void setManager(PhysicsManager mgr) {
+        physMgr = mgr;
+        allSpheres = mgr.getAISpheres();
+        sphereMap = FluentIterable.from(allSpheres.get(aiName))
+                                  .transform(new Function<MutableSphere, Pair<Sphere, MutableSphere>>() {
+            @Override
+            public Pair<Sphere, MutableSphere> apply(MutableSphere sphere) {
+                return Pair.of(sphere.toImmutableSphere(), sphere);
+            }
+        });
+        ownSpheres = sphereMap.transform(Pair.getProjectionToFirst());
     }
 
-    void setSpheres(List<MutableSphere> spheres) {
-        this.spheres = spheres;
+    /**
+     * Set the name used as identifier in maps throughout the framework
+     */
+    void setName(String name) {
+        this.aiName = name;
     }
+
 }
