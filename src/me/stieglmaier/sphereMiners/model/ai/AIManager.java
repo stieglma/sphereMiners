@@ -1,5 +1,7 @@
 package me.stieglmaier.sphereMiners.model.ai;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
@@ -16,7 +18,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -327,7 +328,7 @@ public final class AIManager {
      */
     public void applyMoves() throws IllegalArgumentException, InterruptedException {
 
-        ais.values().stream().map(ai -> Objects.requireNonNull(ai));
+        ais.values().stream().forEach(ai -> requireNonNull(ai));
 
         // execute AIs and Launcher
         ExecutorService threadpool = Executors.newCachedThreadPool();

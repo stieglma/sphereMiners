@@ -1,7 +1,5 @@
 package me.stieglmaier.sphereMiners.model;
 
-import com.google.common.base.Preconditions;
-
 public class Position {
 
     /**
@@ -33,8 +31,9 @@ public class Position {
      * @param newY The y-component of the new {@link Position}.
      */
     public Position(final double newX, final double newY) {
-        Preconditions.checkArgument(!(Double.isNaN(newX) || Double.isNaN(newY)),
-                                    "The parameters have to be in the range of a double. x: ");
+        if(!(Double.isNaN(newX) || Double.isNaN(newY))) {
+            throw new IllegalArgumentException("The parameters have to be in the range of a double. x: ");
+        }
         this.x = newX;
         this.y = newY;
     }
@@ -60,7 +59,6 @@ public class Position {
      * @throws IllegalArgumentException if the given Position is null this exception will be thrown.
      */
     public Position add(final Position p) {
-        Preconditions.checkNotNull(p);
         return new Position(x + p.getX(), y + p.getY());
     }
 
@@ -72,7 +70,6 @@ public class Position {
      * @throws IllegalArgumentException if the given Position is null this exception will be thrown.
      */
     public Position sub(final Position p) {
-        Preconditions.checkNotNull(p);
         return new Position(x - p.getX(), y - p.getY());
     }
 
@@ -143,7 +140,6 @@ public class Position {
      * @throws IllegalArgumentException if the given Position is null this exception will be thrown.
      */
     public double dist(final Position p) {
-        Preconditions.checkNotNull(p);
         Position dif = this.sub(p);
         return dif.length();
     }

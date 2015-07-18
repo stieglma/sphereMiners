@@ -8,8 +8,6 @@ import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
 import me.stieglmaier.sphereMiners.model.ai.AIManager;
 import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
 
-import com.google.common.base.Preconditions;
-
 public class Model extends Observable {
 
     /**
@@ -48,9 +46,8 @@ public class Model extends Observable {
      *                                  will be thrown to prevent an illegal state.
      */
     public Model(final PhysicsManager phys, final AIManager ai) {
-
-        this.physMgr = Preconditions.checkNotNull(phys);
-        this.aiMgr = Preconditions.checkNotNull(ai);
+        this.physMgr = phys;
+        this.aiMgr = ai;
 
         aiMgr.setPhysicsManager(physMgr);
         physMgr.setAIManager(aiMgr);

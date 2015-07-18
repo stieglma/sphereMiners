@@ -1,9 +1,9 @@
 package me.stieglmaier.sphereMiners.model;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.base.Preconditions;
 
 /**
  * This representation of a game can be displayed by the GUI.
@@ -28,8 +28,7 @@ public final class GameSimulation {
      * @param simulationList List of created ticks.
      */
     public GameSimulation(List<Tick> simulationList) {
-        Preconditions.checkNotNull(simulationList);
-        ticks = simulationList;
+        ticks = requireNonNull(simulationList);
     }
 
     /**
@@ -41,7 +40,7 @@ public final class GameSimulation {
      *             will be thrown to prevent an invalid state.
      */
     public void addInstance(final Tick tick) {
-        ticks.add(Preconditions.checkNotNull(tick));
+        ticks.add(requireNonNull(tick));
     }
 
     /**
