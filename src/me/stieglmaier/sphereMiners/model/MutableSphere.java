@@ -1,5 +1,6 @@
 package me.stieglmaier.sphereMiners.model;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -8,7 +9,6 @@ import org.sosy_lab.common.configuration.InvalidConfigurationException;
 import org.sosy_lab.common.configuration.Option;
 import org.sosy_lab.common.configuration.Options;
 
-import com.google.common.collect.Lists;
 
 /**
  * Be careful sphere is a mutable class. Only an
@@ -100,7 +100,7 @@ public class MutableSphere implements Sphere {
             newSphere.maxMergeDist = maxMergeDist;
             newSphere.minSplittingsize = minSplittingsize;
             size = (size+1)/2;
-            return Lists.newArrayList(this, newSphere);
+            return Arrays.asList(this, newSphere);
 
         } else {
             return Collections.singletonList(this);

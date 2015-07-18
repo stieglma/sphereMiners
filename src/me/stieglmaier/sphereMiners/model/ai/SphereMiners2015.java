@@ -12,17 +12,16 @@ import java.util.stream.Stream;
 
 import org.sosy_lab.common.Pair;
 
-import com.google.common.base.Function;
 
 public abstract class SphereMiners2015 {
     /** All owned spheres */
     protected Stream<Sphere> ownSpheres;
 
-    private Function<Void, Void> actualTurn;
     private PhysicsManager physMgr;
     private String aiName;
     private Map<String, List<MutableSphere>> allSpheres;
     private Stream<Pair<Sphere, MutableSphere>> sphereMap;
+    private Turn currentTurn;
 
     /**
      * Set up your AI, initial values for attributes, color of your spheres, ...
@@ -50,18 +49,12 @@ public abstract class SphereMiners2015 {
      * called method of these will be executed.
      */
     protected final void changeMoveDirection(final Map<Sphere, Position> spheres) {
-        actualTurn = new Function<Void, Void>() {
-            @Override
-            public Void apply(Void arg0) {
-                spheres.forEach((sphere, dir) -> sphereMap
-                                                 .filter(p -> p.getFirst() == sphere)
-                                                 .findFirst()
-                                                 .get()
-                                                 .getSecond()
-                                                 .setDirection(dir));
-                return null;
-            }
-        };
+        currentTurn = () -> spheres.forEach((sphere, dir) -> sphereMap
+                                   .filter(p -> p.getFirst() == sphere)
+                                   .findFirst()
+                                   .get()
+                                   .getSecond()
+                                   .setDirection(dir));
     }
 
     /**
@@ -72,16 +65,10 @@ public abstract class SphereMiners2015 {
      * called method of these will be executed.
      */
     protected final void split(Sphere sphere) {
-        actualTurn = new Function<Void, Void>() {
-            @Override
-            public Void apply(Void arg0) {
-                // lists cannot be changed directly therefore we need the phyiscsmanager here
-                physMgr.split(sphereMap.filter(p -> p.getFirst() == sphere)
-                                       .findFirst().get().getSecond(),
-                              aiName);
-                return null;
-            }
-        };
+        // lists cannot be changed directly therefore we need the phyiscsmanager here
+        currentTurn = () -> physMgr.split(sphereMap.filter(p -> p.getFirst() == sphere)
+                                                   .findFirst().get().getSecond(),
+                                          aiName);
     }
 
     /**
@@ -92,18 +79,12 @@ public abstract class SphereMiners2015 {
      * called method of these will be executed.
      */
     protected final void merge(Sphere sphere1, Sphere sphere2) {
-        actualTurn = new Function<Void, Void>() {
-            @Override
-            public Void apply(Void arg0) {
-                // lists cannot be changed directly therefore we need the phyiscsmanager here
-                physMgr.merge(sphereMap.filter(p -> p.getFirst() == sphere1)
-                                       .findFirst().get().getSecond(),
-                              sphereMap.filter(p -> p.getFirst() == sphere2)
-                                       .findFirst().get().getSecond(),
-                              aiName);
-                return null;
-            }
-        };
+        // lists cannot be changed directly therefore we need the phyiscsmanager here
+        currentTurn = () -> physMgr.merge(sphereMap.filter(p -> p.getFirst() == sphere1)
+                                                   .findFirst().get().getSecond(),
+                                          sphereMap.filter(p -> p.getFirst() == sphere2)
+                                                   .findFirst().get().getSecond(),
+                                          aiName);
     }
 
     /**
@@ -121,7 +102,7 @@ public abstract class SphereMiners2015 {
      */
     void evaluateTurn() {
         playTurn();
-        actualTurn.apply(null);
+        currentTurn.apply();
     }
 
     /**
@@ -142,4 +123,8 @@ public abstract class SphereMiners2015 {
         this.aiName = name;
     }
 
+    @FunctionalInterface
+    private interface Turn {
+        void apply();
+    }
 }

@@ -13,8 +13,6 @@ import org.sosy_lab.common.configuration.InvalidConfigurationException;
 import org.sosy_lab.common.configuration.Option;
 import org.sosy_lab.common.configuration.Options;
 
-import com.google.common.collect.Lists;
-
 import me.stieglmaier.sphereMiners.model.MutableSphere;
 import me.stieglmaier.sphereMiners.model.Position;
 import me.stieglmaier.sphereMiners.model.Sphere;
@@ -87,7 +85,7 @@ public class PhysicsManager {
         int i = 0;
         for (String ai : ais) {
             // create new sphere for current player
-            List<MutableSphere> sphereList = Lists.newArrayList();
+            List<MutableSphere> sphereList = new ArrayList<>();
             try {
                 MutableSphere sphere = new MutableSphere(config);
                 Position addPos = new Position(radius * Math.cos(i * 2 * Math.PI / ais.length),
