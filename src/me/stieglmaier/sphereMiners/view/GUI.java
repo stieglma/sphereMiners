@@ -4,6 +4,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import me.stieglmaier.sphereMiners.model.Model;
 
@@ -16,6 +18,8 @@ public class GUI extends JFrame implements Observer {
 
     public GUI(Model m) {
         m.addObserver(this);
+        add(new JLabel("test"));
+        setVisible(true);
     }
 
     @Override

@@ -1,0 +1,14 @@
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'eclipse'
+mainClassName = 'me.stieglmaier.sphereMiners.main.SphereMiners'
+sourceSets.main.java.srcDirs = ['src']
+ 
+def vendor = 'Thomas Stieglmaier'
+def version = '0.1'
+def title = 'Sphere Miners'
+
+dependencies {
+    compile fileTree(dir: "lib", include: "*.jar")
+}
+ 
