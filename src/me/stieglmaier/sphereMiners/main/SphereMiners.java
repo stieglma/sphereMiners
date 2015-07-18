@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import me.stieglmaier.sphereMiners.model.Model;
 import me.stieglmaier.sphereMiners.model.ai.AIManager;
 import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
+import me.stieglmaier.sphereMiners.view.GUI;
 
 import org.sosy_lab.common.configuration.Configuration;
 import org.sosy_lab.common.configuration.InvalidConfigurationException;
@@ -43,8 +44,7 @@ public class SphereMiners {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                model.simulateGame("ais.DumbAI", "ais.DumbAI2", "ais.DumbAI3", "ais.DumbAI4", "ais.DumbAI5");
-                // new gui with config
+                new GUI(model);
             }
         });
     }

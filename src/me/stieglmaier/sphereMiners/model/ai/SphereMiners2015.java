@@ -7,37 +7,22 @@ import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.sosy_lab.common.Pair;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 
 public abstract class SphereMiners2015 {
     /** All owned spheres */
-    protected FluentIterable<Sphere> ownSpheres;
+    protected Stream<Sphere> ownSpheres;
 
     private Function<Void, Void> actualTurn;
     private PhysicsManager physMgr;
     private String aiName;
     private Map<String, List<MutableSphere>> allSpheres;
-    private FluentIterable<Pair<Sphere, MutableSphere>> sphereMap;
-
-    /**
-     * A predicate that finds a certain counterpart in fluentiterables filled
-     * with pairs (unfortunately there is no fluent map implementation)
-     */
-    private static final Predicate<Pair<Sphere, MutableSphere>> equalIfFirstPartMatches(Sphere sphere) {
-        return new Predicate<Pair<Sphere, MutableSphere>>() {
-            @Override
-            public boolean apply(Pair<Sphere, MutableSphere> pair) {
-                return pair.getFirst() == sphere;
-            }
-        };
-    }
+    private Stream<Pair<Sphere, MutableSphere>> sphereMap;
 
     /**
      * Set up your AI, initial values for attributes, color of your spheres, ...
@@ -68,12 +53,12 @@ public abstract class SphereMiners2015 {
         actualTurn = new Function<Void, Void>() {
             @Override
             public Void apply(Void arg0) {
-                for (Entry<Sphere, Position> entry : spheres.entrySet()) {
-                    sphereMap.firstMatch(equalIfFirstPartMatches(entry.getKey()))
-                             .get()
-                             .getSecond()
-                             .setPosition(entry.getValue());
-                }
+                spheres.forEach((sphere, dir) -> sphereMap
+                                                 .filter(p -> p.getFirst() == sphere)
+                                                 .findFirst()
+                                                 .get()
+                                                 .getSecond()
+                                                 .setDirection(dir));
                 return null;
             }
         };
@@ -91,8 +76,8 @@ public abstract class SphereMiners2015 {
             @Override
             public Void apply(Void arg0) {
                 // lists cannot be changed directly therefore we need the phyiscsmanager here
-                physMgr.split(sphereMap.firstMatch(equalIfFirstPartMatches(sphere))
-                                       .get().getSecond(),
+                physMgr.split(sphereMap.filter(p -> p.getFirst() == sphere)
+                                       .findFirst().get().getSecond(),
                               aiName);
                 return null;
             }
@@ -111,10 +96,10 @@ public abstract class SphereMiners2015 {
             @Override
             public Void apply(Void arg0) {
                 // lists cannot be changed directly therefore we need the phyiscsmanager here
-                physMgr.merge(sphereMap.firstMatch(equalIfFirstPartMatches(sphere1))
-                                       .get().getSecond(),
-                              sphereMap.firstMatch(equalIfFirstPartMatches(sphere2))
-                                       .get().getSecond(),
+                physMgr.merge(sphereMap.filter(p -> p.getFirst() == sphere1)
+                                       .findFirst().get().getSecond(),
+                              sphereMap.filter(p -> p.getFirst() == sphere2)
+                                       .findFirst().get().getSecond(),
                               aiName);
                 return null;
             }
@@ -145,14 +130,9 @@ public abstract class SphereMiners2015 {
     void setManager(PhysicsManager mgr) {
         physMgr = mgr;
         allSpheres = mgr.getAISpheres();
-        sphereMap = FluentIterable.from(allSpheres.get(aiName))
-                                  .transform(new Function<MutableSphere, Pair<Sphere, MutableSphere>>() {
-            @Override
-            public Pair<Sphere, MutableSphere> apply(MutableSphere sphere) {
-                return Pair.of(sphere.toImmutableSphere(), sphere);
-            }
-        });
-        ownSpheres = sphereMap.transform(Pair.getProjectionToFirst());
+        sphereMap = allSpheres.get(aiName).stream()
+                              .map(sphere -> Pair.of(sphere.toImmutableSphere(), sphere));
+        ownSpheres = sphereMap.map(p -> p.getFirst());
     }
 
     /**

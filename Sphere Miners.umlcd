@@ -1656,6 +1656,20 @@
         </type>
       </outParameters>
     </operations>
+    <operations xmi:id="_JvbE4CzZEeWK-qBJoTmIJg" name="immutableCopy">
+      <modelElement href="Sphere%20Miners.uml#_JvWMYCzZEeWK-qBJoTmIJg"/>
+      <stereotypes xmi:id="_JvbE4SzZEeWK-qBJoTmIJg" name="StyledElement">
+        <modelElement href="Sphere%20Miners.uml#_JvYBkCzZEeWK-qBJoTmIJg"/>
+      </stereotypes>
+      <visibility xmi:id="_JvbE4izZEeWK-qBJoTmIJg" label="+"/>
+      <cardinality xmi:id="_JvbE4yzZEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
+      <outParameters xmi:id="_li_ScCzZEeWK-qBJoTmIJg">
+        <modelElement href="Sphere%20Miners.uml#_li3WoCzZEeWK-qBJoTmIJg"/>
+        <type xmi:id="_li_ScSzZEeWK-qBJoTmIJg" name="Sphere">
+          <modelElement href="Sphere%20Miners.uml#_Kfj7QCx_EeWapP3vpHQOHQ"/>
+        </type>
+      </outParameters>
+    </operations>
   </nodes>
   <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_K4ybICyhEeWK-qBJoTmIJg" name="InvalidConfigurationException">
     <modelElement href="Sphere%20Miners.uml#_R1wH4CyOEeWapP3vpHQOHQ"/>
@@ -2351,7 +2365,7 @@
           <modelElement href="Sphere%20Miners.uml#_WuO_ICyhEeWK-qBJoTmIJg"/>
         </type>
       </outParameters>
-      <parameters xmi:id="_gcf1Ziy7EeWK-qBJoTmIJg" name="allSpheres">
+      <parameters xmi:id="_gcf1Ziy7EeWK-qBJoTmIJg" name="map">
         <modelElement href="Sphere%20Miners.uml#_gcdZICy7EeWK-qBJoTmIJg"/>
         <cardinality xmi:id="_gcf1Zyy7EeWK-qBJoTmIJg" label="1" max="1" min="1"/>
         <type xmi:id="_gcf1aCy7EeWK-qBJoTmIJg" name="Map">
@@ -2653,6 +2667,20 @@
       </stereotypes>
       <visibility xmi:id="_EGvakizYEeWK-qBJoTmIJg" label="-"/>
       <cardinality xmi:id="_EGvakyzYEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
+    </operations>
+    <operations xmi:id="_WbSTgCzZEeWK-qBJoTmIJg" name="snapshot">
+      <modelElement href="Sphere%20Miners.uml#_WbOpICzZEeWK-qBJoTmIJg"/>
+      <stereotypes xmi:id="_WbSTgizZEeWK-qBJoTmIJg" name="StyledElement">
+        <modelElement href="Sphere%20Miners.uml#_WbP3QCzZEeWK-qBJoTmIJg"/>
+      </stereotypes>
+      <visibility xmi:id="_WbSTgyzZEeWK-qBJoTmIJg" label="-"/>
+      <cardinality xmi:id="_WbSThCzZEeWK-qBJoTmIJg" label="1" max="1" min="1"/>
+      <outParameters xmi:id="_WbSThSzZEeWK-qBJoTmIJg">
+        <modelElement href="Sphere%20Miners.uml#_WbOpISzZEeWK-qBJoTmIJg"/>
+        <type xmi:id="_nV4MYCzZEeWK-qBJoTmIJg" name="Tick">
+          <modelElement href="Sphere%20Miners.uml#_WuO_ICyhEeWK-qBJoTmIJg"/>
+        </type>
+      </outParameters>
     </operations>
   </nodes>
   <nodes xsi:type="com.yattasolutions.diagrams:CommentVisual" xmi:id="_dSyb0CyiEeWK-qBJoTmIJg" sourceConnectionVisual="_dSyb0SyiEeWK-qBJoTmIJg" text="This exception should be thrown if the location of an AI is invalid in case&#xA;they should be initialized. An invalid location equals an invalid filename." item="_dSzp8CyiEeWK-qBJoTmIJg">

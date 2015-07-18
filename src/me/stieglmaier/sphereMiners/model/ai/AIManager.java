@@ -11,16 +11,19 @@ import java.net.URLDecoder;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
 import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
@@ -29,10 +32,6 @@ import org.sosy_lab.common.configuration.Configuration;
 import org.sosy_lab.common.configuration.InvalidConfigurationException;
 import org.sosy_lab.common.configuration.Option;
 import org.sosy_lab.common.configuration.Options;
-
-import com.google.common.base.Function;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.FluentIterable;
 
 
 /**
@@ -144,12 +143,7 @@ public final class AIManager {
         File fileloc = new File(AI_FILELOCATION);
         final URL[] url = new URL[1];
         url[0] = fileloc.toURI().toURL();
-        AccessController.doPrivileged(new PrivilegedAction<Object>() {
-            public Object run() {
-                loader = new URLClassLoader(url);
-                return null;
-            }
-        });
+        AccessController.doPrivileged((PrivilegedAction<Object>) () -> {loader = new URLClassLoader(url); return null;});
     }
 
     /**
@@ -163,21 +157,16 @@ public final class AIManager {
         // create Loader
         File fileloc = new File(AI_FILELOCATION);
         File[] classes = fileloc.listFiles();
-        if (classes != null) {
 
-            // if there are no files, classes will be null. (See JavaManual)
-            for (File f : classes) {
-                String fileName = f.getName();
-                if (fileName.endsWith(".class")) {
-                    fileName = fileName.split(".class")[0];
-                }
-
-                // only add ais if they are valid (extend SphereMiner2015 class)
-                if (isValidAi(fileName)) {
-                    aiList.add(fileName);
-                }
-            }
+        // if there are no files, classes will be null. (See JavaManual)
+        if (classes == null) {
+           return;
         }
+
+        Arrays.stream(classes).map(f -> f.getName())
+                               // only add ais if they are valid (extend SphereMiner2015 class)
+                              .filter(f -> f.endsWith(".class") && isValidAi(f.split(".class")[0]))
+                              .forEach(f -> aiList.add(f));
     }
 
     /**
@@ -237,21 +226,14 @@ public final class AIManager {
         // cleaning up the list of the last ais.
         ais.clear();
 
-        for (String ai : aisToPlay) {
-            if (!isValidAi(ai)) {
-                throw new InvalidAILocationException("AI " + ai + " not found.");
-            }
+        if (Arrays.stream(aisToPlay).map(ai -> isValidAi(ai)).anyMatch(p -> !p)) {
+            throw new InvalidAILocationException("Some AIs could not be found.");
         }
 
         // load ais in discrete thread, so one's able to handle bad constructors.
         ScheduledExecutorService aiLoader = Executors.newSingleThreadScheduledExecutor();
         try {
-            aiLoader.invokeAll(FluentIterable.of(aisToPlay).transform(new Function<String, Callable<Void>>() {
-                @Override
-                public Callable<Void> apply(String ai) {
-                    return loadAi(ai, loader);
-                }
-            }).toList());
+            aiLoader.invokeAll(Arrays.stream(aisToPlay).map(ai -> loadAI(ai, loader)).collect(Collectors.toList()));
 
             // pretty bad something interrupted our loading process...
         } catch (InterruptedException e1) {
@@ -292,10 +274,9 @@ public final class AIManager {
      *                       assigned the newly initialized ai
      * @return the Thread for the initialization
      */
-    private Callable<Void> loadAi(final String ai, final URLClassLoader loader) {
+    private Callable<Void> loadAI(final String ai, final URLClassLoader loader) {
 
         return new Callable<Void>() {
-
             @Override
             public Void call() throws Exception {
                 Class<?> cl;
@@ -346,28 +327,13 @@ public final class AIManager {
      */
     public void applyMoves() throws IllegalArgumentException, InterruptedException {
 
-        for (SphereMiners2015 ai : ais.values()) {
-            Preconditions.checkNotNull(ai, "Any of the Ais is not initialized");
-        }
+        ais.values().stream().map(ai -> Objects.requireNonNull(ai));
 
         // execute AIs and Launcher
         ExecutorService threadpool = Executors.newCachedThreadPool();
-        List<Future<Void>> retvals =
-                threadpool.invokeAll(FluentIterable.from(ais.values())
-                                                   .transform(new Function<SphereMiners2015, Callable<Void>>() {
-
-            @Override
-            public Callable<Void> apply(SphereMiners2015 arg0) {
-                return new Callable<Void>() {
-
-                    @Override
-                    public Void call() throws Exception {
-                        arg0.evaluateTurn();
-                        return null;
-                    }
-                };
-            }
-        }).toList());
+        List<Future<Void>> retvals = threadpool.invokeAll(ais.values().stream()
+            .map(ai -> (Callable<Void>)(() -> {ai.evaluateTurn(); return null;}))
+            .collect(Collectors.toList()));
 
         if (!threadpool.awaitTermination(AI_TIME, TimeUnit.MILLISECONDS)) {
             threadpool.shutdownNow();

@@ -4,7 +4,7 @@
     <eAnnotations xmi:id="__4P_ICxOEeWvaK2JGTJcvA" source="http://ns.yatta.de/umllab">
       <contents xmi:type="ecore:EAnnotation" xmi:id="__4P_ISxOEeWvaK2JGTJcvA" source="codegen">
         <details xmi:id="__4P_IixOEeWvaK2JGTJcvA" key="codegenDirectory" value="/Sphere Miners/src"/>
-        <details xmi:id="_AGFm0CxPEeWvaK2JGTJcvA" key="AssociatedSourceCode" value="/Sphere Miners/src/ais/DumbAI.java;1161302303/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/main/SphereMiners.java;3447319884/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/ai/SphereMiners2015.java;438813897/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Direction.java;2181631423/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/ai/Sphere.java;141263431/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/ai/AIManager.java;653873738/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Model.java;1687734567/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Position.java;3418631206/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/GameSimulation.java;2317915164/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/MutableSphere.java;2244852700/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Sphere.java;988380150/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Tick.java;1926720076/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/physics/PhysicsManager.java;560716099/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/exceptions/InvalidAILocationException.java;624192103/1;/Sphere Miners/src/ais/DumbAI2.java;1475665678/1;/Sphere Miners/src/ais/DumbAI3.java;2177796520/1;/Sphere Miners/src/ais/DumbAI4.java;3472499225/1;/Sphere Miners/src/ais/DumbAI5.java;415265983/1;/Sphere Miners/src/ais/DumbAI6.java;3120531732/1;/Sphere Miners/src/ais/DumbAI7.java;1875238834/1;"/>
+        <details xmi:id="_AGFm0CxPEeWvaK2JGTJcvA" key="AssociatedSourceCode" value="/Sphere Miners/src/ais/DumbAI.java;1161302303/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/main/SphereMiners.java;3447319884/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/ai/SphereMiners2015.java;438813897/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Direction.java;2181631423/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/ai/Sphere.java;141263431/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/ai/AIManager.java;653873738/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Model.java;1687734567/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Position.java;3418631206/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/GameSimulation.java;2317915164/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/MutableSphere.java;451181354/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Sphere.java;988380150/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/Tick.java;222220940/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/model/physics/PhysicsManager.java;1634821968/1;/Sphere Miners/src/me/stieglmaier/sphereMiners/exceptions/InvalidAILocationException.java;624192103/1;/Sphere Miners/src/ais/DumbAI2.java;1475665678/1;/Sphere Miners/src/ais/DumbAI3.java;2177796520/1;/Sphere Miners/src/ais/DumbAI4.java;3472499225/1;/Sphere Miners/src/ais/DumbAI5.java;415265983/1;/Sphere Miners/src/ais/DumbAI6.java;3120531732/1;/Sphere Miners/src/ais/DumbAI7.java;1875238834/1;"/>
         <details xmi:id="_bdjHMCxPEeWvaK2JGTJcvA" key="observedFolders" value="/Sphere Miners"/>
       </contents>
       <contents xmi:type="ecore:EAnnotation" xmi:id="_Jh71YCx_EeWapP3vpHQOHQ" source="preferences">
@@ -234,6 +234,18 @@ adds the View as Observer to the model.</body>
                 <body>return &quot;Sphere (&quot; + size + &quot;) at &quot; + position;
  </body>
               </ownedBehavior>
+              <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_JvZPsCzZEeWK-qBJoTmIJg" name="immutableCopy" specification="_JvWMYCzZEeWK-qBJoTmIJg">
+                <ownedParameter xmi:id="_li7oECzZEeWK-qBJoTmIJg" type="_Kfj7QCx_EeWapP3vpHQOHQ" direction="return"/>
+                <language>java</language>
+                <body>MutableSphere newSphere = new MutableSphere();
+     newSphere.size = size;
+     newSphere.direction = direction;
+     newSphere.position = position;
+     newSphere.maxMergeDist = maxMergeDist;
+     newSphere.minSplittingsize = minSplittingsize;
+     return newSphere.toImmutableSphere();
+ </body>
+              </ownedBehavior>
               <ownedOperation xmi:id="_ep1nkCxQEeWvaK2JGTJcvA" name="split" visibility="public" method="_Kgg9gix_EeWapP3vpHQOHQ">
                 <ownedParameter xmi:id="_ep1nkSxQEeWvaK2JGTJcvA" type="_KfN9ACx_EeWapP3vpHQOHQ" isOrdered="true" direction="return">
                   <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_9O33MSxQEeWvaK2JGTJcvA" value="*"/>
@@ -271,6 +283,9 @@ adds the View as Observer to the model.</body>
                 <ownedParameter xmi:id="_I0jo0Cy9EeWK-qBJoTmIJg" direction="return">
                   <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
                 </ownedParameter>
+              </ownedOperation>
+              <ownedOperation xmi:id="_JvWMYCzZEeWK-qBJoTmIJg" name="immutableCopy" method="_JvZPsCzZEeWK-qBJoTmIJg">
+                <ownedParameter xmi:id="_li3WoCzZEeWK-qBJoTmIJg" type="_Kfj7QCx_EeWapP3vpHQOHQ" direction="return"/>
               </ownedOperation>
               <nestedClassifier xmi:type="uml:Class" xmi:id="_KfRAUCx_EeWapP3vpHQOHQ" name="ImmutableSphere" visibility="private">
                 <eAnnotations xmi:id="_KfRAUSx_EeWapP3vpHQOHQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
@@ -1175,7 +1190,6 @@ adds the View as Observer to the model.</body>
              MutableSphere sphere = new MutableSphere(config);
              Position addPos = new Position(radius * Math.cos(i * 2 * Math.PI / ais.length),
                                             radius * Math.sin(i * 2 * Math.PI / ais.length));
-             System.out.println(&quot;addPos: &quot; + addPos);
              sphere.setPosition(initalPos.add(addPos));
              sphereList.add(sphere);
          } catch (InvalidConfigurationException e) {
@@ -1185,7 +1199,7 @@ adds the View as Observer to the model.</body>
          spheresPerPlayer.put(ai, sphereList);
          i++;
      }
-     return new Tick(spheresPerPlayer);
+     return snapshot();
  </body>
                 </ownedBehavior>
                 <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_aRiRVCyiEeWK-qBJoTmIJg" name="applyPhysics" specification="_aRRLkSyiEeWK-qBJoTmIJg">
@@ -1203,7 +1217,7 @@ adds the View as Observer to the model.</body>
          // 3. merge overlapping spheres of opponent ais
          mergeSpheres();
      }
-     return new Tick(spheresPerPlayer);
+     return snapshot();
  </body>
                 </ownedBehavior>
                 <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_aRi4YCyiEeWK-qBJoTmIJg" name="getAISpheres" specification="_aRRLkiyiEeWK-qBJoTmIJg">
@@ -1268,8 +1282,11 @@ adds the View as Observer to the model.</body>
      }
      for (List&lt;MutableSphere> spheres : spheresPerPlayer.values()) {
          for (MutableSphere sphere : spheres) {
-             double speed = (maxSize - sphere.getSize()) / maxSize * maxSpeed;
-             sphere.setPosition(sphere.getPosition().add(sphere.getDirection().normalize().mult(speed)));
+             double speed = (maxSize - sphere.getSize()) / maxSize * maxSpeed * PART_TICK;
+             Position tmpPos = sphere.getPosition().add(sphere.getDirection().normalize().mult(speed));
+             double x = tmpPos.getX() % fieldWidth;
+             double y = tmpPos.getY() % fieldHeight;
+             sphere.setPosition(new Position(x, y));
          }
      }
  </body>
@@ -1292,6 +1309,22 @@ adds the View as Observer to the model.</body>
              }
          }
      }
+ </body>
+                </ownedBehavior>
+                <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_WbRFYCzZEeWK-qBJoTmIJg" name="snapshot" specification="_WbOpICzZEeWK-qBJoTmIJg">
+                  <ownedParameter xmi:id="_nV2-QCzZEeWK-qBJoTmIJg" type="_WuO_ICyhEeWK-qBJoTmIJg" direction="return">
+                    <name xsi:nil="true"/>
+                  </ownedParameter>
+                  <language>java</language>
+                  <body>Map&lt;String, List&lt;Sphere>> newMap = new HashMap&lt;>();
+     for (Entry&lt;String, List&lt;MutableSphere>> entry : spheresPerPlayer.entrySet()) {
+         ArrayList&lt;Sphere> newList = new ArrayList&lt;>();
+         for (MutableSphere sphere : entry.getValue()) {
+             newList.add(sphere.immutableCopy());
+         }
+         newMap.put(entry.getKey(), Collections.unmodifiableList(newList));
+     }
+     return new Tick(Collections.unmodifiableMap(newMap));
  </body>
                 </ownedBehavior>
                 <ownedOperation xmi:id="_aRQkgCyiEeWK-qBJoTmIJg" name="createInitialTick" method="_aRiRUCyiEeWK-qBJoTmIJg">
@@ -1332,6 +1365,9 @@ adds the View as Observer to the model.</body>
                 </ownedOperation>
                 <ownedOperation xmi:id="_zCndICzVEeWK-qBJoTmIJg" name="moveSpheres" visibility="private" method="_zCp5YCzVEeWK-qBJoTmIJg"/>
                 <ownedOperation xmi:id="_EGm3sCzYEeWK-qBJoTmIJg" name="mergeSpheres" visibility="private" method="_EGuMcCzYEeWK-qBJoTmIJg"/>
+                <ownedOperation xmi:id="_WbOpICzZEeWK-qBJoTmIJg" name="snapshot" visibility="private" method="_WbRFYCzZEeWK-qBJoTmIJg">
+                  <ownedParameter xmi:id="_WbOpISzZEeWK-qBJoTmIJg" type="_WuO_ICyhEeWK-qBJoTmIJg" direction="return"/>
+                </ownedOperation>
               </packagedElement>
               <packagedElement xmi:type="uml:Association" xmi:id="_b8oEsCyjEeWK-qBJoTmIJg" name="" memberEnd="_b8oEsSyjEeWK-qBJoTmIJg _b8locCyjEeWK-qBJoTmIJg">
                 <ownedEnd xmi:id="_b8oEsSyjEeWK-qBJoTmIJg" name="" type="_Kfm-kCx_EeWapP3vpHQOHQ" association="_b8oEsCyjEeWK-qBJoTmIJg"/>
@@ -2335,17 +2371,17 @@ adds the View as Observer to the model.</body>
                 </qualifier>
               </ownedAttribute>
               <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_gcenQyy7EeWK-qBJoTmIJg" name="Tick" specification="_gccyECy7EeWK-qBJoTmIJg">
-                <ownedParameter xmi:id="_gcenRCy7EeWK-qBJoTmIJg" name="allSpheres" type="_M6-cUCxUEeWvaK2JGTJcvA"/>
+                <ownedParameter xmi:id="_gcenRCy7EeWK-qBJoTmIJg" name="map" type="_M6-cUCxUEeWvaK2JGTJcvA"/>
                 <ownedParameter xmi:id="_gcenRSy7EeWK-qBJoTmIJg" type="_WuO_ICyhEeWK-qBJoTmIJg" direction="return">
                   <name xsi:nil="true"/>
                 </ownedParameter>
                 <language>java</language>
-                <body>this.allSpheres = allSpheres;
+                <body>this.allSpheres = map;
  </body>
               </ownedBehavior>
               <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_gcenRiy7EeWK-qBJoTmIJg" name="print" specification="_gcdZJSy7EeWK-qBJoTmIJg">
                 <language>java</language>
-                <body>for (Entry&lt;String, List&lt;MutableSphere>> entry : allSpheres.entrySet()) {
+                <body>for (Entry&lt;String, List&lt;Sphere>> entry : allSpheres.entrySet()) {
          System.out.println(&quot;Player &quot; + entry.getKey() + &quot;:&quot;);
          System.out.println(entry.getValue());
      }
@@ -2355,7 +2391,7 @@ adds the View as Observer to the model.</body>
                 <eAnnotations xmi:id="_gcdZIiy7EeWK-qBJoTmIJg" source="http://www.eclipse.org/uml2/2.0.0/UML">
                   <details xmi:id="_gcdZIyy7EeWK-qBJoTmIJg" key="create"/>
                 </eAnnotations>
-                <ownedParameter xmi:id="_gcdZICy7EeWK-qBJoTmIJg" name="allSpheres" type="_M6-cUCxUEeWvaK2JGTJcvA"/>
+                <ownedParameter xmi:id="_gcdZICy7EeWK-qBJoTmIJg" name="map" type="_M6-cUCxUEeWvaK2JGTJcvA"/>
                 <ownedParameter xmi:id="_gcdZISy7EeWK-qBJoTmIJg" type="_WuO_ICyhEeWK-qBJoTmIJg" direction="return"/>
               </ownedOperation>
               <ownedOperation xmi:id="_gcdZJSy7EeWK-qBJoTmIJg" name="print" method="_gcenRiy7EeWK-qBJoTmIJg"/>
@@ -2896,14 +2932,14 @@ they should be initialized. An invalid location equals an invalid filename.</bod
   <UMLLabProfile:Annotations xmi:id="_824CwiykEeWK-qBJoTmIJg" base_Element="_824CwCykEeWK-qBJoTmIJg">
     <annotations xmi:id="_824CwyykEeWK-qBJoTmIJg" name="Option">
       <annotationParameters xmi:id="_824CxCykEeWK-qBJoTmIJg" name="description" skipArray="true">
-        <valueSpecifications xmi:type="uml:LiteralString" xmi:id="_nuD8gCzREeWK-qBJoTmIJg" value="&quot;The width of the game field&quot;"/>
+        <valueSpecifications xmi:type="uml:LiteralString" xmi:id="_nuD8gCzREeWK-qBJoTmIJg" value="&quot;The width of the game field in meters&quot;"/>
       </annotationParameters>
     </annotations>
   </UMLLabProfile:Annotations>
   <UMLLabProfile:Annotations xmi:id="_824p0iykEeWK-qBJoTmIJg" base_Element="_824p0CykEeWK-qBJoTmIJg">
     <annotations xmi:id="_824p0yykEeWK-qBJoTmIJg" name="Option">
       <annotationParameters xmi:id="_824p1CykEeWK-qBJoTmIJg" name="description" skipArray="true">
-        <valueSpecifications xmi:type="uml:LiteralString" xmi:id="_nuD8gSzREeWK-qBJoTmIJg" value="&quot;The height of the game field&quot;"/>
+        <valueSpecifications xmi:type="uml:LiteralString" xmi:id="_nuD8gSzREeWK-qBJoTmIJg" value="&quot;The height of the game field in meters&quot;"/>
       </annotationParameters>
     </annotations>
   </UMLLabProfile:Annotations>
@@ -2926,8 +2962,8 @@ they should be initialized. An invalid location equals an invalid filename.</bod
   <UMLLabProfile:Generics xmi:id="_4lG7gyy4EeWK-qBJoTmIJg" genericsValue="Pair&lt;Sphere, MutableSphere>" base_Element="_4lG7gCy4EeWK-qBJoTmIJg"/>
   <UMLLabProfile:StyledElement xmi:id="_gRBQFCy5EeWK-qBJoTmIJg" base_Element="_gRBQECy5EeWK-qBJoTmIJg"/>
   <UMLLabProfile:StyledElement xmi:id="_lmI6oyy5EeWK-qBJoTmIJg" base_Element="_lmI6oCy5EeWK-qBJoTmIJg"/>
-  <UMLLabProfile:Generics xmi:id="_gcdZJCy7EeWK-qBJoTmIJg" genericsValue="String, List&lt;MutableSphere>" base_Element="_gcdZICy7EeWK-qBJoTmIJg"/>
-  <UMLLabProfile:Generics xmi:id="_gcenQCy7EeWK-qBJoTmIJg" genericsValue="MutableSphere" base_Element="_gceAMCy7EeWK-qBJoTmIJg"/>
+  <UMLLabProfile:Generics xmi:id="_gcdZJCy7EeWK-qBJoTmIJg" genericsValue="String, List&lt;Sphere>" base_Element="_gcdZICy7EeWK-qBJoTmIJg"/>
+  <UMLLabProfile:Generics xmi:id="_gcenQCy7EeWK-qBJoTmIJg" genericsValue="Sphere" base_Element="_gceAMCy7EeWK-qBJoTmIJg"/>
   <UMLLabProfile:LegacyStyledElement xmi:id="_gcenQSy7EeWK-qBJoTmIJg" base_Element="_gceAMCy7EeWK-qBJoTmIJg"/>
   <UMLLabProfile:Reference xmi:id="_gcfOUiy7EeWK-qBJoTmIJg" base_Element="_gcfOUCy7EeWK-qBJoTmIJg"/>
   <UMLLabProfile:StyledElement xmi:id="_I0iasCy9EeWK-qBJoTmIJg" base_Element="_I0f-cCy9EeWK-qBJoTmIJg"/>
@@ -3012,18 +3048,20 @@ they should be initialized. An invalid location equals an invalid filename.</bod
   <UMLLabProfile:Annotations xmi:id="_veVI8izTEeWK-qBJoTmIJg" base_Element="_veVI8CzTEeWK-qBJoTmIJg">
     <annotations xmi:id="_veVI8yzTEeWK-qBJoTmIJg" name="Option">
       <annotationParameters xmi:id="_veVI9CzTEeWK-qBJoTmIJg" name="description" skipArray="true">
-        <valueSpecifications xmi:type="uml:LiteralString" xmi:id="_veVwACzTEeWK-qBJoTmIJg" value="&quot;The maximum speed a sphere may have&quot;"/>
+        <valueSpecifications xmi:type="uml:LiteralString" xmi:id="_veVwACzTEeWK-qBJoTmIJg" value="&quot;The maximum speed a sphere may have in meter/tick&quot;"/>
       </annotationParameters>
     </annotations>
   </UMLLabProfile:Annotations>
   <UMLLabProfile:Annotations xmi:id="_lW1fEizUEeWK-qBJoTmIJg" base_Element="_lW1fECzUEeWK-qBJoTmIJg">
     <annotations xmi:id="_lW1fEyzUEeWK-qBJoTmIJg" name="Option">
       <annotationParameters xmi:id="_lW1fFCzUEeWK-qBJoTmIJg" name="description" skipArray="true">
-        <valueSpecifications xmi:type="uml:LiteralString" xmi:id="_lW2GICzUEeWK-qBJoTmIJg" value="&quot;The minimum speed a sphere may have&quot;"/>
+        <valueSpecifications xmi:type="uml:LiteralString" xmi:id="_lW2GICzUEeWK-qBJoTmIJg" value="&quot;The minimum speed a sphere may have in meter/tick&quot;"/>
       </annotationParameters>
     </annotations>
   </UMLLabProfile:Annotations>
   <UMLLabProfile:StyledElement xmi:id="_zCorQCzVEeWK-qBJoTmIJg" base_Element="_zCndICzVEeWK-qBJoTmIJg"/>
   <UMLLabProfile:StyledElement xmi:id="_EGoF0CzYEeWK-qBJoTmIJg" base_Element="_EGm3sCzYEeWK-qBJoTmIJg"/>
   <UMLLabProfile:Reference xmi:id="_EGtlYCzYEeWK-qBJoTmIJg" base_Element="_EGs-UCzYEeWK-qBJoTmIJg"/>
+  <UMLLabProfile:StyledElement xmi:id="_JvYBkCzZEeWK-qBJoTmIJg" base_Element="_JvWMYCzZEeWK-qBJoTmIJg"/>
+  <UMLLabProfile:StyledElement xmi:id="_WbP3QCzZEeWK-qBJoTmIJg" base_Element="_WbOpICzZEeWK-qBJoTmIJg"/>
 </xmi:XMI>
