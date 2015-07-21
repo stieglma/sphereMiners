@@ -12,9 +12,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="library" name="common" level="project" />
-    <orderEntry type="library" name="guava-18.0" level="project" />
+    <orderEntry type="library" name="guava" level="project" />
   </component>
 </module>
 

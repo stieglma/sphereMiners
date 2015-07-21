@@ -1,14 +1,50 @@
+import com.sun.org.apache.xalan.internal.xsltc.compiler.Copy
+
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'eclipse'
+
 mainClassName = 'me.stieglmaier.sphereMiners.main.SphereMiners'
-sourceSets.main.java.srcDirs = ['src']
- 
-def vendor = 'Thomas Stieglmaier'
-def version = '0.1'
-def title = 'Sphere Miners'
+
+repositories {
+    ivy {
+        url "http://www.sosy-lab.org/ivy"
+        layout "pattern", {
+            artifact "[organisation]/[module]/[artifact]-[revision].[ext]"
+        }
+    }
+    mavenCentral()
+}
+
+task copyToLib << {
+    configurations.runtime.getResolvedConfiguration().getResolvedArtifacts().each { artifact ->
+        project.copy {
+            from artifact.file
+            into "lib"
+            rename { "${artifact.name}.${artifact.extension}" }
+        }
+    }
+}
 
 dependencies {
-    compile fileTree(dir: "lib", include: "*.jar")
+    compile configuration: "runtime", group: "com.google.guava", name: "guava", version: "18.0"
+    compile configuration: "runtime", group: "org.sosy_lab", name:"common", version:"0.531"
 }
- 
+
+sourceCompatibility = 1.8
+version = '0.1'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Sphere Miners',
+                    'Implementation-Version': version
+    }
+}
+
+uploadArchives {
+    repositories {
+        flatDir {
+            dirs 'repos'
+        }
+    }
+}
