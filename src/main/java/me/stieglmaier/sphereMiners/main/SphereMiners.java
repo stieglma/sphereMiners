@@ -1,6 +1,7 @@
 package me.stieglmaier.sphereMiners.main;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,9 +12,13 @@ import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
 import me.stieglmaier.sphereMiners.view.GUI;
 import org.sosy_lab.common.configuration.Configuration;
 import org.sosy_lab.common.configuration.InvalidConfigurationException;
+import org.sosy_lab.common.configuration.OptionCollector;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Map;
 
 /**
  * Main class of the program. Creates the model and the View in a new Thread and
@@ -31,17 +36,34 @@ public class SphereMiners extends Application {
      * @throws IOException
      * @throws InvalidConfigurationException
      */
-    public static void main(final String[] args) throws InvalidConfigurationException, IOException {
+    public static void main(final String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parameters params = getParameters();
-
+    public void start(Stage primaryStage) throws IOException {
+        Map<String, String>  params = getParameters().getNamed();
         Configuration config;
-        if (params.getUnnamed().size() > 0) {
-            config = Configuration.builder().loadFromFile(params.getUnnamed().get(0)).build();
+
+        // cmdline parameter to retrieve configuration options
+        if (params.containsKey("printOptionsTo")) {
+            try {
+                new FileWriter(new File(params.get("printOptionsTo")), false).append(OptionCollector.getCollectedOptions(false)).close();
+            } catch (IOException e) {
+                System.err.println("Configuration Options file could not be written please recheck the given path.");
+            }
+            Platform.exit();
+            return;
+
+        } else if (params.containsKey("config")) {
+            try {
+                config = Configuration.builder().loadFromFile(params.get("config")).build();
+            } catch (InvalidConfigurationException | IOException e) {
+                System.err.println("Given configuration could not be parsed, now falling back to standard configuration." +
+                                   "\n See the stacktrace for more information:");
+                e.printStackTrace(System.err);
+                config = Configuration.defaultConfiguration();
+            }
         } else {
             config = Configuration.defaultConfiguration();
         }

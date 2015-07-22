@@ -1,10 +1,10 @@
-import com.sun.org.apache.xalan.internal.xsltc.compiler.Copy
-
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'eclipse'
+apply plugin: 'idea'
 
 mainClassName = 'me.stieglmaier.sphereMiners.main.SphereMiners'
+sourceSets.main.java.srcDirs = ['src']
 
 repositories {
     ivy {
@@ -24,6 +24,12 @@ task copyToLib << {
             rename { "${artifact.name}.${artifact.extension}" }
         }
     }
+}
+
+task buildDocumentation (type:JavaExec) {
+    main = mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    args("--printOptionsTo=ConfigurationOptions.txt")
 }
 
 dependencies {
