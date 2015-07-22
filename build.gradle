@@ -4,7 +4,6 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 
 mainClassName = 'me.stieglmaier.sphereMiners.main.SphereMiners'
-sourceSets.main.java.srcDirs = ['src']
 
 repositories {
     ivy {
