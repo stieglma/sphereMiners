@@ -72,11 +72,10 @@ public class SphereMiners extends Application {
         try {
             model = new Model(new PhysicsManager(config), new AIManager(config));
         } catch (ClassNotFoundException | MalformedURLException | InvalidConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            System.err.println("Model could not be created, shutting down.");
+            e.printStackTrace(System.err);
         }
 
-        System.out.println(getClass().getResource("sample.fxml"));
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Sphere Miners");
         primaryStage.setScene(new Scene(new GUI(model)));
