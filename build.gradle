@@ -42,8 +42,11 @@ version = '0.1'
 jar {
     manifest {
         attributes 'Implementation-Title': 'Sphere Miners',
-                    'Implementation-Version': version
+                   'Implementation-Version': version,
+                   'Main-Class': 'me.stieglmaier.sphereMiners.main.SphereMiners'
     }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
 uploadArchives {

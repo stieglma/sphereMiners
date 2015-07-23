@@ -1,4 +1,4 @@
-package ais;
+
 
 import me.stieglmaier.sphereMiners.model.ai.SphereMiners2015;
 

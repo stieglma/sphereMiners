@@ -3,30 +3,32 @@ package me.stieglmaier.sphereMiners.main;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import me.stieglmaier.sphereMiners.model.Model;
 import me.stieglmaier.sphereMiners.model.ai.AIManager;
 import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
-import me.stieglmaier.sphereMiners.view.GUI;
+
 import org.sosy_lab.common.configuration.Configuration;
 import org.sosy_lab.common.configuration.InvalidConfigurationException;
 import org.sosy_lab.common.configuration.OptionCollector;
+
+import com.google.common.base.Optional;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * Main class of the program. Creates the model and the View in a new Thread and
  * adds the View as Observer to the model.
  */
 public class SphereMiners extends Application {
-
-    private static Model model;
 
     /**
      * Launches the application.
@@ -42,6 +44,42 @@ public class SphereMiners extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        Optional<Configuration> config = handleOptions();
+        if (!config.isPresent()) {
+            // platform should be exited by handleOptions anyway
+            return;
+        }
+
+        final Model model;
+        try {
+            model = new Model(new PhysicsManager(config.get()), new AIManager(config.get()));
+        } catch (ClassNotFoundException | MalformedURLException | InvalidConfigurationException e) {
+            System.err.println("Model could not be created, shutting down.");
+            e.printStackTrace(System.err);
+            return;
+        }
+
+        primaryStage.setTitle("Sphere Miners");
+        primaryStage.setScene(new Scene(FXMLLoader.load(getClass().getResource("Overview.fxml"), getMyResourceBundle(model))));
+        primaryStage.show();
+    }
+
+    private ResourceBundle getMyResourceBundle(final Model model) {
+        return new ResourceBundle() {
+            
+            @Override
+            protected Object handleGetObject(String key) {
+                return model.getAIList();
+            }
+
+            @Override
+            public Enumeration<String> getKeys() {
+                return Collections.enumeration(Collections.singletonList("aiList"));
+            }
+        };
+    }
+
+    private Optional<Configuration> handleOptions() {
         Map<String, String>  params = getParameters().getNamed();
         Configuration config;
 
@@ -53,7 +91,7 @@ public class SphereMiners extends Application {
                 System.err.println("Configuration Options file could not be written please recheck the given path.");
             }
             Platform.exit();
-            return;
+            return Optional.absent();
 
         } else if (params.containsKey("config")) {
             try {
@@ -67,19 +105,7 @@ public class SphereMiners extends Application {
         } else {
             config = Configuration.defaultConfiguration();
         }
-
-        Model model = null;
-        try {
-            model = new Model(new PhysicsManager(config), new AIManager(config));
-        } catch (ClassNotFoundException | MalformedURLException | InvalidConfigurationException e) {
-            System.err.println("Model could not be created, shutting down.");
-            e.printStackTrace(System.err);
-        }
-
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Sphere Miners");
-        primaryStage.setScene(new Scene(new GUI(model)));
-        primaryStage.show();
+        return Optional.of(config);
     }
 
 }

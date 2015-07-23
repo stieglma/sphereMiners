@@ -1,9 +1,9 @@
 package me.stieglmaier.sphereMiners.model;
 
-import java.util.List;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
+import javafx.collections.ObservableList;
 import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
 import me.stieglmaier.sphereMiners.model.ai.AIManager;
 import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
@@ -174,7 +174,7 @@ public class Model extends Observable {
     /**
      * {@inheritDoc}
      */
-    public List<String> getAIList() {
+    public ObservableList<String> getAIList() {
         return aiMgr.getAIList();
     }
 

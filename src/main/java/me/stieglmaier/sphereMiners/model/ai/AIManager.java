@@ -12,9 +12,7 @@ import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +24,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
 import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
 
@@ -49,7 +49,7 @@ public final class AIManager {
      * 
      * All available AIs which can be used to simulate a game.
      */
-    private final List<String> aiList = new ArrayList<>();
+    private final ObservableList<String> aiList = FXCollections.observableArrayList();
 
     /**
      * array the the active AIs, each AI is identified by {@link Team}.
@@ -69,7 +69,7 @@ public final class AIManager {
     /**
      * path to location with stored ais.
      */
-    private final String AI_FILELOCATION = getAIPath();
+    private final String AI_FILELOCATION;
 
     @Option(name="location", description="In which folder should the framework search for ais?"
             + " (Base is the root of the project/ the folder where the jar file is located)")
@@ -90,6 +90,7 @@ public final class AIManager {
      */
     public AIManager(Configuration config) throws ClassNotFoundException, MalformedURLException, InvalidConfigurationException {
         config.inject(this);
+        AI_FILELOCATION = getAIPath();
         initalizeClassloader();
         makeAiList();
     }
@@ -109,11 +110,12 @@ public final class AIManager {
      *                                      (Will never happen a standard java charset is used)
      * @ return The file location of the ai.
      */
-    public String getAIPath() {
+    private String getAIPath() {
         String fileLoc = null;
         try {
             fileLoc = URLDecoder.decode(AIManager.class.getProtectionDomain()
-                    .getCodeSource().getLocation().getPath(), "UTF-8");
+                                .getCodeSource()
+                                .getLocation().getPath(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             // if this exception is thrown further executing the framework
             // makes no sense, so throw a runtime exception
@@ -128,14 +130,14 @@ public final class AIManager {
 
             // if the program is run without jar file just append the ai folder one step over in the hierarchy
         } else {
-            fileLoc += "../" + AI_FOLDER_NAME;
+            fileLoc += AI_FOLDER_NAME;
         }
 
         return fileLoc;
     }
 
     /**
-     * this function initialises the classloader.
+     * this function initializes the classloader.
      *
      * @throws MalformedURLException Could appear if the Constants.AI_LOCATION
      *                               was malformed
@@ -179,6 +181,7 @@ public final class AIManager {
     private boolean isValidAi(final String path) {
         boolean validAi = true;
         Class<?> loadedAI;
+
         try {
             loadedAI = loader.loadClass(path);
 
@@ -205,8 +208,8 @@ public final class AIManager {
      *
      * @return The available AIs.
      */
-    public List<String> getAIList() {
-        return Collections.unmodifiableList(aiList);
+    public ObservableList<String> getAIList() {
+        return aiList;
     }
 
     /**

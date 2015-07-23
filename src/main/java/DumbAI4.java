@@ -1,8 +1,8 @@
-package ais;
+
 
 import me.stieglmaier.sphereMiners.model.ai.SphereMiners2015;
 
-public class DumbAI2 extends SphereMiners2015 {
+public class DumbAI4 extends SphereMiners2015 {
 
     @Override
     protected void init() {
