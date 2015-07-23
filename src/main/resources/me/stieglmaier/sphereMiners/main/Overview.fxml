@@ -9,12 +9,15 @@
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.stieglmaier.sphereMiners.controller.AIListController">
    <children>
-      <SplitPane dividerPositions="0.2511737089201878" layoutX="350.0" layoutY="212.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.25" layoutX="350.0" layoutY="212.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
             <VBox prefHeight="898.0" prefWidth="411.0">
                <children>
                   <ListView fx:id="allAIs" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                  <Separator prefWidth="200.0" />
+                  <Separator prefWidth="200.0">
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin></Separator>
                   <HBox alignment="CENTER" prefHeight="34.0" prefWidth="317.0">
                      <children>
                         <Button fx:id="addAIButton" mnemonicParsing="false" prefHeight="25.0" text="↓" textAlignment="CENTER">
@@ -35,7 +38,10 @@
                         </Button>
                      </children>
                   </HBox>
-                  <Separator prefWidth="200.0" />
+                  <Separator prefWidth="200.0">
+                     <padding>
+                        <Insets bottom="5.0" top="5.0" />
+                     </padding></Separator>
                   <TableView fx:id="playingAIs" prefHeight="484.0" prefWidth="317.0">
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -47,7 +53,37 @@
                   </TableView>
                </children>
             </VBox>
-            <Pane prefHeight="898.0" prefWidth="971.0" />
+            <VBox prefHeight="898.0" prefWidth="586.0">
+               <children>
+                  <Pane VBox.vgrow="ALWAYS" />
+                  <Separator prefWidth="200.0" />
+                  <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0">
+                     <children>
+                        <Button mnemonicParsing="false" text="Simulate">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" text="Play">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Slider HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </HBox.margin>
+                        </Slider>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
          </items>
       </SplitPane>
    </children>
