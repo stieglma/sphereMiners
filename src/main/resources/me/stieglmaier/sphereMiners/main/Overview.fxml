@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -11,21 +13,37 @@
          <items>
             <VBox prefHeight="898.0" prefWidth="411.0">
                <children>
-                  <ListView fx:id="aiList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="allAIs" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                   <Separator prefWidth="200.0" />
                   <HBox alignment="CENTER" prefHeight="34.0" prefWidth="317.0">
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="↓" />
-                        <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="50.0" />
-                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="↑" textAlignment="CENTER" />
+                        <Button fx:id="addAIButton" mnemonicParsing="false" prefHeight="25.0" text="↓" textAlignment="CENTER">
+                           <HBox.margin>
+                              <Insets left="25.0" right="25.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="removeAIButton" mnemonicParsing="false" prefHeight="25.0" text="↑" textAlignment="CENTER">
+                           <HBox.margin>
+                              <Insets left="25.0" right="25.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Button>
                      </children>
                   </HBox>
                   <Separator prefWidth="200.0" />
-                  <TableView prefHeight="484.0" prefWidth="317.0">
-                    <columns>
-                      <TableColumn prefWidth="230.0" text="KI" />
-                      <TableColumn minWidth="7.0" prefWidth="86.0" text="Größe" />
-                    </columns>
+                  <TableView fx:id="playingAIs" prefHeight="484.0" prefWidth="317.0">
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                     <columns>
+                        <TableColumn fx:id="aiNameCol" text="KI" />
+                        <TableColumn fx:id="aiSizeCol" text="Größe" />
+                     </columns>
                   </TableView>
                </children>
             </VBox>
