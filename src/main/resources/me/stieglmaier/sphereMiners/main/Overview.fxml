@@ -59,17 +59,17 @@
                   <Separator prefWidth="200.0" />
                   <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Simulate">
+                        <Button fx:id="simulateButton" mnemonicParsing="false" text="Simulate">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" text="Play">
+                        <Button fx:id="playButton" mnemonicParsing="false" text="Play">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
                         </Button>
-                        <Slider HBox.hgrow="ALWAYS">
+                        <Slider fx:id="progressBar" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
@@ -79,7 +79,7 @@
                         <Insets />
                      </opaqueInsets>
                      <padding>
-                        <Insets left="20.0" />
+                        <Insets left="20.0" right="20.0" />
                      </padding>
                   </HBox>
                </children>
