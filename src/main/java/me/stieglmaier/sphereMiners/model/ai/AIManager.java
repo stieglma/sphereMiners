@@ -168,7 +168,9 @@ public final class AIManager {
 
         Arrays.stream(classes).map(f -> f.getName())
                                // only add ais if they are valid (extend SphereMiner2015 class)
-                              .filter(f -> f.endsWith(".class") && isValidAi(f.split(".class")[0]))
+                              .filter(f -> f.endsWith(".class"))
+                              .map(f -> f.split(".class")[0])
+                              .filter(f -> isValidAi(f))
                               .forEach(f -> aiList.add(f));
     }
 
@@ -231,6 +233,8 @@ public final class AIManager {
         ais.clear();
 
         if (ais2.stream().map(ai -> isValidAi(ai)).anyMatch(p -> !p)) {
+            System.out.println(ais2);
+            System.out.println(ais2.stream().map(ai -> isValidAi(ai)).collect(Collectors.toList()));
             throw new InvalidAILocationException("Some AIs could not be found.");
         }
 
