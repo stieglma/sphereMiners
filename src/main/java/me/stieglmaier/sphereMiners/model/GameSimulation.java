@@ -5,6 +5,10 @@ import static java.util.Objects.requireNonNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+
 /**
  * This representation of a game can be displayed by the GUI.
  */
@@ -13,14 +17,13 @@ public final class GameSimulation {
     /**
      * A list containing all ticks of the game.
      */
-    private List<Tick> ticks;
+    private final ObservableList<Tick> ticks = FXCollections.observableArrayList();
+    private final List<ListChangeListener<Tick>> registeredListeners = new ArrayList<>();
 
     /**
      * Creates a new empty {@link GameSimulation}.
      */
-    public GameSimulation() {
-        ticks = new ArrayList<>();
-    }
+    public GameSimulation() { /* nothing to do here*/}
 
     /**
      * Creates a new {@link GameSimulation} from a list of {@link Tick}s.
@@ -28,7 +31,7 @@ public final class GameSimulation {
      * @param simulationList List of created ticks.
      */
     public GameSimulation(List<Tick> simulationList) {
-        ticks = requireNonNull(simulationList);
+        ticks.addAll(simulationList);
     }
 
     /**
@@ -41,6 +44,17 @@ public final class GameSimulation {
      */
     public void addInstance(final Tick tick) {
         ticks.add(requireNonNull(tick));
+    }
+
+    public void addObserver(ListChangeListener<Tick> listener) {
+        ticks.addListener(listener);
+        registeredListeners.add(listener);
+    }
+
+    public void removeObservers() {
+        for (ListChangeListener<Tick> listener : registeredListeners) {
+            ticks.removeListener(listener);
+        }
     }
 
     /**
@@ -59,4 +73,7 @@ public final class GameSimulation {
         }
     }
 
+    public int getSize() {
+        return ticks.size();
+    }
 }
