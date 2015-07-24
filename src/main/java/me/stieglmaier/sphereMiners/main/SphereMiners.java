@@ -49,8 +49,10 @@ public class SphereMiners extends Application {
         }
 
         final Model model;
+        final AIManager aiManager;
         try {
-            model = new Model(new PhysicsManager(config.get()), new AIManager(config.get()));
+            aiManager = new AIManager(config.get());
+            model = new Model(new PhysicsManager(config.get()), aiManager);
         } catch (ClassNotFoundException | MalformedURLException | InvalidConfigurationException e) {
             System.err.println("Model could not be created, shutting down.");
             e.printStackTrace(System.err);
@@ -63,6 +65,7 @@ public class SphereMiners extends Application {
         ViewController controller = (ViewController)loader.getController();
 
         controller.setAIList(model.getAIList());
+        controller.setAIListListeners(() -> aiManager.reloadAIList());
         controller.setSimulateListeners(ais -> model.simulateGame(ais),
                                         ()  -> model.pauseSimulation(),
                                         ()  -> model.deleteSimulation());

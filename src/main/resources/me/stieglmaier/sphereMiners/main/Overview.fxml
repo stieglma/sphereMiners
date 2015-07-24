@@ -22,7 +22,7 @@
                      <children>
                         <Button fx:id="addAIButton" mnemonicParsing="false" prefHeight="25.0" text="↓" textAlignment="CENTER">
                            <HBox.margin>
-                              <Insets left="25.0" right="25.0" />
+                              <Insets left="25.0" right="5.0" />
                            </HBox.margin>
                            <font>
                               <Font name="System Bold" size="20.0" />
@@ -30,11 +30,19 @@
                         </Button>
                         <Button fx:id="removeAIButton" mnemonicParsing="false" prefHeight="25.0" text="↑" textAlignment="CENTER">
                            <HBox.margin>
-                              <Insets left="25.0" right="25.0" />
+                              <Insets left="5.0" right="5.0" />
                            </HBox.margin>
                            <font>
                               <Font name="System Bold" size="20.0" />
                            </font>
+                        </Button>
+                        <Button fx:id="reloadAIButton" mnemonicParsing="false" text="↻">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="5.0" right="25.0" />
+                           </HBox.margin>
                         </Button>
                      </children>
                   </HBox>

@@ -38,6 +38,9 @@ public class ViewController implements Initializable{
     private Button removeAIButton;
 
     @FXML
+    private Button reloadAIButton;
+
+    @FXML
     private Button playButton;
 
     @FXML
@@ -62,11 +65,6 @@ public class ViewController implements Initializable{
 
         setTableViewCells();
         createButtonListeners();
-        initializeSlider();
-    }
-
-    private void initializeSlider() {
-        
     }
 
     private void setTableViewCells() {
@@ -91,6 +89,7 @@ public class ViewController implements Initializable{
                     playButton.setDisable(false);
                     addAIButton.setDisable(true);
                     removeAIButton.setDisable(true);
+                    reloadAIButton.setDisable(true);
                 } catch (Exception e1) {
                     e1.printStackTrace();
                     throw new RuntimeException("Error during starting Simulation");
@@ -116,11 +115,18 @@ public class ViewController implements Initializable{
             progressBar.setMax(0);
             addAIButton.setDisable(false);
             removeAIButton.setDisable(false);
+            reloadAIButton.setDisable(false);
             playButton.setDisable(true);
             deleteSimulationButton.setDisable(true);
         });
     }
 
+    public void setAIListListeners(Runnable aiList) {
+        reloadAIButton.setOnAction(e -> {
+            playingAIs.getItems().clear();
+            aiList.run();
+        });
+    }
 
     private void createButtonListeners() {
         addAIButton.setOnAction(e -> {

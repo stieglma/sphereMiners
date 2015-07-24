@@ -153,10 +153,8 @@ public final class AIManager {
     /**
      * This method creates the list of the possible AIs.
      *
-     * @throws ClassNotFoundException Could appear if a class file is deleted
-     *                                in the runtime of this method
      */
-    private void makeAiList() throws ClassNotFoundException {
+    private void makeAiList() {
 
         // create Loader
         File fileloc = new File(AI_FILELOCATION);
@@ -173,6 +171,11 @@ public final class AIManager {
                               .map(f -> f.split(".class")[0])
                               .filter(f -> isValidAi(f))
                               .forEach(f -> aiList.add(f));
+    }
+
+    public void reloadAIList() {
+        aiList.clear();
+        makeAiList();
     }
 
     /**
