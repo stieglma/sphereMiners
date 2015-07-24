@@ -27,6 +27,9 @@
                            <font>
                               <Font name="System Bold" size="20.0" />
                            </font>
+                           <tooltip>
+                              <Tooltip text="fügt die ausgewählten KI's für das nächste Spiel hinzu" />
+                           </tooltip>
                         </Button>
                         <Button fx:id="removeAIButton" mnemonicParsing="false" prefHeight="25.0" text="↑" textAlignment="CENTER">
                            <HBox.margin>
@@ -35,6 +38,9 @@
                            <font>
                               <Font name="System Bold" size="20.0" />
                            </font>
+                           <tooltip>
+                              <Tooltip text="entfernt die ausgewählten KI's vom nächsten Spiel" />
+                           </tooltip>
                         </Button>
                         <Button fx:id="reloadAIButton" mnemonicParsing="false" text="↻">
                            <font>
@@ -43,6 +49,9 @@
                            <HBox.margin>
                               <Insets left="5.0" right="25.0" />
                            </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Sucht nach neuen KI's" />
+                           </tooltip>
                         </Button>
                      </children>
                   </HBox>
@@ -71,11 +80,17 @@
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Startet/Pausiert die Simulation" />
+                           </tooltip>
                         </Button>
                         <Button fx:id="playButton" mnemonicParsing="false" text="Play">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Startet/Pausiert die Wiedergabe einer Simulation" />
+                           </tooltip>
                         </Button>
                         <Slider fx:id="progressBar" max="0.0" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS">
                            <HBox.margin>
@@ -86,6 +101,9 @@
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Löscht eine komplette Simulation" />
+                           </tooltip>
                         </Button>
                      </children>
                      <opaqueInsets>
