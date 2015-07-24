@@ -62,6 +62,11 @@ public class ViewController implements Initializable{
 
         setTableViewCells();
         createButtonListeners();
+        initializeSlider();
+    }
+
+    private void initializeSlider() {
+        
     }
 
     private void setTableViewCells() {
@@ -80,7 +85,9 @@ public class ViewController implements Initializable{
             if (gameSimulation == null) {
                 try {
                     gameSimulation = startMethod.apply(playingAIs.getItems().stream().map(i -> i.getName()).collect(Collectors.toList()));
+                    gameSimulation.addObserver(t -> progressBar.setMax(gameSimulation.getSize()));
                 } catch (Exception e1) {
+                    e1.printStackTrace();
                     throw new RuntimeException("Error during starting Simulation");
                 }
             } else {
@@ -96,11 +103,13 @@ public class ViewController implements Initializable{
 
         deleteSimulationButton.setOnAction(e -> {
             deleteMethod.run();
+            gameSimulation.removeObservers();
             gameSimulation = null;
             isSimulationPaused = false;
             simulateButton.setText("Simulate");
             playButton.setDisable(true);
             playButton.setText("Play");
+            progressBar.setMax(0);
         });
     }
 
@@ -122,6 +131,7 @@ public class ViewController implements Initializable{
             }
             if (playingAIs.getItems().size() > 0) {
                 removeAIButton.setDisable(false);
+                simulateButton.setDisable(false);
             } 
         });
 
@@ -136,6 +146,7 @@ public class ViewController implements Initializable{
                           .collect(Collectors.toList()));
             if (playingAIs.getItems().isEmpty()) {
                 removeAIButton.setDisable(true);
+                simulateButton.setDisable(true);
             }
             if (playingAIs.getItems().size() < allAIs.getItems().size()) {
                 addAIButton.setDisable(false);

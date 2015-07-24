@@ -60,10 +60,12 @@ public class SphereMiners extends Application {
         primaryStage.setTitle("Sphere Miners");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Overview.fxml"));
         primaryStage.setScene(new Scene(loader.load()));
+        ViewController controller = (ViewController)loader.getController();
 
-        ((ViewController)loader.getController()).setSimulateListeners(ais -> model.simulateGame(ais),
-                                                                      ()  -> model.pauseSimulation(),
-                                                                      ()  -> model.deleteSimulation());
+        controller.setAIList(model.getAIList());
+        controller.setSimulateListeners(ais -> model.simulateGame(ais),
+                                        ()  -> model.pauseSimulation(),
+                                        ()  -> model.deleteSimulation());
         primaryStage.show();
     }
 
