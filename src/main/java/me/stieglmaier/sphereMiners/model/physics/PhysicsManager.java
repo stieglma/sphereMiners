@@ -14,6 +14,7 @@ import org.sosy_lab.common.configuration.Option;
 import org.sosy_lab.common.configuration.Options;
 
 import me.stieglmaier.sphereMiners.model.MutableSphere;
+import me.stieglmaier.sphereMiners.model.Player;
 import me.stieglmaier.sphereMiners.model.Position;
 import me.stieglmaier.sphereMiners.model.Sphere;
 import me.stieglmaier.sphereMiners.model.Tick;
@@ -22,7 +23,7 @@ import me.stieglmaier.sphereMiners.model.ai.AIManager;
 @Options(prefix="physics")
 public class PhysicsManager {
 
-    private final Map<String, List<MutableSphere>> spheresPerPlayer = new HashMap<>();
+    private final Map<Player, List<MutableSphere>> spheresPerPlayer = new HashMap<>();
     private final Configuration config;
     private AIManager aiManager;
 
@@ -73,7 +74,7 @@ public class PhysicsManager {
         aiManager = mgr;
     }
 
-    public Tick createInitialTick(List<String> ais) {
+    public Tick createInitialTick(List<Player> ais) {
         Position initalPos = new Position(fieldWidth/2, fieldHeight/2);
         double angle = 360.0/ais.size();
         
@@ -83,7 +84,9 @@ public class PhysicsManager {
         double radius = initialDistance / 2 / a;
 
         int i = 0;
-        for (String ai : ais) {
+        for (Player ai : ais) {
+            ai.getSizeProperty().setValue(10); // TODO should'nt be hardcoded...
+            
             // create new sphere for current player
             List<MutableSphere> sphereList = new ArrayList<>();
             try {
@@ -113,12 +116,15 @@ public class PhysicsManager {
             // 3. merge overlapping spheres of opponent ais
             mergeSpheres();
         }
+        for (Player p : spheresPerPlayer.keySet()) {
+            p.getSizeProperty().set(spheresPerPlayer.get(p).stream().map(s -> s.getSize()).reduce(0, (a, b) -> a + b));
+        }
         return snapshot();
     }
 
     private Tick snapshot() {
-        Map<String, List<Sphere>> newMap = new HashMap<>();
-        for (Entry<String, List<MutableSphere>> entry : spheresPerPlayer.entrySet()) {
+        Map<Player, List<Sphere>> newMap = new HashMap<>();
+        for (Entry<Player, List<MutableSphere>> entry : spheresPerPlayer.entrySet()) {
             ArrayList<Sphere> newList = new ArrayList<>();
             for (MutableSphere sphere : entry.getValue()) {
                 newList.add(sphere.immutableCopy());
@@ -150,11 +156,11 @@ public class PhysicsManager {
     }
 
     private void mergeSpheres() {
-        for(Entry<String, List<MutableSphere>> entry : spheresPerPlayer.entrySet()) {
-            String playerName = entry.getKey();
+        for(Entry<Player, List<MutableSphere>> entry : spheresPerPlayer.entrySet()) {
+            Player player = entry.getKey();
             for (MutableSphere playerSphere : entry.getValue()) {
-                for(Entry<String, List<MutableSphere>> enemies : spheresPerPlayer.entrySet()) {
-                    if (enemies.getKey().equals(playerName)) continue;
+                for(Entry<Player, List<MutableSphere>> enemies : spheresPerPlayer.entrySet()) {
+                    if (enemies.getKey().equals(player)) continue;
                     Iterator<MutableSphere> it = enemies.getValue().iterator();
                     while (it.hasNext()) {
                         MutableSphere enemySphere = it.next();
@@ -168,17 +174,17 @@ public class PhysicsManager {
         }
     }
 
-    public Map<String, List<MutableSphere>> getAISpheres() {
+    public Map<Player, List<MutableSphere>> getAISpheres() {
         return Collections.unmodifiableMap(spheresPerPlayer);
     }
 
-    public void split(MutableSphere sphere, String aiName) {
+    public void split(MutableSphere sphere, Player aiName) {
         List<MutableSphere> spheres = spheresPerPlayer.get(aiName);
         spheres.remove(sphere);
         spheres.addAll(sphere.split());
     }
 
-    public void merge(MutableSphere sphere1, MutableSphere sphere2, String aiName) {
+    public void merge(MutableSphere sphere1, MutableSphere sphere2, Player aiName) {
         if (sphere1.canBeMergedWidth(sphere2)) {
             List<MutableSphere> spheres = spheresPerPlayer.get(aiName);
             spheres.remove(sphere2);

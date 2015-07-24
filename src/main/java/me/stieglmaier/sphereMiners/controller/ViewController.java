@@ -78,15 +78,19 @@ public class ViewController implements Initializable{
         allAIs.setItems(aiList);
     }
 
-    public void setSimulateListeners(final Function<List<String>, GameSimulation> startMethod,
+    public void setSimulateListeners(final Function<List<Player>, GameSimulation> startMethod,
                                      final Runnable pauseMethod,
                                      final Runnable deleteMethod) {
         simulateButton.setOnAction(e -> {
             if (gameSimulation == null) {
                 try {
-                    gameSimulation = startMethod.apply(playingAIs.getItems().stream().map(i -> i.getName()).collect(Collectors.toList()));
+                    gameSimulation = startMethod.apply(playingAIs.getItems());
                     gameSimulation.addObserver(t -> progressBar.setMax(gameSimulation.getSize()));
                     simulateButton.setText("Pause");
+                    deleteSimulationButton.setDisable(false);
+                    playButton.setDisable(false);
+                    addAIButton.setDisable(true);
+                    removeAIButton.setDisable(true);
                 } catch (Exception e1) {
                     e1.printStackTrace();
                     throw new RuntimeException("Error during starting Simulation");
@@ -111,6 +115,8 @@ public class ViewController implements Initializable{
             playButton.setDisable(true);
             playButton.setText("Play");
             progressBar.setMax(0);
+            addAIButton.setDisable(false);
+            removeAIButton.setDisable(false);
         });
     }
 

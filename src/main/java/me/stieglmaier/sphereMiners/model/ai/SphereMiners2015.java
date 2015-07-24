@@ -1,6 +1,7 @@
 package me.stieglmaier.sphereMiners.model.ai;
 
 import me.stieglmaier.sphereMiners.model.MutableSphere;
+import me.stieglmaier.sphereMiners.model.Player;
 import me.stieglmaier.sphereMiners.model.Position;
 import me.stieglmaier.sphereMiners.model.Sphere;
 import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
@@ -18,8 +19,8 @@ public abstract class SphereMiners2015 {
     protected Stream<Sphere> ownSpheres;
 
     private PhysicsManager physMgr;
-    private String aiName;
-    private Map<String, List<MutableSphere>> allSpheres;
+    private Player aiName;
+    private Map<Player, List<MutableSphere>> allSpheres;
     private Stream<Pair<Sphere, MutableSphere>> sphereMap;
     private Turn currentTurn;
 
@@ -119,7 +120,7 @@ public abstract class SphereMiners2015 {
     /**
      * Set the name used as identifier in maps throughout the framework
      */
-    void setName(String name) {
+    void setPlayer(Player name) {
         this.aiName = name;
     }
 

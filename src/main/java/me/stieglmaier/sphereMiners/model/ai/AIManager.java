@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
+import me.stieglmaier.sphereMiners.model.Player;
 import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
 
 import org.sosy_lab.common.configuration.Configuration;
@@ -54,7 +55,7 @@ public final class AIManager {
     /**
      * array the the active AIs, each AI is identified by {@link Team}.
      */
-    private final Map<String, SphereMiners2015> ais = new HashMap<>();
+    private final Map<Player, SphereMiners2015> ais = new HashMap<>();
 
     /**
      * The loader which loads the ais.
@@ -226,15 +227,13 @@ public final class AIManager {
      * @throws InterruptedException 
      * @throws InvalidAiLocationException If the aiLocations are invalid
      */
-    public void initializeGameAIs(final List<String> ais2)
+    public void initializeGameAIs(final List<Player> ais2)
             throws InstantiationException, InvalidAILocationException {
 
         // cleaning up the list of the last ais.
         ais.clear();
 
-        if (ais2.stream().map(ai -> isValidAi(ai)).anyMatch(p -> !p)) {
-            System.out.println(ais2);
-            System.out.println(ais2.stream().map(ai -> isValidAi(ai)).collect(Collectors.toList()));
+        if (ais2.stream().map(ai -> isValidAi(ai.getName())).anyMatch(p -> !p)) {
             throw new InvalidAILocationException("Some AIs could not be found.");
         }
 
@@ -261,12 +260,12 @@ public final class AIManager {
         // if loading was not successful throw an exception
         // otherwise set the relevant fields in the ai
         // and call the init method
-        for (String aiStr : ais2) {
-            SphereMiners2015 ai = ais.get(aiStr);
+        for (Player player : ais2) {
+            SphereMiners2015 ai = ais.get(player);
             if (ai == null) {
                 throw new InstantiationException("The Ais could not be loaded properly.");
             } else {
-                ai.setName(aiStr);
+                ai.setPlayer(player);
                 ai.setManager(physicsManager);
                 ai.init();
             }
@@ -282,14 +281,14 @@ public final class AIManager {
      *                       assigned the newly initialized ai
      * @return the Thread for the initialization
      */
-    private Callable<Void> loadAI(final String ai, final URLClassLoader loader) {
+    private Callable<Void> loadAI(final Player ai, final URLClassLoader loader) {
 
         return new Callable<Void>() {
             @Override
             public Void call() throws Exception {
                 Class<?> cl;
                 try {
-                    cl = loader.loadClass(ai);
+                    cl = loader.loadClass(ai.getName());
                 } catch (ClassFormatError
                         | NoClassDefFoundError
                         | ClassNotFoundException e) {
@@ -345,7 +344,7 @@ public final class AIManager {
 
         if (!threadpool.awaitTermination(AI_TIME, TimeUnit.MILLISECONDS)) {
             threadpool.shutdownNow();
-            String[] aiStr = new String[ais.size()];
+            Player[] aiStr = new Player[ais.size()];
             ais.keySet().toArray(aiStr);
             for (int i = 0; i < ais.size(); i++) {
                 Future<Void> ret = retvals.get(i);
@@ -374,13 +373,13 @@ public final class AIManager {
      * @throws InstantiationException if the class can't be instantiated anymore.
      * @throws IllegalAccessException if the class could not be accessed.
      */
-    private void reinitializeAi(String ai) throws ClassNotFoundException,
+    private void reinitializeAi(Player ai) throws ClassNotFoundException,
             IllegalAccessException, InstantiationException {
 
-        Class<?> cl = loader.loadClass(ais.get(ai).getClass().getName());
+        Class<?> cl = loader.loadClass(ais.get(ai.getName()).getClass().getName());
         ais.remove(ai);
         SphereMiners2015 newAi = (SphereMiners2015) cl.newInstance();
-        newAi.setName(ai);
+        newAi.setPlayer(ai);
         newAi.setManager(physicsManager);
         newAi.init();
         ais.put(ai, newAi);

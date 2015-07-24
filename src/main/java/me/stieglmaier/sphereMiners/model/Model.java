@@ -51,7 +51,7 @@ public class Model extends Observable {
      * Simulates a game and returns the simulation object where the ticks
      * are saved into.
      */
-    public GameSimulation simulateGame(final List<String> ais) {
+    public GameSimulation simulateGame(final List<Player> ais) {
         if (simulationView == null) {
             // create new Simulation
             simulationView = new GameSimulation();
@@ -99,9 +99,9 @@ public class Model extends Observable {
         private boolean stopSimulation = false;
         private final PhysicsManager physMgr;
         private final AIManager aiMgr;
-        private final List<String> ais;
+        private final List<Player> ais;
 
-        public Simulation(AIManager aiMgr, PhysicsManager physMgr, List<String> ais) {
+        public Simulation(AIManager aiMgr, PhysicsManager physMgr, List<Player> ais) {
             this.aiMgr = aiMgr;
             this.physMgr = physMgr;
             this.ais = ais;
