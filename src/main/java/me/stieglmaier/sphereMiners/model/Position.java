@@ -31,7 +31,7 @@ public class Position {
      * @param newY The y-component of the new {@link Position}.
      */
     public Position(final double newX, final double newY) {
-        if(!(Double.isNaN(newX) || Double.isNaN(newY))) {
+        if(Double.isNaN(newX) || Double.isNaN(newY)) {
             throw new IllegalArgumentException("The parameters have to be in the range of a double. x: ");
         }
         this.x = newX;
