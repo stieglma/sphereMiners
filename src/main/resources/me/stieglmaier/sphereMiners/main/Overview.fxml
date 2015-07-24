@@ -69,7 +69,7 @@
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
                         </Button>
-                        <Slider fx:id="progressBar" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS">
+                        <Slider fx:id="progressBar" max="0.0" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
