@@ -112,11 +112,12 @@ public class ViewController implements Initializable{
             gameSimulation = null;
             isSimulationPaused = false;
             simulateButton.setText("Simulate");
-            playButton.setDisable(true);
             playButton.setText("Play");
             progressBar.setMax(0);
             addAIButton.setDisable(false);
             removeAIButton.setDisable(false);
+            playButton.setDisable(true);
+            deleteSimulationButton.setDisable(true);
         });
     }
 
