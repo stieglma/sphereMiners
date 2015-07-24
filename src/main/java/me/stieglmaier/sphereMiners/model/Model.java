@@ -2,7 +2,6 @@ package me.stieglmaier.sphereMiners.model;
 
 import java.util.List;
 import java.util.Observable;
-import java.util.ResourceBundle;
 
 import javafx.collections.ObservableList;
 import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
@@ -69,77 +68,54 @@ public class Model extends Observable {
     public GameSimulation simulateGame(final List<String> ais) {
         if (!existsSimulation) {
             existsSimulation = true;
-            simulation = new Thread(new Runnable() {
+            // reset old simulation
+            simulationView = new GameSimulation();
+            simulationView.addInstance(physMgr.createInitialTick(ais));
 
-                @Override
-                public void run() {
+            simulation = new Thread(() -> {
+                // now try to initialize a game with the given AIs.
+                // this needs the physMgr with a new simulation do
+                // not change the order
+                try {
+                    aiMgr.initializeGameAIs(ais);
 
-                    // reset old simulation
-                    simulationView = new GameSimulation();
-                    simulationView.addInstance(physMgr.createInitialTick(ais));
+                    // a given AI could not be initialized or found at the
+                    // given location
+                } catch (InstantiationException | InvalidAILocationException e) {
+                    existsSimulation = false;
+                    // TODO populate this error to view, no crash necessary
+                    throw new RuntimeException("Error while loading AIs", e);
+                }
 
-                    // now try to initialize a game with the given AIs.
-                    // this needs the physMgr with a new simulation do
-                    // not change the order
-                    try {
-                        aiMgr.initializeGameAIs(ais);
-
-                        // a given AI could not be initialized or found at the
-                        // given location
-                    } catch (InstantiationException | InvalidAILocationException e) {
-                        existsSimulation = false;
-                        ResourceBundle bundle = ResourceBundle.getBundle("sphere_miners_language");
-                        setChanged();
-
-                        if (e instanceof InstantiationException) {
-                            notifyObservers(bundle.getString("KI_INVALID"));
-                        } else {
-                            notifyObservers(bundle.getString("KI_LOCATION_INVALID"));
-                        }
-
-                        // abort execution because there is an error.
+                while (true) {
+                    // check runtime relevant flags
+                    if (!existsSimulation) {
                         return;
-                    }
-
-                    while (true) {
-                        // check runtime relevant flags
-                        if (!existsSimulation) {
-                            return;
-                        } else {
-                            while (isSimulationPaused) {
-                                try {
-                                    wait();
-                                } catch (InterruptedException e) {
-                                    // if they don't care we don't care...
-                                    // one does not simply interrupt...
-                                    // TODO is this correct?
-                                }
+                    } else {
+                        while (isSimulationPaused) {
+                            try {
+                                wait();
+                            } catch (InterruptedException e) {
+                                // if they don't care we don't care...
+                                // one does not simply interrupt...
+                                // TODO is this correct?
                             }
                         }
+                    }
 
-                        // let the AIs apply their moves.
-                        try {
-                            aiMgr.applyMoves();
-                        } catch (InterruptedException e) {
-                            // probably a programming error, when this occurs
-                            throw new RuntimeException(e);
-                        }
-
-                        // calculates the tick based on the AI moves.
-                        // adds the finished tick.
-                        try {
-                            simulationView.addInstance(physMgr.applyPhysics());
-                        } catch (IllegalArgumentException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
+                    // let the AIs apply their moves and
+                    // calculate the tick based on them
+                    // adds the finished tick to the simulation object
+                    try {
+                        simulationView.addInstance(physMgr.applyPhysics());
+                    } catch (IllegalArgumentException | InterruptedException e) {
+                        // whis will most likely be a programming error,
+                        // rethrow and hope it doesn't occur
+                        throw new RuntimeException(e);
                     }
                 }
             });
-            simulation.setName("[jSoccer][CommunicationLayer]");
+            simulation.setName("[sphereMiners][simulationThread]");
             simulation.start();
         }
 
