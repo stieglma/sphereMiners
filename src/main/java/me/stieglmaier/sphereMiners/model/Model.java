@@ -23,18 +23,12 @@ public class Model extends Observable {
     /**
      * The {@link SimulationToViewManager}.
      */
-    private GameSimulation simulationView;
+    private static GameSimulation simulationView;
 
     /**
      * The thread where the games will be simulated.
      */
-    private Thread simulation;
-
-    /**
-     * Indicates whether actually a simulation is running.
-     */
-    private volatile boolean existsSimulation = false;
-    private volatile boolean isSimulationPaused = false;
+    private Simulation simulation;
 
     /**
      * Creates a new {@link CommunicationLayer}.
@@ -53,96 +47,116 @@ public class Model extends Observable {
         physMgr.setAIManager(aiMgr);
     }
 
-    public static int[] toPrimitive(Integer[] IntegerArray) {
-        
-        int[] result = new int[IntegerArray.length];
-        for (int i = 0; i < IntegerArray.length; i++) {
-                result[i] = IntegerArray[i].intValue();
-        }
-        return result;
-}
-
     /**
-     * {@inheritDoc}
+     * Simulates a game and returns the simulation object where the ticks
+     * are saved into.
      */
     public GameSimulation simulateGame(final List<String> ais) {
-        if (!existsSimulation) {
-            existsSimulation = true;
-            // reset old simulation
+        if (simulationView == null) {
+            // create new Simulation
             simulationView = new GameSimulation();
             simulationView.addInstance(physMgr.createInitialTick(ais));
 
-            simulation = new Thread(() -> {
-                // now try to initialize a game with the given AIs.
-                // this needs the physMgr with a new simulation do
-                // not change the order
-                try {
-                    aiMgr.initializeGameAIs(ais);
-
-                    // a given AI could not be initialized or found at the
-                    // given location
-                } catch (InstantiationException | InvalidAILocationException e) {
-                    existsSimulation = false;
-                    // TODO populate this error to view, no crash necessary
-                    throw new RuntimeException("Error while loading AIs", e);
-                }
-
-                while (true) {
-                    // check runtime relevant flags
-                    if (!existsSimulation) {
-                        return;
-                    } else {
-                        while (isSimulationPaused) {
-                            try {
-                                wait();
-                            } catch (InterruptedException e) {
-                                // if they don't care we don't care...
-                                // one does not simply interrupt...
-                                // TODO is this correct?
-                            }
-                        }
-                    }
-
-                    // let the AIs apply their moves and
-                    // calculate the tick based on them
-                    // adds the finished tick to the simulation object
-                    try {
-                        simulationView.addInstance(physMgr.applyPhysics());
-                    } catch (IllegalArgumentException | InterruptedException e) {
-                        // whis will most likely be a programming error,
-                        // rethrow and hope it doesn't occur
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-            simulation.setName("[sphereMiners][simulationThread]");
+            simulation = new Simulation(aiMgr, physMgr, ais);
             simulation.start();
         }
 
         return simulationView;
     }
 
+    /**
+     * Completely deletes the current simulation.
+     */
     public void deleteSimulation() {
-        if (existsSimulation) {
-            existsSimulation = false;
-            isSimulationPaused = false;
-        }
-    }
-
-    public void pauseSimulation() {
-        if (existsSimulation) {
-            isSimulationPaused = !isSimulationPaused;
-            if (!isSimulationPaused) {
-                simulation.notify();
+        if (simulationView != null) {
+            simulationView = null;
+            synchronized(simulation) {
+                simulation.stopSimulation();
             }
         }
     }
 
     /**
-     * {@inheritDoc}
+     * Pauses or Resumes the current simulation.
+     */
+    public void pauseSimulation() {
+        if (simulationView != null) {
+            synchronized (simulation) {
+                simulation.pauseResume();
+            }
+        }
+    }
+
+    /**
+     * Returns the list of AIs that can be used for playing
      */
     public ObservableList<String> getAIList() {
         return aiMgr.getAIList();
     }
 
+    private static class Simulation extends Thread {
+        private boolean isRunning = false;
+        private boolean stopSimulation = false;
+        private final PhysicsManager physMgr;
+        private final AIManager aiMgr;
+        private final List<String> ais;
+
+        public Simulation(AIManager aiMgr, PhysicsManager physMgr, List<String> ais) {
+            this.aiMgr = aiMgr;
+            this.physMgr = physMgr;
+            this.ais = ais;
+            setName("[sphereMiners][simulationThread]");
+        }
+
+        public void pauseResume() {
+            isRunning = !isRunning;
+            if (isRunning) {
+                notify();
+            }
+        }
+
+        public void stopSimulation() {
+            stopSimulation = true;
+        }
+
+        public void run() {
+            isRunning = true;
+
+         // now try to initialize a game with the given AIs.
+            // this needs the physMgr with a new simulation do
+            // not change the order
+            try {
+                aiMgr.initializeGameAIs(ais);
+
+                // a given AI could not be initialized or found at the
+                // given location
+            } catch (InstantiationException | InvalidAILocationException e) {
+                // TODO populate this error to view, no crash necessary
+                throw new RuntimeException("Error while loading AIs", e);
+            }
+
+            // let the AIs apply their moves and
+            // calculate the tick based on them
+            // adds the finished tick to the simulation object
+            while (!stopSimulation) {
+                synchronized (this) {
+                    while (!isRunning) {
+                       try {
+                          wait();
+                       } catch (Exception e) {
+                          e.printStackTrace();
+                       }
+                    }
+                 }
+
+                try {
+                    simulationView.addInstance(physMgr.applyPhysics());
+                } catch (IllegalArgumentException | InterruptedException e) {
+                    // whis will most likely be a programming error,
+                    // rethrow and hope it doesn't occur
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
 }
