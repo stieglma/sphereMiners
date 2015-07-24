@@ -145,6 +145,7 @@ public class Model extends Observable {
                           wait();
                        } catch (Exception e) {
                           e.printStackTrace();
+                          // TODO what to do here? Just ignore probably
                        }
                     }
                  }
