@@ -16,9 +16,9 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.paint.Color;
 import me.stieglmaier.sphereMiners.model.GameSimulation;
-import me.stieglmaier.sphereMiners.model.Player;
+import me.stieglmaier.sphereMiners.model.ai.Player;
+import me.stieglmaier.sphereMiners.view.DisplayGameHandler;
 
 
 public class ViewController implements Initializable{
@@ -59,6 +59,8 @@ public class ViewController implements Initializable{
 
     private boolean isSimulationPaused = false;
     private GameSimulation gameSimulation = null;
+    private boolean isReplayPaused = true;
+    private DisplayGameHandler displayGameHandler = null;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -68,8 +70,6 @@ public class ViewController implements Initializable{
         playButton.setDisable(true);
         deleteSimulationButton.setDisable(true);
 
-        viewGameCanvas.getGraphicsContext2D().setFill(Color.BLACK);
-        viewGameCanvas.getGraphicsContext2D().fillRect(0, 0, 800, 800);
         setTableViewCells();
         createButtonListeners();
     }
@@ -143,7 +143,7 @@ public class ViewController implements Initializable{
                       .stream()
                       .filter(p -> playingAIs.getItems()
                                              .stream()
-                                             .map(Player::getName)
+                                             .map(Player::getInternalName)
                                              .noneMatch(a -> a.equals(p)))
                       .map(s -> new Player(s, 10))
                       .collect(Collectors.toList()));
@@ -163,7 +163,7 @@ public class ViewController implements Initializable{
                           .filter(p -> allAIs.getSelectionModel()
                                              .getSelectedItems()
                                              .stream()
-                                             .anyMatch(s -> s.equals(p.getName())))
+                                             .anyMatch(s -> s.equals(p.getInternalName())))
                           .collect(Collectors.toList()));
             if (playingAIs.getItems().isEmpty()) {
                 removeAIButton.setDisable(true);
@@ -174,8 +174,25 @@ public class ViewController implements Initializable{
             }
         });
 
-        // TODO drawing
-        playButton.setOnAction(e -> {});
+        // drawing is done on an 800x800 grid that gets resized to fit the current
+        // view resolution, we don't need to bother with scaling, it is done
+        // automatically
+        playButton.setOnAction(e -> {
+            isReplayPaused = !isReplayPaused;
+            if (displayGameHandler != null) {
+                if (isReplayPaused) {
+                    playButton.setText("play");
+                    displayGameHandler.pauseAnimation();
+                } else {
+                    playButton.setText("pause");
+                    displayGameHandler.startAnimation();
+                }
+            } else {
+                playButton.setText("pause");
+                displayGameHandler = new DisplayGameHandler(viewGameCanvas.getGraphicsContext2D(), gameSimulation);
+                displayGameHandler.startAnimation();
+            }
+        });
     }
 
 }

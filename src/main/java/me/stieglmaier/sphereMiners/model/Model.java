@@ -6,7 +6,8 @@ import java.util.Observable;
 import javafx.collections.ObservableList;
 import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
 import me.stieglmaier.sphereMiners.model.ai.AIManager;
-import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
+import me.stieglmaier.sphereMiners.model.ai.PhysicsManager;
+import me.stieglmaier.sphereMiners.model.ai.Player;
 
 public class Model extends Observable {
 

@@ -1,4 +1,4 @@
-package me.stieglmaier.sphereMiners.model.physics;
+package me.stieglmaier.sphereMiners.model.ai;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,11 +14,9 @@ import org.sosy_lab.common.configuration.Option;
 import org.sosy_lab.common.configuration.Options;
 
 import me.stieglmaier.sphereMiners.model.MutableSphere;
-import me.stieglmaier.sphereMiners.model.Player;
 import me.stieglmaier.sphereMiners.model.Position;
 import me.stieglmaier.sphereMiners.model.Sphere;
 import me.stieglmaier.sphereMiners.model.Tick;
-import me.stieglmaier.sphereMiners.model.ai.AIManager;
 
 @Options(prefix="physics")
 public class PhysicsManager {
@@ -52,7 +50,7 @@ public class PhysicsManager {
      */
     @Option(description="The amount of calculations that should be done per tick."
             + " Changing this changes the granularity of the calculations")
-    private int calcsPerTick = 10;
+    private int calcsPerTick = 5;
 
     @Option(description="The maximum speed a sphere may have in meter/tick")
     private double maxSpeed = 1.0;
@@ -63,11 +61,15 @@ public class PhysicsManager {
     /**
      * The duration in seconds of one partial tick.
      */
-    private final double PART_TICK = tick / calcsPerTick;
+    private final double PART_TICK;
+    private static int timePerTick = 0;
 
     public PhysicsManager(Configuration config) throws InvalidConfigurationException {
         config.inject(this);
         this.config = config;
+        PART_TICK = tick / calcsPerTick;
+        timePerTick = (int) (PART_TICK * 1000);
+        System.out.println(timePerTick);
     }
 
     public void setAIManager(AIManager mgr) {
@@ -85,8 +87,8 @@ public class PhysicsManager {
 
         int i = 0;
         for (Player ai : ais) {
-            ai.getSizeProperty().setValue(10); // TODO should'nt be hardcoded...
-            
+            ai.setSize(10); // TODO should'nt be hardcoded...
+
             // create new sphere for current player
             List<MutableSphere> sphereList = new ArrayList<>();
             try {
@@ -117,7 +119,7 @@ public class PhysicsManager {
             mergeSpheres();
         }
         for (Player p : spheresPerPlayer.keySet()) {
-            p.getSizeProperty().set(spheresPerPlayer.get(p).stream().map(s -> s.getSize()).reduce(0, (a, b) -> a + b));
+            p.setSize(spheresPerPlayer.get(p).stream().map(s -> s.getSize()).reduce(0, (a, b) -> a + b));
         }
         return snapshot();
     }
@@ -190,6 +192,13 @@ public class PhysicsManager {
             spheres.remove(sphere2);
             sphere1.merge(sphere2);
         }
+    }
+
+    /**
+     * Time per tick in milliseconds
+     */
+    public static int getTimePerTick() {
+        return timePerTick;
     }
 
 }

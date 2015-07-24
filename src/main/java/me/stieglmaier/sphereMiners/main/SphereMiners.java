@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 import me.stieglmaier.sphereMiners.controller.ViewController;
 import me.stieglmaier.sphereMiners.model.Model;
 import me.stieglmaier.sphereMiners.model.ai.AIManager;
-import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
+import me.stieglmaier.sphereMiners.model.ai.PhysicsManager;
 
 import org.sosy_lab.common.configuration.Configuration;
 import org.sosy_lab.common.configuration.InvalidConfigurationException;

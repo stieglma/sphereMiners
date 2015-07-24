@@ -27,8 +27,6 @@ import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
-import me.stieglmaier.sphereMiners.model.Player;
-import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
 
 import org.sosy_lab.common.configuration.Configuration;
 import org.sosy_lab.common.configuration.InvalidConfigurationException;
@@ -126,8 +124,7 @@ public final class AIManager {
         // if everything is packaged in a jar file remove the last part and add the ai folder
         if (fileLoc.endsWith(".jar")) {
             int index = fileLoc.lastIndexOf("/");
-            fileLoc = fileLoc.substring(0, index + 1);
-            fileLoc += AI_FOLDER_NAME;
+            fileLoc = fileLoc.substring(0, index + 1) + AI_FOLDER_NAME;
 
             // if the program is run without jar file just append the ai folder one step over in the hierarchy
         } else {
@@ -236,7 +233,7 @@ public final class AIManager {
         // cleaning up the list of the last ais.
         ais.clear();
 
-        if (ais2.stream().map(ai -> isValidAi(ai.getName())).anyMatch(p -> !p)) {
+        if (ais2.stream().map(ai -> isValidAi(ai.getInternalName())).anyMatch(p -> !p)) {
             throw new InvalidAILocationException("Some AIs could not be found.");
         }
 
@@ -291,7 +288,7 @@ public final class AIManager {
             public Void call() throws Exception {
                 Class<?> cl;
                 try {
-                    cl = loader.loadClass(ai.getName());
+                    cl = loader.loadClass(ai.getInternalName());
                 } catch (ClassFormatError
                         | NoClassDefFoundError
                         | ClassNotFoundException e) {
@@ -379,7 +376,7 @@ public final class AIManager {
     private void reinitializeAi(Player ai) throws ClassNotFoundException,
             IllegalAccessException, InstantiationException {
 
-        Class<?> cl = loader.loadClass(ais.get(ai.getName()).getClass().getName());
+        Class<?> cl = loader.loadClass(ais.get(ai.getInternalName()).getClass().getName());
         ais.remove(ai);
         SphereMiners2015 newAi = (SphereMiners2015) cl.newInstance();
         newAi.setPlayer(ai);

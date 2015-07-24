@@ -1,15 +1,15 @@
 package me.stieglmaier.sphereMiners.model.ai;
 
 import me.stieglmaier.sphereMiners.model.MutableSphere;
-import me.stieglmaier.sphereMiners.model.Player;
 import me.stieglmaier.sphereMiners.model.Position;
 import me.stieglmaier.sphereMiners.model.Sphere;
-import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import javafx.scene.paint.Color;
 
 import org.sosy_lab.common.Pair;
 
@@ -19,7 +19,7 @@ public abstract class SphereMiners2015 {
     protected Stream<Sphere> ownSpheres;
 
     private PhysicsManager physMgr;
-    private Player aiName;
+    private Player ownAI;
     private Map<Player, List<MutableSphere>> allSpheres;
     private Stream<Pair<Sphere, MutableSphere>> sphereMap;
     private Turn currentTurn;
@@ -38,6 +38,14 @@ public abstract class SphereMiners2015 {
      *       is allowed at the same time
      */
     protected abstract void playTurn();
+
+    protected final void setColor(Color color) {
+        ownAI.setColor(color);
+    }
+
+    protected final void setName(String name) {
+        ownAI.setName(name);
+    }
 
     /**
      * Changes the moving direction of a Sphere instantly, there is no kind of
@@ -69,7 +77,7 @@ public abstract class SphereMiners2015 {
         // lists cannot be changed directly therefore we need the phyiscsmanager here
         currentTurn = () -> physMgr.split(sphereMap.filter(p -> p.getFirst() == sphere)
                                                    .findFirst().get().getSecond(),
-                                          aiName);
+                                          ownAI);
     }
 
     /**
@@ -85,7 +93,7 @@ public abstract class SphereMiners2015 {
                                                    .findFirst().get().getSecond(),
                                           sphereMap.filter(p -> p.getFirst() == sphere2)
                                                    .findFirst().get().getSecond(),
-                                          aiName);
+                                          ownAI);
     }
 
     /**
@@ -112,7 +120,7 @@ public abstract class SphereMiners2015 {
     void setManager(PhysicsManager mgr) {
         physMgr = mgr;
         allSpheres = mgr.getAISpheres();
-        sphereMap = allSpheres.get(aiName).stream()
+        sphereMap = allSpheres.get(ownAI).stream()
                               .map(sphere -> Pair.of(sphere.toImmutableSphere(), sphere));
         ownSpheres = sphereMap.map(p -> p.getFirst());
     }
@@ -121,7 +129,7 @@ public abstract class SphereMiners2015 {
      * Set the name used as identifier in maps throughout the framework
      */
     void setPlayer(Player name) {
-        this.aiName = name;
+        this.ownAI = name;
     }
 
     @FunctionalInterface
