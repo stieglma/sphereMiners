@@ -73,9 +73,9 @@ public class PhysicsManager {
         aiManager = mgr;
     }
 
-    public Tick createInitialTick(String[] ais) {
+    public Tick createInitialTick(List<String> ais) {
         Position initalPos = new Position(fieldWidth/2, fieldHeight/2);
-        double angle = 360.0/ais.length;
+        double angle = 360.0/ais.size();
         
         // b² = c² - a², c = 1 im Einheitskreis, a = sin Alpha * c im Einheitskreis
         // Strahlensatz: ZA zu BA = ZA' zu BA', c zu a = x*c zu x*a sodass x*a = 5 
@@ -88,8 +88,8 @@ public class PhysicsManager {
             List<MutableSphere> sphereList = new ArrayList<>();
             try {
                 MutableSphere sphere = new MutableSphere(config);
-                Position addPos = new Position(radius * Math.cos(i * 2 * Math.PI / ais.length),
-                                               radius * Math.sin(i * 2 * Math.PI / ais.length));
+                Position addPos = new Position(radius * Math.cos(i * 2 * Math.PI / ais.size()),
+                                               radius * Math.sin(i * 2 * Math.PI / ais.size()));
                 sphere.setPosition(initalPos.add(addPos));
                 sphereList.add(sphere);
             } catch (InvalidConfigurationException e) {

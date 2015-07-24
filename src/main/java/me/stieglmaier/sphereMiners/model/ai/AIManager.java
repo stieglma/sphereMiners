@@ -224,20 +224,20 @@ public final class AIManager {
      * @throws InterruptedException 
      * @throws InvalidAiLocationException If the aiLocations are invalid
      */
-    public void initializeGameAIs(final String ... aisToPlay)
+    public void initializeGameAIs(final List<String> ais2)
             throws InstantiationException, InvalidAILocationException {
 
         // cleaning up the list of the last ais.
         ais.clear();
 
-        if (Arrays.stream(aisToPlay).map(ai -> isValidAi(ai)).anyMatch(p -> !p)) {
+        if (ais2.stream().map(ai -> isValidAi(ai)).anyMatch(p -> !p)) {
             throw new InvalidAILocationException("Some AIs could not be found.");
         }
 
         // load ais in discrete thread, so one's able to handle bad constructors.
         ScheduledExecutorService aiLoader = Executors.newSingleThreadScheduledExecutor();
         try {
-            aiLoader.invokeAll(Arrays.stream(aisToPlay).map(ai -> loadAI(ai, loader)).collect(Collectors.toList()));
+            aiLoader.invokeAll(ais2.stream().map(ai -> loadAI(ai, loader)).collect(Collectors.toList()));
 
             // pretty bad something interrupted our loading process...
         } catch (InterruptedException e1) {
@@ -257,7 +257,7 @@ public final class AIManager {
         // if loading was not successful throw an exception
         // otherwise set the relevant fields in the ai
         // and call the init method
-        for (String aiStr : aisToPlay) {
+        for (String aiStr : ais2) {
             SphereMiners2015 ai = ais.get(aiStr);
             if (ai == null) {
                 throw new InstantiationException("The Ais could not be loaded properly.");

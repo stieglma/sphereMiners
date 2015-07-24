@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import me.stieglmaier.sphereMiners.controller.ViewController;
 import me.stieglmaier.sphereMiners.model.Model;
 import me.stieglmaier.sphereMiners.model.ai.AIManager;
 import me.stieglmaier.sphereMiners.model.physics.PhysicsManager;
@@ -19,10 +20,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * Main class of the program. Creates the model and the View in a new Thread and
@@ -60,23 +58,13 @@ public class SphereMiners extends Application {
         }
 
         primaryStage.setTitle("Sphere Miners");
-        primaryStage.setScene(new Scene(FXMLLoader.load(getClass().getResource("Overview.fxml"), getMyResourceBundle(model))));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Overview.fxml"));
+        primaryStage.setScene(new Scene(loader.load()));
+
+        ((ViewController)loader.getController()).setSimulateListeners(ais -> model.simulateGame(ais),
+                                                                      () -> model.pauseSimulation(),
+                                                                      () -> model.deleteSimulation());
         primaryStage.show();
-    }
-
-    private ResourceBundle getMyResourceBundle(final Model model) {
-        return new ResourceBundle() {
-            
-            @Override
-            protected Object handleGetObject(String key) {
-                return model.getAIList();
-            }
-
-            @Override
-            public Enumeration<String> getKeys() {
-                return Collections.enumeration(Collections.singletonList("aiList"));
-            }
-        };
     }
 
     private Optional<Configuration> handleOptions() {

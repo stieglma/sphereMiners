@@ -1,5 +1,6 @@
 package me.stieglmaier.sphereMiners.model;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
@@ -65,7 +66,7 @@ public class Model extends Observable {
     /**
      * {@inheritDoc}
      */
-    public void simulateGame(final String ... ais) {
+    public GameSimulation simulateGame(final List<String> ais) {
         if (!existsSimulation) {
             existsSimulation = true;
             simulation = new Thread(new Runnable() {
@@ -141,17 +142,11 @@ public class Model extends Observable {
             simulation.setName("[jSoccer][CommunicationLayer]");
             simulation.start();
         }
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    public GameSimulation getViewableSimulation() {
         return simulationView;
     }
 
-
-    public void stopSimulation() {
+    public void deleteSimulation() {
         if (existsSimulation) {
             existsSimulation = false;
             isSimulationPaused = false;
@@ -160,14 +155,10 @@ public class Model extends Observable {
 
     public void pauseSimulation() {
         if (existsSimulation) {
-            isSimulationPaused = true;
-        }
-    }
-
-    public void resumeSimulation() {
-        if (existsSimulation) {
-            isSimulationPaused = false;
-            simulation.notify();
+            isSimulationPaused = !isSimulationPaused;
+            if (!isSimulationPaused) {
+                simulation.notify();
+            }
         }
     }
 
