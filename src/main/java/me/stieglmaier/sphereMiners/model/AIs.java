@@ -75,7 +75,7 @@ public final class AIs {
     private String AI_FOLDER_NAME = "ais";
 
     @Option(name="timeout", description="Timeout for the computation done by the ais in milliseconds")
-    private int AI_TIME = 50;
+    private int AI_TIME = 10;
 
     /**
      * The constructor of this class. It is responsible for listing the possible

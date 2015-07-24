@@ -13,6 +13,7 @@ import org.sosy_lab.common.configuration.InvalidConfigurationException;
 import org.sosy_lab.common.configuration.Option;
 import org.sosy_lab.common.configuration.Options;
 
+
 @Options(prefix="physics")
 public class Physics {
 
@@ -29,7 +30,6 @@ public class Physics {
     @Option(description="The height of the game field in meters")
     private int fieldHeight = 100;
 
-    
     @Option(description="The frames that should be displayed per second")
     private int framesPerSecond = 25;
 
@@ -45,7 +45,7 @@ public class Physics {
      */
     @Option(description="The amount of calculations that should be done per tick."
             + " Changing this changes the granularity of the calculations")
-    private int calcsPerTick = 5;
+    private int calcsPerTick = 1;
 
     @Option(description="The maximum speed a sphere may have in meter/tick")
     private double maxSpeed = 1.0;
@@ -57,14 +57,13 @@ public class Physics {
      * The duration in seconds of one partial tick.
      */
     private final double PART_TICK;
-    private static int timePerTick = 0;
+    private static int fps = 0;
 
     public Physics(Configuration config) throws InvalidConfigurationException {
         config.inject(this);
         this.config = config;
         PART_TICK = tick / calcsPerTick;
-        timePerTick = (int) (PART_TICK * 1000);
-        System.out.println(timePerTick);
+        fps = framesPerSecond;
     }
 
     public void setAIManager(AIs mgr) {
@@ -192,8 +191,8 @@ public class Physics {
     /**
      * Time per tick in milliseconds
      */
-    public static int getTimePerTick() {
-        return timePerTick;
+    public static int getFPS() {
+        return fps;
     }
 
 }

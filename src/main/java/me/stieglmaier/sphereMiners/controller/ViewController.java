@@ -17,6 +17,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import me.stieglmaier.sphereMiners.model.GameSimulation;
+import me.stieglmaier.sphereMiners.model.Physics;
 import me.stieglmaier.sphereMiners.model.Player;
 import me.stieglmaier.sphereMiners.view.DisplayGameHandler;
 
@@ -59,7 +60,6 @@ public class ViewController implements Initializable{
 
     private boolean isSimulationPaused = false;
     private GameSimulation gameSimulation = null;
-    private boolean isReplayPaused = true;
     private DisplayGameHandler displayGameHandler = null;
 
     @Override
@@ -90,7 +90,7 @@ public class ViewController implements Initializable{
             if (gameSimulation == null) {
                 try {
                     gameSimulation = startMethod.apply(playingAIs.getItems());
-                    gameSimulation.addObserver(t -> progressBar.setMax(gameSimulation.getSize()));
+                    gameSimulation.addObserver(t -> progressBar.setMax(gameSimulation.getSize()/Physics.getFPS()));
                     simulateButton.setText("Pause");
                     deleteSimulationButton.setDisable(false);
                     playButton.setDisable(false);
@@ -178,9 +178,8 @@ public class ViewController implements Initializable{
         // view resolution, we don't need to bother with scaling, it is done
         // automatically
         playButton.setOnAction(e -> {
-            isReplayPaused = !isReplayPaused;
             if (displayGameHandler != null) {
-                if (isReplayPaused) {
+                if (playButton.getText().equals("pause")) {
                     playButton.setText("play");
                     displayGameHandler.pauseAnimation();
                 } else {
@@ -189,7 +188,7 @@ public class ViewController implements Initializable{
                 }
             } else {
                 playButton.setText("pause");
-                displayGameHandler = new DisplayGameHandler(viewGameCanvas.getGraphicsContext2D(), gameSimulation);
+                displayGameHandler = new DisplayGameHandler(viewGameCanvas.getGraphicsContext2D(), gameSimulation, progressBar, playButton);
                 displayGameHandler.startAnimation();
             }
         });
