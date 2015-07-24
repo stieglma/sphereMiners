@@ -5,21 +5,18 @@ import java.util.Observable;
 
 import javafx.collections.ObservableList;
 import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
-import me.stieglmaier.sphereMiners.model.ai.AIManager;
-import me.stieglmaier.sphereMiners.model.ai.PhysicsManager;
-import me.stieglmaier.sphereMiners.model.ai.Player;
 
 public class Model extends Observable {
 
     /**
-     * The {@link PhysicsManager}.
+     * The {@link Physics}.
      */
-    private final PhysicsManager physMgr;
+    private final Physics physics;
 
     /**
-     * The {@link AIManager}.
+     * The {@link AIs}.
      */
-    private final AIManager aiMgr;
+    private final AIs ais;
 
     /**
      * The {@link SimulationToViewManager}.
@@ -34,31 +31,31 @@ public class Model extends Observable {
     /**
      * Creates a new {@link CommunicationLayer}.
      *
-     * @param phys    The {@link PhysicsManager} to use for the simulation.
-     * @param ai      The {@link AIManager} to use for the simulation.
+     * @param phys    The {@link Physics} to use for the simulation.
+     * @param ai      The {@link AIs} to use for the simulation.
      * @param simView The {@link SimulationToViewManager} to use for the simulation.
      * @throws IllegalArgumentException if a reference of the given managers is null an exception
      *                                  will be thrown to prevent an illegal state.
      */
-    public Model(final PhysicsManager phys, final AIManager ai) {
-        this.physMgr = phys;
-        this.aiMgr = ai;
+    public Model(final Physics phys, final AIs ai) {
+        this.physics = phys;
+        this.ais = ai;
 
-        aiMgr.setPhysicsManager(physMgr);
-        physMgr.setAIManager(aiMgr);
+        ais.setPhysics(physics);
+        physics.setAIManager(ais);
     }
 
     /**
      * Simulates a game and returns the simulation object where the ticks
      * are saved into.
      */
-    public GameSimulation simulateGame(final List<Player> ais) {
+    public GameSimulation simulateGame(final List<Player> aisToPlay) {
         if (simulationView == null) {
             // create new Simulation
             simulationView = new GameSimulation();
-            simulationView.addInstance(physMgr.createInitialTick(ais));
+            simulationView.addInstance(physics.createInitialTick(aisToPlay));
 
-            simulation = new Simulation(aiMgr, physMgr, ais);
+            simulation = new Simulation(ais, physics, aisToPlay);
             simulation.start();
         }
 
@@ -92,20 +89,20 @@ public class Model extends Observable {
      * Returns the list of AIs that can be used for playing
      */
     public ObservableList<String> getAIList() {
-        return aiMgr.getAIList();
+        return ais.getAIList();
     }
 
     private static class Simulation extends Thread {
         private boolean isRunning = false;
         private boolean stopSimulation = false;
-        private final PhysicsManager physMgr;
-        private final AIManager aiMgr;
-        private final List<Player> ais;
+        private final Physics physMgr;
+        private final AIs ais;
+        private final List<Player> aisToPlay;
 
-        public Simulation(AIManager aiMgr, PhysicsManager physMgr, List<Player> ais) {
-            this.aiMgr = aiMgr;
-            this.physMgr = physMgr;
+        public Simulation(AIs ais, Physics physics, List<Player> aisToPlay) {
             this.ais = ais;
+            this.physMgr = physics;
+            this.aisToPlay = aisToPlay;
             setName("[sphereMiners][simulationThread]");
         }
 
@@ -127,7 +124,7 @@ public class Model extends Observable {
             // this needs the physMgr with a new simulation do
             // not change the order
             try {
-                aiMgr.initializeGameAIs(ais);
+                ais.initializeGameAIs(aisToPlay);
 
                 // a given AI could not be initialized or found at the
                 // given location

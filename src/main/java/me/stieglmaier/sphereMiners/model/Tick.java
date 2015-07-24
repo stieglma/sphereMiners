@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import me.stieglmaier.sphereMiners.model.ai.Player;
-
 public class Tick {
 
     Map<Player, List<Sphere>> allSpheres;

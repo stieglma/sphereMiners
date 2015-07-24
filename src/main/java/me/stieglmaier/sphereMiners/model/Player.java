@@ -1,4 +1,4 @@
-package me.stieglmaier.sphereMiners.model.ai;
+package me.stieglmaier.sphereMiners.model;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;

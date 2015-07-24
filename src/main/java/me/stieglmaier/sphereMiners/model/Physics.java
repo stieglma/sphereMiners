@@ -1,4 +1,4 @@
-package me.stieglmaier.sphereMiners.model.ai;
+package me.stieglmaier.sphereMiners.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,17 +13,12 @@ import org.sosy_lab.common.configuration.InvalidConfigurationException;
 import org.sosy_lab.common.configuration.Option;
 import org.sosy_lab.common.configuration.Options;
 
-import me.stieglmaier.sphereMiners.model.MutableSphere;
-import me.stieglmaier.sphereMiners.model.Position;
-import me.stieglmaier.sphereMiners.model.Sphere;
-import me.stieglmaier.sphereMiners.model.Tick;
-
 @Options(prefix="physics")
-public class PhysicsManager {
+public class Physics {
 
     private final Map<Player, List<MutableSphere>> spheresPerPlayer = new HashMap<>();
     private final Configuration config;
-    private AIManager aiManager;
+    private AIs ais;
 
     @Option(description="The initial distance between the spheres of all ais")
     private int initialDistance = 50;
@@ -64,7 +59,7 @@ public class PhysicsManager {
     private final double PART_TICK;
     private static int timePerTick = 0;
 
-    public PhysicsManager(Configuration config) throws InvalidConfigurationException {
+    public Physics(Configuration config) throws InvalidConfigurationException {
         config.inject(this);
         this.config = config;
         PART_TICK = tick / calcsPerTick;
@@ -72,13 +67,13 @@ public class PhysicsManager {
         System.out.println(timePerTick);
     }
 
-    public void setAIManager(AIManager mgr) {
-        aiManager = mgr;
+    public void setAIManager(AIs mgr) {
+        ais = mgr;
     }
 
-    public Tick createInitialTick(List<Player> ais) {
+    public Tick createInitialTick(List<Player> playingAIs) {
         Position initalPos = new Position(fieldWidth/2, fieldHeight/2);
-        double angle = 360.0/ais.size();
+        double angle = 360.0/playingAIs.size();
         
         // b² = c² - a², c = 1 im Einheitskreis, a = sin Alpha * c im Einheitskreis
         // Strahlensatz: ZA zu BA = ZA' zu BA', c zu a = x*c zu x*a sodass x*a = 5 
@@ -86,15 +81,15 @@ public class PhysicsManager {
         double radius = initialDistance / 2 / a;
 
         int i = 0;
-        for (Player ai : ais) {
+        for (Player ai : playingAIs) {
             ai.setSize(10); // TODO should'nt be hardcoded...
 
             // create new sphere for current player
             List<MutableSphere> sphereList = new ArrayList<>();
             try {
                 MutableSphere sphere = new MutableSphere(config);
-                Position addPos = new Position(radius * Math.cos(i * 2 * Math.PI / ais.size()),
-                                               radius * Math.sin(i * 2 * Math.PI / ais.size()));
+                Position addPos = new Position(radius * Math.cos(i * 2 * Math.PI / playingAIs.size()),
+                                               radius * Math.sin(i * 2 * Math.PI / playingAIs.size()));
                 sphere.setPosition(initalPos.add(addPos));
                 sphereList.add(sphere);
             } catch (InvalidConfigurationException e) {
@@ -110,7 +105,7 @@ public class PhysicsManager {
     public Tick applyPhysics() throws IllegalArgumentException, InterruptedException {
         for (int i = 0; i < calcsPerTick; i++) {
             // 1. let ais do ther moves
-            aiManager.applyMoves();
+            ais.applyMoves();
 
             // 2. move all spheres
             moveSpheres();

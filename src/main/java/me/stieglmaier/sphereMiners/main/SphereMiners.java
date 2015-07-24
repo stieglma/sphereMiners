@@ -6,9 +6,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import me.stieglmaier.sphereMiners.controller.ViewController;
+import me.stieglmaier.sphereMiners.model.AIs;
 import me.stieglmaier.sphereMiners.model.Model;
-import me.stieglmaier.sphereMiners.model.ai.AIManager;
-import me.stieglmaier.sphereMiners.model.ai.PhysicsManager;
+import me.stieglmaier.sphereMiners.model.Physics;
 
 import org.sosy_lab.common.configuration.Configuration;
 import org.sosy_lab.common.configuration.InvalidConfigurationException;
@@ -49,10 +49,10 @@ public class SphereMiners extends Application {
         }
 
         final Model model;
-        final AIManager aiManager;
+        final AIs ais;
         try {
-            aiManager = new AIManager(config.get());
-            model = new Model(new PhysicsManager(config.get()), aiManager);
+            ais = new AIs(config.get());
+            model = new Model(new Physics(config.get()), ais);
         } catch (ClassNotFoundException | MalformedURLException | InvalidConfigurationException e) {
             System.err.println("Model could not be created, shutting down.");
             e.printStackTrace(System.err);
@@ -67,8 +67,8 @@ public class SphereMiners extends Application {
         ViewController controller = (ViewController)loader.getController();
 
         controller.setAIList(model.getAIList());
-        controller.setAIListListeners(() -> aiManager.reloadAIList());
-        controller.setSimulateListeners(ais -> model.simulateGame(ais),
+        controller.setAIListListeners(() -> ais.reloadAIList());
+        controller.setSimulateListeners(aisToPlay -> model.simulateGame(aisToPlay),
                                         ()  -> model.pauseSimulation(),
                                         ()  -> model.deleteSimulation());
         primaryStage.show();

@@ -7,8 +7,8 @@ import java.util.concurrent.TimeUnit;
 
 import javafx.scene.canvas.GraphicsContext;
 import me.stieglmaier.sphereMiners.model.GameSimulation;
+import me.stieglmaier.sphereMiners.model.Physics;
 import me.stieglmaier.sphereMiners.model.Tick;
-import me.stieglmaier.sphereMiners.model.ai.PhysicsManager;
 
 public class DisplayGameHandler {
 
@@ -34,7 +34,7 @@ public class DisplayGameHandler {
     }
 
     public void startAnimation() {
-        future = scheduler.scheduleAtFixedRate(playTick, 0, PhysicsManager.getTimePerTick(), TimeUnit.MILLISECONDS);
+        future = scheduler.scheduleAtFixedRate(playTick, 0, Physics.getTimePerTick(), TimeUnit.MILLISECONDS);
     }
 
     public void pauseAnimation() {
@@ -42,7 +42,7 @@ public class DisplayGameHandler {
         if (isPaused) {
             future.cancel(true);
         } else {
-            future = scheduler.scheduleAtFixedRate(playTick, 0, PhysicsManager.getTimePerTick(), TimeUnit.MILLISECONDS);
+            future = scheduler.scheduleAtFixedRate(playTick, 0, Physics.getTimePerTick(), TimeUnit.MILLISECONDS);
         }
     }
 

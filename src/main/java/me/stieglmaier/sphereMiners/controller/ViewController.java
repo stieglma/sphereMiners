@@ -17,7 +17,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import me.stieglmaier.sphereMiners.model.GameSimulation;
-import me.stieglmaier.sphereMiners.model.ai.Player;
+import me.stieglmaier.sphereMiners.model.Player;
 import me.stieglmaier.sphereMiners.view.DisplayGameHandler;
 
 

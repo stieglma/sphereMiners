@@ -1,6 +1,6 @@
 
 
-import me.stieglmaier.sphereMiners.model.ai.SphereMiners2015;
+import me.stieglmaier.sphereMiners.model.SphereMiners2015;
 
 public class DumbAI6 extends SphereMiners2015 {
 

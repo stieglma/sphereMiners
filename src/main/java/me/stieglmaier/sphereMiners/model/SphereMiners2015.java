@@ -1,8 +1,4 @@
-package me.stieglmaier.sphereMiners.model.ai;
-
-import me.stieglmaier.sphereMiners.model.MutableSphere;
-import me.stieglmaier.sphereMiners.model.Position;
-import me.stieglmaier.sphereMiners.model.Sphere;
+package me.stieglmaier.sphereMiners.model;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +14,7 @@ public abstract class SphereMiners2015 {
     /** All owned spheres */
     protected Stream<Sphere> ownSpheres;
 
-    private PhysicsManager physMgr;
+    private Physics physMgr;
     private Player ownAI;
     private Map<Player, List<MutableSphere>> allSpheres;
     private Stream<Pair<Sphere, MutableSphere>> sphereMap;
@@ -117,7 +113,7 @@ public abstract class SphereMiners2015 {
     /**
      * Package private, this should only be called and set by AImanager!
      */
-    void setManager(PhysicsManager mgr) {
+    void setPhysics(Physics mgr) {
         physMgr = mgr;
         allSpheres = mgr.getAISpheres();
         sphereMap = allSpheres.get(ownAI).stream()

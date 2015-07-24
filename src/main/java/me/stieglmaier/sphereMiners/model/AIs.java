@@ -1,4 +1,4 @@
-package me.stieglmaier.sphereMiners.model.ai;
+package me.stieglmaier.sphereMiners.model;
 
 import static java.util.Objects.requireNonNull;
 
@@ -42,7 +42,7 @@ import org.sosy_lab.common.configuration.Options;
  * terminated by the AI Manager and initialized again.
  */
 @Options(prefix="ai")
-public final class AIManager {
+public final class AIs {
 
     /**
      * 
@@ -63,7 +63,7 @@ public final class AIManager {
     /**
      * The physics engine responsible for calculating all the stuff.
      */
-    private PhysicsManager physicsManager;
+    private Physics physics;
 
     /**
      * path to location with stored ais.
@@ -87,7 +87,7 @@ public final class AIManager {
      *                                was malformed
      * @throws InvalidConfigurationException 
      */
-    public AIManager(Configuration config) throws ClassNotFoundException, MalformedURLException, InvalidConfigurationException {
+    public AIs(Configuration config) throws ClassNotFoundException, MalformedURLException, InvalidConfigurationException {
         config.inject(this);
         AI_FILELOCATION = getAIPath();
         initalizeClassloader();
@@ -95,11 +95,10 @@ public final class AIManager {
     }
 
     /**
-     * Adds a physicsManager instance to this class
-     * @param physMgr
+     * Adds a physics instance to this class
      */
-    public void setPhysicsManager(PhysicsManager physMgr) {
-        physicsManager = physMgr;
+    public void setPhysics(Physics physics) {
+        this.physics = physics;
     }
 
     /**
@@ -112,7 +111,7 @@ public final class AIManager {
     private String getAIPath() {
         String fileLoc = null;
         try {
-            fileLoc = URLDecoder.decode(AIManager.class.getProtectionDomain()
+            fileLoc = URLDecoder.decode(AIs.class.getProtectionDomain()
                                 .getCodeSource()
                                 .getLocation().getPath(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -266,7 +265,7 @@ public final class AIManager {
                 throw new InstantiationException("The Ais could not be loaded properly.");
             } else {
                 ai.setPlayer(player);
-                ai.setManager(physicsManager);
+                ai.setPhysics(physics);
                 ai.init();
             }
         }
@@ -380,7 +379,7 @@ public final class AIManager {
         ais.remove(ai);
         SphereMiners2015 newAi = (SphereMiners2015) cl.newInstance();
         newAi.setPlayer(ai);
-        newAi.setManager(physicsManager);
+        newAi.setPhysics(physics);
         newAi.init();
         ais.put(ai, newAi);
     }
