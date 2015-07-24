@@ -62,8 +62,8 @@ public class SphereMiners extends Application {
         primaryStage.setScene(new Scene(loader.load()));
 
         ((ViewController)loader.getController()).setSimulateListeners(ais -> model.simulateGame(ais),
-                                                                      () -> model.pauseSimulation(),
-                                                                      () -> model.deleteSimulation());
+                                                                      ()  -> model.pauseSimulation(),
+                                                                      ()  -> model.deleteSimulation());
         primaryStage.show();
     }
 
