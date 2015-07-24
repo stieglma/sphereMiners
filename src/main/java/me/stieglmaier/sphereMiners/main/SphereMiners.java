@@ -62,6 +62,8 @@ public class SphereMiners extends Application {
         primaryStage.setTitle("Sphere Miners");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Overview.fxml"));
         primaryStage.setScene(new Scene(loader.load()));
+        primaryStage.setMinWidth(1280);
+        primaryStage.setMinHeight(900);
         ViewController controller = (ViewController)loader.getController();
 
         controller.setAIList(model.getAIList());

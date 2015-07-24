@@ -9,12 +9,14 @@ import java.util.stream.Collectors;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.paint.Color;
 import me.stieglmaier.sphereMiners.model.GameSimulation;
 import me.stieglmaier.sphereMiners.model.Player;
 
@@ -52,6 +54,9 @@ public class ViewController implements Initializable{
     @FXML
     private Slider progressBar;
 
+    @FXML
+    private Canvas viewGameCanvas;
+
     private boolean isSimulationPaused = false;
     private GameSimulation gameSimulation = null;
 
@@ -63,6 +68,8 @@ public class ViewController implements Initializable{
         playButton.setDisable(true);
         deleteSimulationButton.setDisable(true);
 
+        viewGameCanvas.getGraphicsContext2D().setFill(Color.BLACK);
+        viewGameCanvas.getGraphicsContext2D().fillRect(0, 0, 800, 800);
         setTableViewCells();
         createButtonListeners();
     }

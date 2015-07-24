@@ -6,6 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
+<?import me.stieglmaier.sphereMiners.view.*?>
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.stieglmaier.sphereMiners.controller.ViewController">
    <children>
@@ -72,7 +73,11 @@
             </VBox>
             <VBox prefHeight="898.0" prefWidth="586.0">
                <children>
-                  <Pane VBox.vgrow="ALWAYS" />
+                  <AutoScalingStackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Canvas fx:id="viewGameCanvas" height="800.0" width="800.0" />
+                     </children>
+                  </AutoScalingStackPane>
                   <Separator prefWidth="200.0" />
                   <HBox alignment="CENTER_LEFT" prefHeight="71.0" prefWidth="954.0">
                      <children>
