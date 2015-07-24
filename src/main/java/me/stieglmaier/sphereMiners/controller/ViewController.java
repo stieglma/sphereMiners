@@ -86,6 +86,7 @@ public class ViewController implements Initializable{
                 try {
                     gameSimulation = startMethod.apply(playingAIs.getItems().stream().map(i -> i.getName()).collect(Collectors.toList()));
                     gameSimulation.addObserver(t -> progressBar.setMax(gameSimulation.getSize()));
+                    simulateButton.setText("Pause");
                 } catch (Exception e1) {
                     e1.printStackTrace();
                     throw new RuntimeException("Error during starting Simulation");
