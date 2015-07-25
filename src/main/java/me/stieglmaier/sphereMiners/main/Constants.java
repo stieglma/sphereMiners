@@ -53,55 +53,111 @@ public class Constants {
     private int minMergeDist = 1;
 
 
-
+    /**
+     * Create the Constants object. It only consists of configurable constants
+     * that are used in the whole framework. These constants are private and
+     * can be accessed via getters, but not changed.
+     *
+     * @param configuration The configuration object to set the values of all constants
+     * @throws InvalidConfigurationException if the configuration is invalid
+     */
     public Constants(Configuration configuration) throws InvalidConfigurationException {
         configuration.inject(this);
     }
 
+    /**
+     * The relative location in the file system where the ais can be found.
+     * @return the location where AIs can be found.
+     */
     public String getAILocation() {
         return aiFolderName;
     }
 
+    /**
+     * The maximal computation time for one tick per AI.
+     * @return the maximal computation time for one tick
+     */
     public int getAIComputationTime() {
         return aiComputationTime;
     }
 
+    /**
+     * The initial distance all AI's should have to each other
+     * @return the initial distance between two ais
+     */
     public int getInitialDistance() {
         return initialDistance;
     }
 
+    /**
+     * The field width of the playground.
+     * @return the field width of the playground
+     */
     public int getFieldWidth() {
         return fieldWidth;
     }
 
+    /**
+     * The field height of the playground.
+     * @return the field height of the playground
+     */
     public int getFieldHeight() {
         return fieldHeight;
     }
 
+    /**
+     * The amount of frames per second.
+     * @return the amount of frames per second
+     */
     public int getFramesPerSecond() {
         return framesPerSecond;
     }
 
+    /**
+     * The amount of (physical) computations per frame
+     * @return the amount of computations per frame
+     */
     public int getCalcsPerTick() {
         return calcsPerTick;
     }
 
+    /**
+     * The maximum speed of a sphere.
+     * @return The maximum speed of a sphere
+     */
     public double getMaxSpeed() {
         return maxSpeed;
     }
 
+    /**
+     * The minimum speed of a sphere
+     * @return The minimum speed of a sphere
+     */
     public double getMinSpeed() {
         return minSpeed;
     }
 
+    /**
+     * The initial size of a sphere.
+     * @return the initial size of a sphere
+     */
     public int getInitialSphereSize() {
         return initialSphereSize;
     }
 
+    /**
+     * The minimal size a sphere has to have for splitting.
+     * @return the minimal sphere size for splitting
+     */
     public int getMinSplittingsize() {
         return minSplittingsize;
     }
 
+    /**
+     * The minimal overlapping distance of to sphere to merge the smaller one
+     * into the bigger one
+     * @return the minimal overlapping distance for merging spheres
+     */
     public int getMinMergeDist() {
         return minMergeDist;
     }
