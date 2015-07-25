@@ -2,7 +2,6 @@ package me.stieglmaier.sphereMiners.view;
 
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -14,7 +13,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableView;
-import javafx.scene.paint.Color;
 import me.stieglmaier.sphereMiners.main.Constants;
 import me.stieglmaier.sphereMiners.model.GameSimulation;
 import me.stieglmaier.sphereMiners.model.Player;

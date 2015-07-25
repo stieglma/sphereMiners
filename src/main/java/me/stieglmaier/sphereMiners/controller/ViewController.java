@@ -1,7 +1,6 @@
 package me.stieglmaier.sphereMiners.controller;
 
 import java.net.URL;
-import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
