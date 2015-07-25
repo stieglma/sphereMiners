@@ -48,7 +48,7 @@ public final class AIs {
     private final ObservableList<String> aiList = FXCollections.observableArrayList();
 
     /**
-     * array the the active AIs, each AI is identified by {@link Team}.
+     * array of the active AIs, each AI is identified by {@link Team}.
      */
     private final Map<Player, SphereMiners2015> ais = new LinkedHashMap<>();
 
@@ -73,6 +73,7 @@ public final class AIs {
      * The constructor of this class. It is responsible for listing the possible
      * AIs, so they can be displayed in the View and chosen to simulate games.
      *
+     * @param constants The constants that should be used for the AIs class
      * @throws ClassNotFoundException Could appear if a class file is deleted
      *                                in the runtime of this method
      * @throws MalformedURLException  Could appear if the Constants.AI_LOCATION
@@ -80,7 +81,7 @@ public final class AIs {
      */
     public AIs(Constants constants) throws ClassNotFoundException, MalformedURLException {
         this.constants = constants;
-        AI_FILELOCATION = getAIPath(constants.getAILocation());
+        AI_FILELOCATION = getAIPath();
         AI_TIME = constants.getAIComputationTime();
         initalizeClassloader();
         makeAiList();
@@ -88,6 +89,8 @@ public final class AIs {
 
     /**
      * Adds a physics instance to this class
+     *
+     * @param physics the Physics object that should be used
      */
     public void setPhysics(Physics physics) {
         this.physics = physics;
@@ -96,11 +99,9 @@ public final class AIs {
     /**
      * This method creates the ai path, depending on the path of this class.
      *
-     * @throws UnsupportedEncodingException if the encoding is invalid
-     *                                      (Will never happen a standard java charset is used)
-     * @ return The file location of the ai.
+     * @return The file location of the ai.
      */
-    private String getAIPath(String aiFolderName) {
+    private String getAIPath() {
         String fileLoc = null;
         try {
             fileLoc = URLDecoder.decode(AIs.class.getProtectionDomain()
@@ -115,11 +116,11 @@ public final class AIs {
         // if everything is packaged in a jar file remove the last part and add the ai folder
         if (fileLoc.endsWith(".jar")) {
             int index = fileLoc.lastIndexOf("/");
-            fileLoc = fileLoc.substring(0, index + 1) + aiFolderName;
+            fileLoc = fileLoc.substring(0, index + 1) + constants.getAILocation();
 
             // if the program is run without jar file just append the ai folder one step over in the hierarchy
         } else {
-            fileLoc += aiFolderName;
+            fileLoc += constants.getAILocation();
         }
 
         return fileLoc;
@@ -140,7 +141,6 @@ public final class AIs {
 
     /**
      * This method creates the list of the possible AIs.
-     *
      */
     private void makeAiList() {
 
@@ -161,6 +161,9 @@ public final class AIs {
                               .forEach(f -> aiList.add(f));
     }
 
+    /**
+     * Recreate the list of AI's that could be used for playing
+     */
     public void reloadAIList() {
         aiList.clear();
         makeAiList();
@@ -210,28 +213,25 @@ public final class AIs {
      * This method initializes the AIs which should play against each other in
      * the next simulation.
      *
-     * @param ai1 The first AI.
-     * @param ai2 The second AI.
-     * @throws IllegalArgumentException   If a reference to a given AI is invalid.
+     * @param ai2 The list of AI's that should play against each other
      * @throws InstantiationException     If the method is not able to initialize the given two AIs,
      *                                    this exception will be thrown.
-     * @throws InterruptedException 
      * @throws InvalidAiLocationException If the aiLocations are invalid
      */
-    public void initializeGameAIs(final List<Player> ais2)
+    public void initializeGameAIs(final List<Player> aisToPlay)
             throws InstantiationException, InvalidAILocationException {
 
         // cleaning up the list of the last ais.
         ais.clear();
 
-        if (ais2.stream().map(ai -> isValidAi(ai.getInternalName())).anyMatch(p -> !p)) {
+        if (aisToPlay.stream().map(ai -> isValidAi(ai.getInternalName())).anyMatch(p -> !p)) {
             throw new InvalidAILocationException("Some AIs could not be found.");
         }
 
         // load ais in discrete thread, so one's able to handle bad constructors.
         ScheduledExecutorService aiLoader = Executors.newSingleThreadScheduledExecutor();
         try {
-            aiLoader.invokeAll(ais2.stream().map(ai -> loadAI(ai, loader)).collect(Collectors.toList()));
+            aiLoader.invokeAll(aisToPlay.stream().map(ai -> loadAI(ai, loader)).collect(Collectors.toList()));
 
             // pretty bad something interrupted our loading process...
         } catch (InterruptedException e1) {
@@ -251,7 +251,7 @@ public final class AIs {
         // if loading was not successful throw an exception
         // otherwise set the relevant fields in the ai
         // and call the init method
-        for (Player player : ais2) {
+        for (Player player : aisToPlay) {
             SphereMiners2015 ai = ais.get(player);
             if (ai == null) {
                 throw new InstantiationException("The Ais could not be loaded properly.");
@@ -265,13 +265,11 @@ public final class AIs {
     }
 
     /**
-     * This method returns a thread where an ai will be initialized if possible.
+     * This method returns a callable where an ai will be initialized if possible.
      *
-     * @param ai             the name of the class which should be initialized
-     * @param loader         the loader which is used for initialization
-     * @param aiToInitialize this enum indicates which global variable (ai1, ai2) should be
-     *                       assigned the newly initialized ai
-     * @return the Thread for the initialization
+     * @param ai he player which should be initialized
+     * @param loader the loader which is used for initialization
+     * @return the callable that can be used for the initialization
      */
     private Callable<Void> loadAI(final Player ai, final URLClassLoader loader) {
 
