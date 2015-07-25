@@ -10,7 +10,14 @@ import java.util.Map.Entry;
 
 import me.stieglmaier.sphereMiners.main.Constants;
 
-
+/**
+ * This class handles all the physical computations such as moving and "eating"
+ * smaller spheres that are in the necessary range. The move compuatation is done
+ * based on a certain FPS number which is divided into smaller computation parts.
+ *
+ * @author stieglma
+ *
+ */
 public class Physics {
 
     private final Map<Player, List<MutableSphere>> spheresPerPlayer = new HashMap<>();
@@ -19,12 +26,21 @@ public class Physics {
     private final double tickLength;
     private final double partialTick;
 
+    /**
+     * Creates a physics object.
+     * @param constants The constants object the physics will base the computation on.
+     */
     public Physics(Constants constants) {
         this.constants = constants;
         tickLength = 1.0 / constants.getFramesPerSecond();
         partialTick = tickLength / constants.getCalcsPerTick();
     }
 
+    /**
+     * Creates the initial tick for a simulation.
+     * @param playingAIs the list of players that should take part
+     * @return the computed initial tick
+     */
     public Tick createInitialTick(List<Player> playingAIs) {
         Position initalPos = new Position(constants.getFieldWidth()/2, constants.getFieldHeight()/2);
         double angle = 360.0/playingAIs.size();
@@ -52,7 +68,14 @@ public class Physics {
         return snapshot();
     }
 
-    public Tick applyPhysics() throws IllegalArgumentException, InterruptedException {
+    /**
+     * This method applies the physics for one tick (frame). It is computed
+     * in smaller parts in a loop, the last of these parts is then packed
+     * into a tick and returned.
+     *
+     * @return the computed tick
+     */
+    public Tick applyPhysics() {
         for (int i = 0; i <  constants.getCalcsPerTick(); i++) {
             // 1. move all spheres
             moveSpheres();
@@ -122,19 +145,33 @@ public class Physics {
         }
     }
 
+    /**
+     * Returns an unmodifiable view of the map with all spheres per player.
+     */
     public Map<Player, List<MutableSphere>> getAISpheres() {
         return Collections.unmodifiableMap(spheresPerPlayer);
     }
 
-    public void split(MutableSphere sphere, Player aiName) {
-        List<MutableSphere> spheres = spheresPerPlayer.get(aiName);
+    /**
+     * Splits a sphere into two smaller parts
+     * @param sphere the sphere to split
+     * @param player the player who owns the sphere
+     */
+    public void split(MutableSphere sphere, Player player) {
+        List<MutableSphere> spheres = spheresPerPlayer.get(player);
         spheres.remove(sphere);
         spheres.addAll(sphere.split());
     }
 
-    public void merge(MutableSphere sphere1, MutableSphere sphere2, Player aiName) {
+    /**
+     * Merges two spheres if they are in the necessary range to do that.
+     * @param sphere1 the sphere that should grow
+     * @param sphere2 the sphere that should be merged into the other one
+     * @param player the player who owns the spheres
+     */
+    public void merge(MutableSphere sphere1, MutableSphere sphere2, Player player) {
         if (sphere1.canBeMergedWidth(sphere2)) {
-            List<MutableSphere> spheres = spheresPerPlayer.get(aiName);
+            List<MutableSphere> spheres = spheresPerPlayer.get(player);
             spheres.remove(sphere2);
             sphere1.merge(sphere2);
         }
