@@ -39,10 +39,8 @@ public class DisplayGameHandler {
             progressBar.setValue(((double)currentTick)/constants.getFramesPerSecond());
             //do drawing on graphics object
             for (Entry<Player, List<Sphere>> e : tick.getSpheresMap().entrySet()) {
-                System.out.println(e.getKey());
                 graphicsContext.setFill(e.getKey().getColor());
                 for (Sphere s : e.getValue()) graphicsContext.fillOval(s.getPosition().getX(), s.getPosition().getY(), 2, 2);
-                for (Sphere s : e.getValue()) System.out.println("\t" + s.getPosition());
             }
         };
     }
