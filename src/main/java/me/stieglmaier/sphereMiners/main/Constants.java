@@ -23,10 +23,10 @@ public class Constants {
     private int initialDistance = 50;
 
     @Option(description="The width of the game field in meters")
-    private int fieldWidth = 400;
+    private int fieldWidth = 800;
 
     @Option(description="The height of the game field in meters")
-    private int fieldHeight = 400;
+    private int fieldHeight = 800;
 
     @Option(description="The frames that should be displayed per second")
     private int framesPerSecond = 25;
@@ -44,19 +44,19 @@ public class Constants {
     /* Sphere related constants */
 
     @Option(description="The initial size for a sphere with which a player starts.")
-    private int initialSphereSize = 10;
+    private int initialSphereSize = 50;
 
     @Option(description="The minimal size a sphere has to have before it can be splitted")
-    private int minSplittingsize = 20;
+    private int minSplittingsize = 100;
 
     @Option(description="The minimal overlapping area between two spheres that should be merged")
     private int minMergeDist = 1;
 
     @Option(description="The size of the dots spawing randomly.")
-    private int dotSize = 2;
+    private int dotSize = 10;
 
     @Option(description="The number of dots on the playground")
-    private int dotAmount = 500;
+    private int dotAmount = 800;
 
     /**
      * Create the Constants object. It only consists of configurable constants
