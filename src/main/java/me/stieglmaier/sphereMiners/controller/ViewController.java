@@ -1,6 +1,7 @@
 package me.stieglmaier.sphereMiners.controller;
 
 import java.net.URL;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
@@ -15,7 +16,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TableView;
+import javafx.util.Callback;
 import me.stieglmaier.sphereMiners.main.Constants;
 import me.stieglmaier.sphereMiners.model.GameSimulation;
 import me.stieglmaier.sphereMiners.model.Player;
@@ -81,6 +84,17 @@ public class ViewController implements Initializable{
         aiNameCol.setCellValueFactory(p -> p.getValue().getNameProperty());
         aiNameCol.setSortable(false);
         aiSizeCol.setCellValueFactory(p -> p.getValue().getSizeProperty());
+        aiSizeCol.setSortType(SortType.DESCENDING);
+        playingAIs.setSortPolicy(new Callback<TableView<Player>, Boolean>() {
+            
+            @Override
+            public Boolean call(TableView<Player> param) {
+                param.getItems().sort((a,b) -> {
+                    return b.getSizeProperty().get() - a.getSizeProperty().get();
+                });
+                return true;
+            }
+        });
     }
 
     /**
@@ -217,7 +231,12 @@ public class ViewController implements Initializable{
                 displayGameHandler.pauseResumeAnimation();
             } else {
                 playButton.setText("pause");
-                displayGameHandler = new DisplayGameHandler(viewGameCanvas.getGraphicsContext2D(), gameSimulation, progressBar, playButton, constants);
+                displayGameHandler = new DisplayGameHandler(viewGameCanvas.getGraphicsContext2D(),
+                                                            gameSimulation,
+                                                            progressBar,
+                                                            playButton,
+                                                            playingAIs,
+                                                            constants);
                 progressBar.valueProperty().addListener(displayGameHandler.getSliderChangedListener());
                 displayGameHandler.startAnimation();
             }

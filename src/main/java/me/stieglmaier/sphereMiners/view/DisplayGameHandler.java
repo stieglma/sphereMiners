@@ -13,6 +13,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TableView;
 import javafx.scene.paint.Color;
 import me.stieglmaier.sphereMiners.main.Constants;
 import me.stieglmaier.sphereMiners.model.GameSimulation;
@@ -34,7 +35,6 @@ public class DisplayGameHandler {
     private final Runnable showCurrentTick;
     private final Slider progressBar;
     private final Constants constants;
-    private final Random random = new Random();
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> future;
     private boolean isPaused = false;
@@ -49,9 +49,12 @@ public class DisplayGameHandler {
      * @param simulation the simulation that should be played
      * @param progressBar the progressBar displaying the current viewed state
      * @param playButton the button that is used to start/stop/pause the replay
+     * @param playingAIs the tableview showing the current size of the players
      * @param constants the constants which are necessary for computing the view
      */
-    public DisplayGameHandler(GraphicsContext graphicsContext, GameSimulation simulation, Slider progressBar, Button playButton, Constants constants) {
+    public DisplayGameHandler(GraphicsContext graphicsContext, GameSimulation simulation,
+                              Slider progressBar, Button playButton, TableView<Player> playingAIs,
+                              Constants constants) {
         this.constants = constants;
         this.progressBar = progressBar;
 
@@ -82,6 +85,7 @@ public class DisplayGameHandler {
                 }
                 e.getKey().getSizeProperty().set(size);
             }
+            playingAIs.sort();
 
             for (Sphere s : tick.getDots()) {
                 graphicsContext.setFill(s.getColor());
