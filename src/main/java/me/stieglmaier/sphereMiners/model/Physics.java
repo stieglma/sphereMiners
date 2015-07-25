@@ -62,7 +62,16 @@ public class Physics {
             MutableSphere sphere = new MutableSphere(constants);
             Position addPos = new Position(radius * Math.cos(i * 2 * Math.PI / playingAIs.size()),
                                            radius * Math.sin(i * 2 * Math.PI / playingAIs.size()));
-            sphere.setPosition(initalPos.add(addPos));
+
+            // place modulo the usual position if it would be out of bounds
+            Position spherePos = initalPos.add(addPos);
+            if (spherePos.getX() < 0 || spherePos.getX() > constants.getFieldWidth()
+                || spherePos.getY() < 0 || spherePos.getY() > constants.getFieldHeight()) {
+                spherePos = new Position(spherePos.getX() % constants.getFieldWidth(),
+                                         spherePos.getY() % constants.getFieldHeight());
+            }
+
+            sphere.setPosition(spherePos);
             sphereList.add(sphere);
 
             spheresPerPlayer.put(ai, sphereList);
