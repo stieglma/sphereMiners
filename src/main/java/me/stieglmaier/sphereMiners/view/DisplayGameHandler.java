@@ -2,15 +2,18 @@ package me.stieglmaier.sphereMiners.view;
 
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import javafx.scene.paint.Color;
 import me.stieglmaier.sphereMiners.main.Constants;
 import me.stieglmaier.sphereMiners.model.GameSimulation;
 import me.stieglmaier.sphereMiners.model.Player;
@@ -31,6 +34,7 @@ public class DisplayGameHandler {
     private final Runnable showCurrentTick;
     private final Slider progressBar;
     private final Constants constants;
+    private final Random random = new Random();
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> future;
     private boolean isPaused = false;
@@ -75,6 +79,12 @@ public class DisplayGameHandler {
                     graphicsContext.fillOval(s.getPosition().getX()-radius, s.getPosition().getY()-radius, radius, radius);
                 }
             }
+
+            for (Sphere s : tick.getDots()) {
+                graphicsContext.setFill(new Color(random.nextDouble(), random.nextDouble(), random.nextDouble(), 0));
+                double radius = s.getRadius();
+                graphicsContext.fillOval(s.getPosition().getX()-radius, s.getPosition().getY()-radius, radius, radius);
+            }
         };
 
         currentSliderTickListener = (a, b, n) -> {
@@ -95,7 +105,7 @@ public class DisplayGameHandler {
      * Starts the animation.
      */
     public void startAnimation() {
-        future = scheduler.scheduleAtFixedRate(playTick, 0, constants.getFramesPerSecond(), TimeUnit.MILLISECONDS);
+        future = scheduler.scheduleAtFixedRate(() -> Platform.runLater(playTick), 0, constants.getFramesPerSecond(), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -107,7 +117,7 @@ public class DisplayGameHandler {
             future.cancel(true);
         } else {
             currentTick = (int) progressBar.getValue();
-            future = scheduler.scheduleAtFixedRate(playTick, 0, constants.getFramesPerSecond(), TimeUnit.MILLISECONDS);
+            future = scheduler.scheduleAtFixedRate(() -> Platform.runLater(playTick), 0, constants.getFramesPerSecond(), TimeUnit.MILLISECONDS);
         }
     }
 

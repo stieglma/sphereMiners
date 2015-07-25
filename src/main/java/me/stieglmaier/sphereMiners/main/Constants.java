@@ -12,7 +12,7 @@ public class Constants {
 
     @Option(description="In which folder should the framework search for ais?"
             + " (Base is the root of the project/ the folder where the jar file is located)")
-    private String aiFolderName = "";
+    private String aiFolderName = "ais";
 
     @Option(description="Timeout for the computation done by the ais in milliseconds")
     private int aiComputationTime = 50;
@@ -52,6 +52,11 @@ public class Constants {
     @Option(description="The minimal overlapping area between two spheres that should be merged")
     private int minMergeDist = 1;
 
+    @Option(description="The size of the dots spawing randomly.")
+    private int dotSize = 2;
+
+    @Option(description="The number of dots on the playground")
+    private int dotAmount = 500;
 
     /**
      * Create the Constants object. It only consists of configurable constants
@@ -160,5 +165,21 @@ public class Constants {
      */
     public int getMinMergeDist() {
         return minMergeDist;
+    }
+
+    /**
+     * The size of the dots randomly appearing on the playground.
+     * @return the size of the randomly appearing dots
+     */
+    public int getDotSize() {
+        return dotSize;
+    }
+
+    /**
+     * The number of randomly appearing dots maximally on the field.
+     * @return the number of dots on the playground
+     */
+    public int getDotAmount() {
+        return dotAmount;
     }
 }

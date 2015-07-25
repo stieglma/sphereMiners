@@ -79,6 +79,7 @@ public class ViewController implements Initializable{
 
     private void setTableViewCells() {
         aiNameCol.setCellValueFactory(p -> p.getValue().getNameProperty());
+        aiNameCol.setSortable(false);
         aiSizeCol.setCellValueFactory(p -> p.getValue().getSizeProperty());
     }
 
@@ -221,6 +222,8 @@ public class ViewController implements Initializable{
                 displayGameHandler.startAnimation();
             }
         });
+
+        progressBar.setOnDragDetected(e -> {});
     }
 
 }

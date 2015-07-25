@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import me.stieglmaier.sphereMiners.main.Constants;
 
@@ -21,10 +23,12 @@ import me.stieglmaier.sphereMiners.main.Constants;
 public class Physics {
 
     private final Map<Player, List<MutableSphere>> spheresPerPlayer = new HashMap<>();
+    private final List<MutableSphere> dots = new ArrayList<>();
 
     private final Constants constants;
     private final double tickLength;
     private final double partialTick;
+    private final Random random = new Random();
 
     /**
      * Creates a physics object.
@@ -65,7 +69,18 @@ public class Physics {
             spheresPerPlayer.put(ai, sphereList);
             i++;
         }
+        createDots(constants.getDotAmount());
         return snapshot();
+    }
+
+    private void createDots(int number) {
+        for (int i = 0; i < number; i++) {
+            MutableSphere sphere = new MutableSphere(constants);
+            sphere.setPosition(new Position(random.nextInt(constants.getFieldWidth()+1),
+                                            random.nextInt(constants.getFieldHeight()+1)));
+            sphere.setSize(constants.getDotSize());
+            dots.add(sphere);
+        }
     }
 
     /**
@@ -83,9 +98,15 @@ public class Physics {
             // 2. merge overlapping spheres of opponent ais
             mergeSpheres();
         }
+
+        // refill dots
+        createDots(constants.getDotAmount() - dots.size());
+
+        // update sizes of players
         for (Player p : spheresPerPlayer.keySet()) {
             p.setSize(spheresPerPlayer.get(p).stream().map(s -> s.getSize()).reduce(0, (a, b) -> a + b));
         }
+
         return snapshot();
     }
 
@@ -98,7 +119,9 @@ public class Physics {
             }
             newMap.put(entry.getKey(), Collections.unmodifiableList(newList));
         }
-        return new Tick(Collections.unmodifiableMap(newMap));
+
+        return new Tick(Collections.unmodifiableMap(newMap),
+                        dots.stream().map(s -> s.toImmutableSphere()).collect(Collectors.toList()));
     }
 
     private void moveSpheres() {
@@ -130,6 +153,7 @@ public class Physics {
         for(Entry<Player, List<MutableSphere>> entry : spheresPerPlayer.entrySet()) {
             Player player = entry.getKey();
             for (MutableSphere playerSphere : entry.getValue()) {
+                // check collisions with players
                 for(Entry<Player, List<MutableSphere>> enemies : spheresPerPlayer.entrySet()) {
                     if (enemies.getKey().equals(player)) continue;
                     Iterator<MutableSphere> it = enemies.getValue().iterator();
@@ -139,6 +163,16 @@ public class Physics {
                             it.remove();
                             playerSphere.merge(enemySphere);
                         }
+                    }
+                }
+
+                // check collisions with dots
+                Iterator<MutableSphere> dotsIt = dots.iterator();
+                while(dotsIt.hasNext()) {
+                    Sphere dot = dotsIt.next();
+                    if (playerSphere.canBeMergedWidth(dot)) {
+                        playerSphere.merge(dot);
+                        dotsIt.remove();
                     }
                 }
             }
