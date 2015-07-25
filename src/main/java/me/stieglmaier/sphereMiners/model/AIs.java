@@ -13,10 +13,11 @@ import java.net.URLDecoder;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -48,7 +49,7 @@ public final class AIs {
     /**
      * array the the active AIs, each AI is identified by {@link Team}.
      */
-    private final Map<Player, SphereMiners2015> ais = new HashMap<>();
+    private final Map<Player, SphereMiners2015> ais = new LinkedHashMap<>();
 
     /**
      * The loader which loads the ais.
@@ -65,6 +66,7 @@ public final class AIs {
      */
     private final String AI_FILELOCATION;
     private final int AI_TIME;
+    private final Constants constants;
 
     /**
      * The constructor of this class. It is responsible for listing the possible
@@ -76,6 +78,7 @@ public final class AIs {
      *                                was malformed
      */
     public AIs(Constants constants) throws ClassNotFoundException, MalformedURLException {
+        this.constants = constants;
         AI_FILELOCATION = getAIPath(constants.getAILocation());
         AI_TIME = constants.getAIComputationTime();
         initalizeClassloader();
@@ -254,6 +257,7 @@ public final class AIs {
             } else {
                 ai.setPlayer(player);
                 ai.setPhysics(physics);
+                ai.setConstants(constants);
                 ai.init();
             }
         }
@@ -325,30 +329,35 @@ public final class AIs {
 
         // execute AIs and Launcher
         ExecutorService threadpool = Executors.newCachedThreadPool();
-        List<Future<Void>> retvals = threadpool.invokeAll(ais.values().stream()
-            .map(ai -> (Callable<Void>)(() -> {ai.evaluateTurn(); return null;}))
+        List<Future<Boolean>> retvals = threadpool.invokeAll(ais.values().stream()
+            .map(ai -> (Callable<Boolean>)(() -> ai.evaluateTurn()))
             .collect(Collectors.toList()));
 
-        if (!threadpool.awaitTermination(AI_TIME, TimeUnit.MILLISECONDS)) {
-            threadpool.shutdownNow();
-            Player[] aiStr = new Player[ais.size()];
-            ais.keySet().toArray(aiStr);
-            for (int i = 0; i < ais.size(); i++) {
-                Future<Void> ret = retvals.get(i);
-                if (ret.isCancelled()) {
-                    try {
-                        reinitializeAi(aiStr[i]);
-                    } catch (ClassNotFoundException
-                            | IllegalAccessException
-                            | InstantiationException e1) {
-                        throw new Error("Reinitialization of "
-                                + ais.get(aiStr[i]).getClass().getName()
-                                + " FAILED!");
-                    }
-                }
-                i++;
+        threadpool.shutdown();
+        threadpool.awaitTermination(AI_TIME*ais.size(), TimeUnit.MILLISECONDS);
+
+        int counter = 0;
+        for (Player ai : ais.keySet()) {
+            Future<Boolean> ret = retvals.get(counter);
+            boolean shouldReinitialize = ret.isCancelled();
+            try {
+                shouldReinitialize = shouldReinitialize || !ret.get();
+            } catch (ExecutionException e) {
+                // another exception just reinitialize as intended
+                shouldReinitialize = true;
             }
-        } 
+            if (shouldReinitialize) {
+                try {
+                    reinitializeAi(ai);
+                } catch (ClassNotFoundException
+                        | IllegalAccessException
+                        | InstantiationException e1) {
+                    throw new Error("Reinitialization of "
+                            + ais.get(ai).getClass().getName() + " FAILED!");
+                }
+            }
+            counter++;
+        }
     }
 
     /**
@@ -363,11 +372,12 @@ public final class AIs {
     private void reinitializeAi(Player ai) throws ClassNotFoundException,
             IllegalAccessException, InstantiationException {
 
-        Class<?> cl = loader.loadClass(ais.get(ai.getInternalName()).getClass().getName());
+        Class<?> cl = loader.loadClass(ais.get(ai).getClass().getName());
         ais.remove(ai);
         SphereMiners2015 newAi = (SphereMiners2015) cl.newInstance();
         newAi.setPlayer(ai);
         newAi.setPhysics(physics);
+        newAi.setConstants(constants);
         newAi.init();
         ais.put(ai, newAi);
     }

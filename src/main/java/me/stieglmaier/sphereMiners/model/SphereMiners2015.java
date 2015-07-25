@@ -3,9 +3,16 @@ package me.stieglmaier.sphereMiners.model;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Stream;
 
 import javafx.scene.paint.Color;
+import me.stieglmaier.sphereMiners.main.Constants;
 
 import org.sosy_lab.common.Pair;
 
@@ -19,6 +26,8 @@ public abstract class SphereMiners2015 {
     private Map<Player, List<MutableSphere>> allSpheres;
     private Stream<Pair<Sphere, MutableSphere>> sphereMap;
     private Turn currentTurn;
+    private Constants constants;
+    private ExecutorService threadExecutor = Executors.newSingleThreadExecutor();
 
     /**
      * Set up your AI, initial values for attributes, color of your spheres, ...
@@ -41,6 +50,10 @@ public abstract class SphereMiners2015 {
 
     protected final void setName(String name) {
         ownAI.setName(name);
+    }
+
+    protected final Constants getConstants() {
+        return constants;
     }
 
     /**
@@ -104,10 +117,25 @@ public abstract class SphereMiners2015 {
 
     /**
      * Package private, this should only be called by AIManager!
+     * @return indicates wether the turn could be evaluated within the timelimit
+     *         or not
      */
-    void evaluateTurn() {
-        playTurn();
+    boolean evaluateTurn() {
+        currentTurn = () -> {};
+        Future<?> future = threadExecutor.submit(() -> playTurn());
+        try {
+            future.get(constants.getAIComputationTime(), TimeUnit.MILLISECONDS);
+        } catch (ExecutionException | TimeoutException | InterruptedException e) {
+            future.cancel(true);
+            // TODO proved exception information in logger (introduce logging first)
+            return false;
+        }
         currentTurn.apply();
+        return true;
+    }
+
+    void setConstants(Constants constants) {
+        this.constants = constants;
     }
 
     /**

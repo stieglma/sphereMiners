@@ -15,7 +15,7 @@ public class Constants {
     private String aiFolderName = "ais";
 
     @Option(description="Timeout for the computation done by the ais in milliseconds")
-    private int aiComputationTime = 10;
+    private int aiComputationTime = 50;
 
     /* Physics related constants */
 
