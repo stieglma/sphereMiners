@@ -6,26 +6,19 @@ import java.util.Observable;
 import javafx.collections.ObservableList;
 import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
 
+
+/**
+ * The model class connects the whole backend of the framework. It is responsible
+ * for starting a simulation and setting up all necessary parts.
+ *
+ * @author stieglma
+ *
+ */
 public class Model extends Observable {
 
-    /**
-     * The {@link Physics}.
-     */
     private final Physics physics;
-
-    /**
-     * The {@link AIs}.
-     */
     private final AIs ais;
-
-    /**
-     * The {@link SimulationToViewManager}.
-     */
     private static GameSimulation simulationView;
-
-    /**
-     * The thread where the games will be simulated.
-     */
     private Simulation simulation;
 
     /**
@@ -47,6 +40,9 @@ public class Model extends Observable {
     /**
      * Simulates a game and returns the simulation object where the ticks
      * are saved into.
+     *
+     * @param the list of players that should play a game
+     * @return the SimulationObject that can be viewed
      */
     public GameSimulation simulateGame(final List<Player> aisToPlay) {
         if (simulationView == null) {
