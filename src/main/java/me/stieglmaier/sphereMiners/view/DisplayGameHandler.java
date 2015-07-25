@@ -34,14 +34,18 @@ public class DisplayGameHandler {
         this.constants = constants;
         this.progressBar = progressBar;
 
-        currentSliderTickListener = (a, b, n) -> currentTick = (int) (n.doubleValue() * constants.getFramesPerSecond());
+        currentSliderTickListener = (a, b, n) -> {
+            currentTick = (int) (n.doubleValue() * constants.getFramesPerSecond());
+            showCurrentTick.run();
+        };
+
         playTick = () -> {
             // check if current tick is available before retrieving it
             if (currentTick >= simulation.getSize()) {
                 future.cancel(true);
                 playButton.setText("pause");
             }
-            showCurrentTick.run();
+            progressBar.increment();
         };
 
         showCurrentTick = () -> {
@@ -50,12 +54,14 @@ public class DisplayGameHandler {
 
             // retrieve tick
             Tick tick = simulation.getTick(currentTick);
-            progressBar.increment();
 
             //do drawing on graphics object
             for (Entry<Player, List<Sphere>> e : tick.getSpheresMap().entrySet()) {
                 graphicsContext.setFill(e.getKey().getColor());
-                for (Sphere s : e.getValue()) graphicsContext.fillOval(s.getPosition().getX(), s.getPosition().getY(), 2, 2);
+                for (Sphere s : e.getValue()) {
+                    double radius = Math.sqrt(s.getSize());
+                    graphicsContext.fillOval(s.getPosition().getX()-radius, s.getPosition().getY()-radius, radius, radius);
+                }
             }
         };
     }

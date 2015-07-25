@@ -23,10 +23,10 @@ public class Constants {
     private int initialDistance = 50;
 
     @Option(description="The width of the game field in meters")
-    private int fieldWidth = 800;
+    private int fieldWidth = 400;
 
     @Option(description="The height of the game field in meters")
-    private int fieldHeight = 800;
+    private int fieldHeight = 400;
 
     @Option(description="The frames that should be displayed per second")
     private int framesPerSecond = 25;
