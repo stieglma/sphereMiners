@@ -19,7 +19,7 @@ public abstract class SphereMiners2015 {
     /** All owned spheres */
     protected Set<Sphere> ownSpheres;
 
-    private Physics physMgr;
+    private Physics physics;
     private Player ownAI;
     private Map<Player, List<MutableSphere>> allSpheres;
     private Map<Sphere, MutableSphere> sphereMap;
@@ -42,14 +42,29 @@ public abstract class SphereMiners2015 {
      */
     protected abstract void playTurn();
 
+    /**
+     * Sets the color of your spheres.
+     *
+     * @param color The color your spheres should have
+     */
     protected final void setColor(Color color) {
         ownAI.setColor(color);
     }
 
+    /**
+     * Sets your displayed name.
+     *
+     * @param name The name you want to have
+     */
     protected final void setName(String name) {
         ownAI.setName(name);
     }
 
+    /**
+     * Returns the Constants that are used throughout the framework.
+     *
+     * @return the Constants object used in the whole framework
+     */
     protected final Constants getConstants() {
         return constants;
     }
@@ -63,6 +78,9 @@ public abstract class SphereMiners2015 {
      * Executing this method prevents you from executing {@link SphereMiners2015#split(Sphere)}
      * and {@link SphereMiners2015#merge(Sphere, Sphere)} in this turn. The last
      * called method of these will be executed.
+     *
+     * @param spheres The map of spheres to their new positions (does not need to
+     *                include all spheres you own)
      */
     protected final void changeMoveDirection(final Map<Sphere, Position> spheres) {
         currentTurn = () -> spheres.forEach((sphere, dir) -> sphereMap.get(sphere)
@@ -75,10 +93,12 @@ public abstract class SphereMiners2015 {
      * Executing this method prevents you from executing {@link SphereMiners2015#changeMoveDirection(Map)}
      * and {@link SphereMiners2015#merge(Sphere, Sphere)} in this turn. The last
      * called method of these will be executed.
+     *
+     * @param sphere The sphere you want to split into two parts
      */
     protected final void split(Sphere sphere) {
         // lists cannot be changed directly therefore we need the phyiscsmanager here
-        currentTurn = () -> physMgr.split(sphereMap.get(sphere), ownAI);
+        currentTurn = () -> physics.split(sphereMap.get(sphere), ownAI);
     }
 
     /**
@@ -87,18 +107,22 @@ public abstract class SphereMiners2015 {
      * Executing this method prevents you from executing {@link SphereMiners2015#changeMoveDirection(Map)}
      * and {@link SphereMiners2015#split(Sphere)} in this turn. The last
      * called method of these will be executed.
+     *
+     * @param sphere1 The sphere that should grow
+     * @param sphere2 The sphere that should be merged into the other one
      */
     protected final void merge(Sphere sphere1, Sphere sphere2) {
         // lists cannot be changed directly therefore we need the phyiscsmanager here
-        currentTurn = () -> physMgr.merge(sphereMap.get(sphere1),
+        currentTurn = () -> physics.merge(sphereMap.get(sphere1),
                                           sphereMap.get(sphere2),
                                           ownAI);
     }
 
     /**
      * Returns the enemies surrounding the given sphere in a certain distance.
-     * @param sphere
-     * @return
+     *
+     * @param sphere The sphere you want to find the surrounding enemies for
+     * @return the sourrounding enemies of the given sphere
      */
     protected final Set<MutableSphere> getSurroundingEnemies(Sphere sphere) {
         // TODO implement this operation
@@ -124,26 +148,35 @@ public abstract class SphereMiners2015 {
         return true;
     }
 
+    /**
+     * Sets the constants object for this ai.
+     *
+     * @param constants The constants that should be used for this ai.
+     */
     void setConstants(Constants constants) {
         this.constants = constants;
     }
 
     /**
      * Package private, this should only be called and set by AImanager!
+     *
+     * @param physics the physics instance needed for some ai interactions
      */
-    void setPhysics(Physics mgr) {
-        physMgr = mgr;
-        allSpheres = mgr.getAISpheres();
+    void setPhysics(Physics physics) {
+        this.physics = physics;
+        allSpheres = physics.getAISpheres();
         sphereMap = allSpheres.get(ownAI).stream()
                               .collect(Collectors.toMap(s -> s.toImmutableSphere(), s -> s));
         ownSpheres = sphereMap.keySet();
     }
 
     /**
-     * Set the name used as identifier in maps throughout the framework
+     * Set the player used as identifier in maps throughout the framework
+     *
+     * @param player The internal representation of the player in the framework
      */
-    void setPlayer(Player name) {
-        this.ownAI = name;
+    void setPlayer(Player player) {
+        this.ownAI = player;
     }
 
     @FunctionalInterface
