@@ -36,10 +36,10 @@ public class Constants {
     private int calcsPerTick = 10;
 
     @Option(description="The maximum speed a sphere may have in meter/tick")
-    private double maxSpeed = 1.0;
+    private double maxSpeed = 20.0;
 
     @Option(description="The minimum speed a sphere may have in meter/tick")
-    private double minSpeed = 1.0;
+    private double minSpeed = 2.0;
 
     /* Sphere related constants */
 

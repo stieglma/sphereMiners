@@ -90,8 +90,10 @@ public class Physics {
         }
         for (List<MutableSphere> spheres : spheresPerPlayer.values()) {
             for (MutableSphere sphere : spheres) {
-                // TODO speed should be lower for bigger spheres
-                double speed = constants.getMaxSpeed() * partialTick;
+                double speed = (constants.getInitialSphereSize()
+                                        / sphere.getSize()
+                                        * (constants.getMaxSpeed() - constants.getMinSpeed())
+                               + constants.getMinSpeed()) * partialTick;
                 Position tmpPos = sphere.getPosition().add(sphere.getDirection().normalize().mult(speed));
                 // TODO should we have an infinite field? if not rearrange this code and check the borders
                 double x = tmpPos.getX() % constants.getFieldWidth();
