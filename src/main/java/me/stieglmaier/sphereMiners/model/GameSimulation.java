@@ -38,19 +38,24 @@ public final class GameSimulation {
      * Adds a new {@link Tick} to the SimulationObject.
      *
      * @param tick The {@link Tick} to add.
-     * @throws IllegalArgumentException
-     *             If the tick-parameter is invalid (e.g. null) this exception
-     *             will be thrown to prevent an invalid state.
      */
     public void addInstance(final Tick tick) {
         ticks.add(requireNonNull(tick));
     }
 
+    /**
+     * Adds an list change listener to the underlying list of ticks.
+     *
+     * @param listener The listener that should be attached to the GameSimulation
+     */
     public void addObserver(ListChangeListener<Tick> listener) {
         ticks.addListener(listener);
         registeredListeners.add(listener);
     }
 
+    /**
+     * Removes all observers from this GameSimulation
+     */
     public void removeObservers() {
         for (ListChangeListener<Tick> listener : registeredListeners) {
             ticks.removeListener(listener);
@@ -73,6 +78,11 @@ public final class GameSimulation {
         }
     }
 
+    /**
+     * Returns the amount of ticks in the GameSimulation
+     *
+     * @return the amount of ticks in the GameSimulation
+     */
     public int getSize() {
         return ticks.size();
     }
