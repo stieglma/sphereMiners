@@ -149,9 +149,11 @@ public class Physics {
                                         * (constants.getMaxSpeed() - constants.getMinSpeed())
                                + constants.getMinSpeed()) * partialTick;
                 Position tmpPos = sphere.getPosition().add(sphere.getDirection().normalize().mult(speed));
-                // TODO should we have an infinite field? if not rearrange this code and check the borders
-                double x = tmpPos.getX() % constants.getFieldWidth();
-                double y = tmpPos.getY() % constants.getFieldHeight();
+                // TODO should we have an infinite field? 
+                double x = tmpPos.getX() > constants.getFieldWidth() ? constants.getFieldWidth() : 
+                                (tmpPos.getX() < 0 ? 0 : tmpPos.getX());
+                double y = tmpPos.getY() > constants.getFieldHeight() ? constants.getFieldHeight() : 
+                    (tmpPos.getY() < 0 ? 0 : tmpPos.getY());
                 sphere.setPosition(new Position(x, y));
             }
         }
