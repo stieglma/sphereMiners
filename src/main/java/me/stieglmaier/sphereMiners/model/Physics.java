@@ -3,11 +3,13 @@ package me.stieglmaier.sphereMiners.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javafx.scene.paint.Color;
@@ -24,7 +26,7 @@ import me.stieglmaier.sphereMiners.main.Constants;
 public class Physics {
 
     private final Map<Player, List<MutableSphere>> spheresPerPlayer = new HashMap<>();
-    private final List<MutableSphere> dots = new ArrayList<>();
+    private final Set<MutableSphere> dots = new HashSet<>();
 
     private final Constants constants;
     private final double tickLength;
@@ -196,6 +198,15 @@ public class Physics {
      */
     public Map<Player, List<MutableSphere>> getAISpheres() {
         return Collections.unmodifiableMap(spheresPerPlayer);
+    }
+
+    /**
+     * Returns an unmodifiable view of the set of all dots on the playground
+     *
+     * @return the set of all dots on the playground
+     */
+    public Set<Sphere> getDots() {
+        return Collections.unmodifiableSet(dots.stream().map(s -> s.toImmutableSphere()).collect(Collectors.toSet()));
     }
 
     /**

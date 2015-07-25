@@ -17,6 +17,9 @@ public class Constants {
     @Option(description="Timeout for the computation done by the ais in milliseconds")
     private int aiComputationTime = 50;
 
+    @Option(description="How far can a sphere see other enemies?")
+    private int sightDistance = 50;
+
     /* Physics related constants */
 
     @Option(description="The initial distance between the spheres of all ais")
@@ -84,6 +87,14 @@ public class Constants {
      */
     public int getAIComputationTime() {
         return aiComputationTime;
+    }
+
+    /**
+     * The maximal distance a sphere can see enemies.
+     * @return the maximal distance for seeing other spheres
+     */
+    public int getSightDistance() {
+        return sightDistance;
     }
 
     /**

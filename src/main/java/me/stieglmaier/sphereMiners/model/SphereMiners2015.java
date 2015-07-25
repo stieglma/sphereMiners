@@ -18,6 +18,8 @@ import me.stieglmaier.sphereMiners.main.Constants;
 public abstract class SphereMiners2015 {
     /** All owned spheres */
     protected Set<Sphere> ownSpheres;
+    /** All dots on the playground*/
+    protected Set<Sphere> dots;
 
     private Physics physics;
     private Player ownAI;
@@ -124,9 +126,14 @@ public abstract class SphereMiners2015 {
      * @param sphere The sphere you want to find the surrounding enemies for
      * @return the sourrounding enemies of the given sphere
      */
-    protected final Set<MutableSphere> getSurroundingEnemies(Sphere sphere) {
-        // TODO implement this operation
-        throw new UnsupportedOperationException("not implemented");
+    protected final Set<Sphere> getSurroundingEnemies(Sphere sphere) {
+         return allSpheres.entrySet()
+                  .stream()
+                  .filter(e -> e.getKey() != ownAI)
+                  .flatMap(l -> l.getValue().stream())
+                  .filter(s -> s.getPosition().dist(sphere.getPosition()) <= constants.getSightDistance())
+                  .map(s -> s.toImmutableSphere())
+                  .collect(Collectors.toSet());
     }
 
     /**
@@ -168,6 +175,7 @@ public abstract class SphereMiners2015 {
         sphereMap = allSpheres.get(ownAI).stream()
                               .collect(Collectors.toMap(s -> s.toImmutableSphere(), s -> s));
         ownSpheres = sphereMap.keySet();
+        dots = physics.getDots();
     }
 
     /**
