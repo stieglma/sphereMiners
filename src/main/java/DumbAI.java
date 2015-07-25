@@ -1,17 +1,21 @@
 
 
+import java.util.stream.Collectors;
+
+import javafx.scene.paint.Color;
+import me.stieglmaier.sphereMiners.model.Position;
 import me.stieglmaier.sphereMiners.model.SphereMiners2015;
 
 public class DumbAI extends SphereMiners2015 {
 
     @Override
     protected void init() {
-        // TODO Auto-generated method stub
+        setColor(Color.RED);
     }
 
     @Override
     protected void playTurn() {
-        // TODO Auto-generated method stub
+        changeMoveDirection(ownSpheres.collect(Collectors.toMap(s -> s, s -> new Position(0, 0))));
     }
 
 }
