@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import javafx.scene.paint.Color;
 import me.stieglmaier.sphereMiners.main.Constants;
 
 /**
@@ -79,6 +80,7 @@ public class Physics {
             sphere.setPosition(new Position(random.nextInt(constants.getFieldWidth()+1),
                                             random.nextInt(constants.getFieldHeight()+1)));
             sphere.setSize(constants.getDotSize());
+            sphere.setColor(new Color(random.nextDouble(), random.nextDouble(), random.nextDouble(), 1));
             dots.add(sphere);
         }
     }
@@ -120,8 +122,12 @@ public class Physics {
             newMap.put(entry.getKey(), Collections.unmodifiableList(newList));
         }
 
-        return new Tick(Collections.unmodifiableMap(newMap),
-                        dots.stream().map(s -> s.toImmutableSphere()).collect(Collectors.toList()));
+        List<Sphere> newDots = new ArrayList<>(constants.getDotAmount());
+        for (MutableSphere dot : dots) {
+            newDots.add(dot.immutableCopy());
+        }
+
+        return new Tick(Collections.unmodifiableMap(newMap), newDots);
     }
 
     private void moveSpheres() {
@@ -136,8 +142,8 @@ public class Physics {
         }
         for (List<MutableSphere> spheres : spheresPerPlayer.values()) {
             for (MutableSphere sphere : spheres) {
-                double speed = (constants.getInitialSphereSize()
-                                        / sphere.getSize()
+                double speed = (Math.log(constants.getInitialSphereSize())
+                                        / Math.log(sphere.getSize())
                                         * (constants.getMaxSpeed() - constants.getMinSpeed())
                                + constants.getMinSpeed()) * partialTick;
                 Position tmpPos = sphere.getPosition().add(sphere.getDirection().normalize().mult(speed));

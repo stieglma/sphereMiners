@@ -2,6 +2,8 @@ package me.stieglmaier.sphereMiners.model;
 
 import java.util.List;
 
+import javafx.scene.paint.Color;
+
 public interface Sphere {
 
     /**
@@ -55,6 +57,19 @@ public interface Sphere {
      * @return the current radius of the sphere
      */
     double getRadius();
+
+    /**
+     * Returns the sphere's color.
+     * @return the color of the sphere
+     */
+    Color getColor();
+
+    /**
+     * Sets the color of the sphere
+     *
+     * @param color the new color of the sphere
+     */
+    void setColor(Color color);
 
     /**
      * Splits the sphere into two equal sized (smaller) parts.

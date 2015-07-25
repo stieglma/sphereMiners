@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javafx.scene.paint.Color;
 import me.stieglmaier.sphereMiners.main.Constants;
 
 
@@ -18,6 +19,7 @@ public class MutableSphere implements Sphere {
     private Position position;
     private Position direction = new Position();
     private int size;
+    private Color color;
 
     /**
      * Creatae a new Mutable sphere with the relevant constants
@@ -64,8 +66,25 @@ public class MutableSphere implements Sphere {
     /**
      * {@inheritDoc}
      */
+    @Override
     public double getRadius() {
         return Math.sqrt(size);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Color getColor() {
+        return color;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     /**
@@ -124,7 +143,7 @@ public class MutableSphere implements Sphere {
     }
 
     /**
-     * Create an immutable view of this sphere object;
+     * Create an immutable view of this sphere object.
      *
      * @return an immutable view of the sphere
      */
@@ -132,14 +151,23 @@ public class MutableSphere implements Sphere {
         return new ImmutableSphere(this);
     }
 
+    /**
+     * Creates an immutable copy of this sphere object.
+     *
+     * @return an immutable copy of this sphere
+     */
     public Sphere immutableCopy() {
         MutableSphere newSphere = new MutableSphere(constants);
         newSphere.size = size;
         newSphere.direction = direction;
         newSphere.position = position;
+        newSphere.color = color;
         return newSphere.toImmutableSphere();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String toString() {
         return "Sphere (" + size + ") at " + position;
     }
@@ -180,6 +208,22 @@ public class MutableSphere implements Sphere {
         @Override
         public int getSize() {
             return sphere.getSize();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Color getColor() {
+            return sphere.getColor();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setColor(Color color) {
+            throw new UnsupportedOperationException("This object is immutable!");
         }
 
         /**

@@ -81,7 +81,7 @@ public class DisplayGameHandler {
             }
 
             for (Sphere s : tick.getDots()) {
-                graphicsContext.setFill(new Color(random.nextDouble(), random.nextDouble(), random.nextDouble(), 0));
+                graphicsContext.setFill(s.getColor());
                 double radius = s.getRadius();
                 graphicsContext.fillOval(s.getPosition().getX()-radius, s.getPosition().getY()-radius, radius, radius);
             }
