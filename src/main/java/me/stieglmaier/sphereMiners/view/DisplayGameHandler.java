@@ -59,7 +59,7 @@ public class DisplayGameHandler {
             for (Entry<Player, List<Sphere>> e : tick.getSpheresMap().entrySet()) {
                 graphicsContext.setFill(e.getKey().getColor());
                 for (Sphere s : e.getValue()) {
-                    double radius = Math.sqrt(s.getSize());
+                    double radius = s.getRadius();
                     graphicsContext.fillOval(s.getPosition().getX()-radius, s.getPosition().getY()-radius, radius, radius);
                 }
             }

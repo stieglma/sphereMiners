@@ -38,6 +38,11 @@ public interface Sphere {
     int getSize();
 
     /**
+     * Returns the radius of the Sphere
+     */
+    double getRadius();
+
+    /**
      * Splits the sphere into two equal sized (smaller) parts.
      * Should only be called by the Framework, no AI interaction permitted.
      */

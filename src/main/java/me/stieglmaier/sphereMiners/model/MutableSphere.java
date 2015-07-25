@@ -56,6 +56,12 @@ public class MutableSphere implements Sphere {
         return position;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public double getRadius() {
+        return Math.sqrt(size);
+    }
 
     /**
      * {@inheritDoc}
@@ -107,7 +113,7 @@ public class MutableSphere implements Sphere {
      */
     @Override
     public boolean canBeMergedWidth(Sphere otherSphere) {
-        return position.dist(otherSphere.getPosition()) <= constants.getMaxMergeDist()
+        return position.dist(otherSphere.getPosition()) - (getRadius() + otherSphere.getRadius()) <= constants.getMinMergeDist()
                 // TODO more constraints on size?
                 && size > otherSphere.getSize();
     }
@@ -152,6 +158,13 @@ public class MutableSphere implements Sphere {
         @Override
         public Position getPosition() {
             return sphere.getPosition();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public double getRadius() {
+            return sphere.getRadius();
         }
 
         /**

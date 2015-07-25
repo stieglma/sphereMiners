@@ -49,8 +49,8 @@ public class Constants {
     @Option(description="The minimal size a sphere has to have before it can be splitted")
     private int minSplittingsize = 20;
 
-    @Option(description="The maximal distance between two spheres that should be merged")
-    private int maxMergeDist = 1;
+    @Option(description="The minimal overlapping area between two spheres that should be merged")
+    private int minMergeDist = 1;
 
 
 
@@ -102,7 +102,7 @@ public class Constants {
         return minSplittingsize;
     }
 
-    public int getMaxMergeDist() {
-        return maxMergeDist;
+    public int getMinMergeDist() {
+        return minMergeDist;
     }
 }
