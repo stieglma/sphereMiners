@@ -18,7 +18,7 @@ import me.stieglmaier.sphereMiners.model.Tick;
 
 public class DisplayGameHandler {
 
-    private int currentTick = 0;
+    private volatile int currentTick = 0;
     private final Runnable playTick;
     private final Slider progressBar;
     private final Constants constants;
@@ -30,6 +30,9 @@ public class DisplayGameHandler {
         this.constants = constants;
         this.progressBar = progressBar;
         playTick = () -> {
+            // clear drawing area
+            graphicsContext.clearRect(0, 0, constants.getFieldWidth(), constants.getFieldHeight());
+
             // check if current tick is available before retrieving it
             if (currentTick >= simulation.getSize()) {
                 future.cancel(true);
