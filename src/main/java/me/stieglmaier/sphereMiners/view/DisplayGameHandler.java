@@ -17,6 +17,13 @@ import me.stieglmaier.sphereMiners.model.Player;
 import me.stieglmaier.sphereMiners.model.Sphere;
 import me.stieglmaier.sphereMiners.model.Tick;
 
+/**
+ * This class handles the drawing on the canvas, such that the simulation
+ * can be viewed.
+ *
+ * @author stieglma
+ *
+ */
 public class DisplayGameHandler {
 
     private volatile int currentTick = 0;
@@ -30,14 +37,19 @@ public class DisplayGameHandler {
 
     private final ChangeListener<Number> currentSliderTickListener;
 
+    /**
+     * The constructor creates the handler and some listeners that are attached
+     * e.g. to the progressBar.
+     *
+     * @param graphicsContext the graphics object that is used to draw
+     * @param simulation the simulation that should be played
+     * @param progressBar the progressBar displaying the current viewed state
+     * @param playButton the button that is used to start/stop/pause the replay
+     * @param constants the constants which are necessary for computing the view
+     */
     public DisplayGameHandler(GraphicsContext graphicsContext, GameSimulation simulation, Slider progressBar, Button playButton, Constants constants) {
         this.constants = constants;
         this.progressBar = progressBar;
-
-        currentSliderTickListener = (a, b, n) -> {
-            currentTick = (int) (n.doubleValue() * constants.getFramesPerSecond());
-            showCurrentTick.run();
-        };
 
         playTick = () -> {
             // check if current tick is available before retrieving it
@@ -64,25 +76,32 @@ public class DisplayGameHandler {
                 }
             }
         };
+
+        currentSliderTickListener = (a, b, n) -> {
+            currentTick = (int) (n.doubleValue() * constants.getFramesPerSecond());
+            showCurrentTick.run();
+        };
     }
 
+    /**
+     * Returns the listener for the slider change event
+     * @return the listener
+     */
     public ChangeListener<Number> getSliderChangedListener() {
         return currentSliderTickListener;
     }
 
-    public void setCurrentTick(int tick) {
-        currentTick = tick;
-    }
-
-    public void showCurrentTick() {
-        showCurrentTick.run();
-    }
-
+    /**
+     * Starts the animation.
+     */
     public void startAnimation() {
         future = scheduler.scheduleAtFixedRate(playTick, 0, constants.getFramesPerSecond(), TimeUnit.MILLISECONDS);
     }
 
-    public void pauseAnimation() {
+    /**
+     * Pauses or resumes the animation.
+     */
+    public void pauseResumeAnimation() {
         isPaused = !isPaused;
         if (isPaused) {
             future.cancel(true);
@@ -92,6 +111,10 @@ public class DisplayGameHandler {
         }
     }
 
+    /**
+     * Stops the animation, cannot be undone, the DisplayHandler cannot be used
+     * anymore afterwards.
+     */
     public void stopAnimation() {
         scheduler.shutdownNow();
     }

@@ -70,10 +70,10 @@ public class SphereMiners extends Application {
 
         controller.setConstants(constants);
         controller.setAIList(model.getAIList());
-        controller.setAIListListeners(() -> ais.reloadAIList());
-        controller.setSimulateListeners(aisToPlay -> model.simulateGame(aisToPlay),
-                                        ()  -> model.pauseSimulation(),
-                                        ()  -> model.deleteSimulation());
+        controller.setListeners(aisToPlay -> model.simulateGame(aisToPlay),
+                                ()  -> model.pauseSimulation(),
+                                ()  -> model.deleteSimulation(),
+                                () -> ais.reloadAIList());
         primaryStage.show();
     }
 

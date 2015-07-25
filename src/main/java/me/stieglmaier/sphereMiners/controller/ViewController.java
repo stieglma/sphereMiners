@@ -22,6 +22,12 @@ import me.stieglmaier.sphereMiners.model.Player;
 import me.stieglmaier.sphereMiners.view.DisplayGameHandler;
 
 
+/**
+ * The controller handling all the stuff between model and view.
+ *
+ * @author stieglma
+ *
+ */
 public class ViewController implements Initializable{
 
     @FXML
@@ -76,10 +82,18 @@ public class ViewController implements Initializable{
         aiSizeCol.setCellValueFactory(p -> p.getValue().getSizeProperty());
     }
 
+    /**
+     * Set the list containing all AIs that could be used for playing.
+     * @param aiList the list containting all ais
+     */
     public void setAIList(ObservableList<String> aiList) {
         allAIs.setItems(aiList);
     }
 
+    /**
+     * Set the constants used throughout the whole project.
+     * @param constants the used constants
+     */
     public void setConstants(Constants constants) {
         this.constants = constants;
         // resize canvas to match field size, scaling to viewport is done elsewhere
@@ -90,9 +104,19 @@ public class ViewController implements Initializable{
         progressBar.setBlockIncrement(1.0/constants.getFramesPerSecond());
     }
 
-    public void setSimulateListeners(final Function<List<Player>, GameSimulation> startMethod,
+    /**
+     * Sets the simulation listeners / callbacks that are necessary to show 
+     * something in the view.
+     *
+     * @param startMethod the method for starting the simulation
+     * @param pauseMethod the method for pausing the compuatation of a simulation
+     * @param deleteMethod the method for deleting a simulation
+     * @param reloadAIList the method for reloading the list of playable ais
+     */
+    public void setListeners(final Function<List<Player>, GameSimulation> startMethod,
                                      final Runnable pauseMethod,
-                                     final Runnable deleteMethod) {
+                                     final Runnable deleteMethod,
+                                     final Runnable reloadAIList) {
         simulateButton.setOnAction(e -> {
             if (gameSimulation == null) {
                 try {
@@ -128,18 +152,18 @@ public class ViewController implements Initializable{
             playButton.setText("Play");
             progressBar.setMax(0);
             progressBar.setValue(0);
+            progressBar.valueProperty().removeListener(displayGameHandler.getSliderChangedListener());
+            displayGameHandler.stopAnimation();
             addAIButton.setDisable(false);
             removeAIButton.setDisable(false);
             reloadAIButton.setDisable(false);
             playButton.setDisable(true);
             deleteSimulationButton.setDisable(true);
         });
-    }
 
-    public void setAIListListeners(Runnable aiList) {
         reloadAIButton.setOnAction(e -> {
             playingAIs.getItems().clear();
-            aiList.run();
+            reloadAIList.run();
         });
     }
 
@@ -189,7 +213,7 @@ public class ViewController implements Initializable{
                 } else {
                     playButton.setText("pause");
                 }
-                displayGameHandler.pauseAnimation();
+                displayGameHandler.pauseResumeAnimation();
             } else {
                 playButton.setText("pause");
                 displayGameHandler = new DisplayGameHandler(viewGameCanvas.getGraphicsContext2D(), gameSimulation, progressBar, playButton, constants);
