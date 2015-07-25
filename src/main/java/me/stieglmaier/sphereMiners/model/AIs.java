@@ -12,6 +12,7 @@ import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -336,7 +337,9 @@ public final class AIs {
         threadpool.shutdown();
         threadpool.awaitTermination(AI_TIME*ais.size(), TimeUnit.MILLISECONDS);
 
+        // only iterate, otherwise this could lead to concurrent modification exceptions
         int counter = 0;
+        List<Player> toReinitialize = new ArrayList<>();
         for (Player ai : ais.keySet()) {
             Future<Boolean> ret = retvals.get(counter);
             boolean shouldReinitialize = ret.isCancelled();
@@ -347,17 +350,22 @@ public final class AIs {
                 shouldReinitialize = true;
             }
             if (shouldReinitialize) {
-                try {
-                    reinitializeAi(ai);
-                } catch (ClassNotFoundException
-                        | IllegalAccessException
-                        | InstantiationException e1) {
-                    throw new Error("Reinitialization of "
-                            + ais.get(ai).getClass().getName() + " FAILED!");
-                }
+                toReinitialize.add(ai);
             }
             counter++;
         }
+
+        // now reinitialize all necessary ais
+        toReinitialize.forEach(ai -> {
+            try {
+                reinitializeAi(ai);
+            } catch (ClassNotFoundException
+                    | IllegalAccessException
+                    | InstantiationException e1) {
+                throw new Error("Reinitialization of "
+                        + ais.get(ai).getClass().getName() + " FAILED!");
+            }
+        });
     }
 
     /**
