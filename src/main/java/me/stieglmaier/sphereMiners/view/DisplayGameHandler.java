@@ -7,6 +7,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import javafx.beans.value.ChangeListener;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
@@ -20,26 +21,37 @@ public class DisplayGameHandler {
 
     private volatile int currentTick = 0;
     private final Runnable playTick;
+    private final Runnable showCurrentTick;
     private final Slider progressBar;
     private final Constants constants;
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> future;
     private boolean isPaused = false;
 
+    private final ChangeListener<Number> currentSliderTickListener;
+
     public DisplayGameHandler(GraphicsContext graphicsContext, GameSimulation simulation, Slider progressBar, Button playButton, Constants constants) {
         this.constants = constants;
         this.progressBar = progressBar;
-        playTick = () -> {
-            // clear drawing area
-            graphicsContext.clearRect(0, 0, constants.getFieldWidth(), constants.getFieldHeight());
 
+        currentSliderTickListener = (a, b, n) -> currentTick = (int) (n.doubleValue() * constants.getFramesPerSecond());
+        playTick = () -> {
             // check if current tick is available before retrieving it
             if (currentTick >= simulation.getSize()) {
                 future.cancel(true);
                 playButton.setText("pause");
             }
-            Tick tick = simulation.getTick(currentTick++);
-            progressBar.setValue(((double)currentTick)/constants.getFramesPerSecond());
+            showCurrentTick.run();
+        };
+
+        showCurrentTick = () -> {
+            // clear drawing area
+            graphicsContext.clearRect(0, 0, constants.getFieldWidth(), constants.getFieldHeight());
+
+            // retrieve tick
+            Tick tick = simulation.getTick(currentTick);
+            progressBar.increment();
+
             //do drawing on graphics object
             for (Entry<Player, List<Sphere>> e : tick.getSpheresMap().entrySet()) {
                 graphicsContext.setFill(e.getKey().getColor());
@@ -48,8 +60,16 @@ public class DisplayGameHandler {
         };
     }
 
+    public ChangeListener<Number> getSliderChangedListener() {
+        return currentSliderTickListener;
+    }
+
     public void setCurrentTick(int tick) {
         currentTick = tick;
+    }
+
+    public void showCurrentTick() {
+        showCurrentTick.run();
     }
 
     public void startAnimation() {

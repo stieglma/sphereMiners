@@ -16,7 +16,6 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-
 import me.stieglmaier.sphereMiners.main.Constants;
 import me.stieglmaier.sphereMiners.model.GameSimulation;
 import me.stieglmaier.sphereMiners.model.Player;
@@ -86,6 +85,9 @@ public class ViewController implements Initializable{
         // resize canvas to match field size, scaling to viewport is done elsewhere
         viewGameCanvas.setWidth(constants.getFieldWidth());
         viewGameCanvas.setHeight(constants.getFieldHeight());
+
+        // set increment size of progressbar
+        progressBar.setBlockIncrement(1.0/constants.getFramesPerSecond());
     }
 
     public void setSimulateListeners(final Function<List<Player>, GameSimulation> startMethod,
@@ -184,19 +186,17 @@ public class ViewController implements Initializable{
             if (displayGameHandler != null) {
                 if (playButton.getText().equals("pause")) {
                     playButton.setText("play");
-                    displayGameHandler.pauseAnimation();
                 } else {
                     playButton.setText("pause");
-                    displayGameHandler.startAnimation();
                 }
+                displayGameHandler.pauseAnimation();
             } else {
                 playButton.setText("pause");
                 displayGameHandler = new DisplayGameHandler(viewGameCanvas.getGraphicsContext2D(), gameSimulation, progressBar, playButton, constants);
+                progressBar.valueProperty().addListener(displayGameHandler.getSliderChangedListener());
                 displayGameHandler.startAnimation();
             }
         });
-
-        progressBar.setOnDragDone(e -> displayGameHandler.setCurrentTick((int)progressBar.getValue()));
     }
 
 }
