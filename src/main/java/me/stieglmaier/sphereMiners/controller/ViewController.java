@@ -37,25 +37,20 @@ public class ViewController implements Initializable{
 
     @FXML
     private Button addAIButton;
-
     @FXML
     private Button removeAIButton;
-
     @FXML
     private Button reloadAIButton;
 
     @FXML
     private Button playButton;
-
     @FXML
     private Button simulateButton;
-
     @FXML
     private Button deleteSimulationButton;
 
     @FXML
     private Slider progressBar;
-
     @FXML
     private Canvas viewGameCanvas;
 
@@ -88,6 +83,9 @@ public class ViewController implements Initializable{
 
     public void setConstants(Constants constants) {
         this.constants = constants;
+        // resize canvas to match field size, scaling to viewport is done elsewhere
+        viewGameCanvas.setWidth(constants.getFieldWidth());
+        viewGameCanvas.setHeight(constants.getFieldHeight());
     }
 
     public void setSimulateListeners(final Function<List<Player>, GameSimulation> startMethod,
@@ -127,6 +125,7 @@ public class ViewController implements Initializable{
             simulateButton.setText("Simulate");
             playButton.setText("Play");
             progressBar.setMax(0);
+            progressBar.setValue(0);
             addAIButton.setDisable(false);
             removeAIButton.setDisable(false);
             reloadAIButton.setDisable(false);
@@ -181,9 +180,6 @@ public class ViewController implements Initializable{
             }
         });
 
-        // drawing is done on an 800x800 grid that gets resized to fit the current
-        // view resolution, we don't need to bother with scaling, it is done
-        // automatically
         playButton.setOnAction(e -> {
             if (displayGameHandler != null) {
                 if (playButton.getText().equals("pause")) {
@@ -199,6 +195,8 @@ public class ViewController implements Initializable{
                 displayGameHandler.startAnimation();
             }
         });
+
+        progressBar.setOnDragDone(e -> displayGameHandler.setCurrentTick((int)progressBar.getValue()));
     }
 
 }

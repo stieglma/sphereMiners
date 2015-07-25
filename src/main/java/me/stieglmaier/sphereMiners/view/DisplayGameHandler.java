@@ -1,5 +1,7 @@
 package me.stieglmaier.sphereMiners.view;
 
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -8,9 +10,10 @@ import java.util.concurrent.TimeUnit;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
-
 import me.stieglmaier.sphereMiners.main.Constants;
 import me.stieglmaier.sphereMiners.model.GameSimulation;
+import me.stieglmaier.sphereMiners.model.Player;
+import me.stieglmaier.sphereMiners.model.Sphere;
 import me.stieglmaier.sphereMiners.model.Tick;
 
 public class DisplayGameHandler {
@@ -35,7 +38,17 @@ public class DisplayGameHandler {
             Tick tick = simulation.getTick(currentTick++);
             progressBar.setValue(((double)currentTick)/constants.getFramesPerSecond());
             //do drawing on graphics object
+            for (Entry<Player, List<Sphere>> e : tick.getSpheresMap().entrySet()) {
+                System.out.println(e.getKey());
+                graphicsContext.setFill(e.getKey().getColor());
+                for (Sphere s : e.getValue()) graphicsContext.fillOval(s.getPosition().getX(), s.getPosition().getY(), 2, 2);
+                for (Sphere s : e.getValue()) System.out.println("\t" + s.getPosition());
+            }
         };
+    }
+
+    public void setCurrentTick(int tick) {
+        currentTick = tick;
     }
 
     public void startAnimation() {

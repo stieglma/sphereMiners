@@ -65,4 +65,8 @@ public class Player {
     void setSize(int newSize) {
         aiSize.set(newSize);
     }
+
+    public String toString() {
+        return displayName.get() + " (" + aiSize.get() + ", " + color + ")";
+    }
 }

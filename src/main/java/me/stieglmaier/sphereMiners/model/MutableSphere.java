@@ -151,7 +151,7 @@ public class MutableSphere implements Sphere {
          */
         @Override
         public Position getPosition() {
-            return sphere.getDirection();
+            return sphere.getPosition();
         }
 
         /**
@@ -208,6 +208,10 @@ public class MutableSphere implements Sphere {
        @Override
        public boolean canBeMergedWidth(Sphere sphere2) {
            return sphere.canBeMergedWidth(sphere2);
+       }
+
+       public String toString() {
+           return "Sphere (" + sphere.getSize() + ") at " + sphere.getPosition();
        }
     }
 }

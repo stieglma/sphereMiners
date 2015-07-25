@@ -1,5 +1,6 @@
 package me.stieglmaier.sphereMiners.model;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,6 +11,10 @@ public class Tick {
 
     public Tick(Map<Player, List<Sphere>> map) {
         this.allSpheres = map;
+    }
+
+    public Map<Player, List<Sphere>> getSpheresMap() {
+        return Collections.unmodifiableMap(allSpheres);
     }
 
     public void print() {
