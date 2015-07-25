@@ -12,7 +12,7 @@ public class Constants {
 
     @Option(description="In which folder should the framework search for ais?"
             + " (Base is the root of the project/ the folder where the jar file is located)")
-    private String aiFolderName = "ais";
+    private String aiFolderName = "";
 
     @Option(description="Timeout for the computation done by the ais in milliseconds")
     private int aiComputationTime = 50;
@@ -33,7 +33,7 @@ public class Constants {
 
     @Option(description="The amount of calculations that should be done per tick."
             + " Changing this changes the granularity of the calculations")
-    private int calcsPerTick = 1;
+    private int calcsPerTick = 10;
 
     @Option(description="The maximum speed a sphere may have in meter/tick")
     private double maxSpeed = 1.0;

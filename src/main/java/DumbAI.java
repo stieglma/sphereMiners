@@ -15,7 +15,7 @@ public class DumbAI extends SphereMiners2015 {
 
     @Override
     protected void playTurn() {
-        changeMoveDirection(ownSpheres.collect(Collectors.toMap(s -> s, s -> new Position(0, 0))));
+        changeMoveDirection(ownSpheres.stream().collect(Collectors.toMap(s -> s, s -> new Position(1, 1))));
     }
 
 }

@@ -2,6 +2,7 @@ package me.stieglmaier.sphereMiners.model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -9,22 +10,20 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.Stream;
-
+import java.util.stream.Collectors;
 import javafx.scene.paint.Color;
-import me.stieglmaier.sphereMiners.main.Constants;
 
-import org.sosy_lab.common.Pair;
+import me.stieglmaier.sphereMiners.main.Constants;
 
 
 public abstract class SphereMiners2015 {
     /** All owned spheres */
-    protected Stream<Sphere> ownSpheres;
+    protected Set<Sphere> ownSpheres;
 
     private Physics physMgr;
     private Player ownAI;
     private Map<Player, List<MutableSphere>> allSpheres;
-    private Stream<Pair<Sphere, MutableSphere>> sphereMap;
+    private Map<Sphere, MutableSphere> sphereMap;
     private Turn currentTurn;
     private Constants constants;
     private ExecutorService threadExecutor = Executors.newSingleThreadExecutor();
@@ -67,12 +66,8 @@ public abstract class SphereMiners2015 {
      * called method of these will be executed.
      */
     protected final void changeMoveDirection(final Map<Sphere, Position> spheres) {
-        currentTurn = () -> spheres.forEach((sphere, dir) -> sphereMap
-                                   .filter(p -> p.getFirst() == sphere)
-                                   .findFirst()
-                                   .get()
-                                   .getSecond()
-                                   .setDirection(dir));
+        currentTurn = () -> spheres.forEach((sphere, dir) -> sphereMap.get(sphere)
+                                                                      .setDirection(dir));
     }
 
     /**
@@ -84,9 +79,7 @@ public abstract class SphereMiners2015 {
      */
     protected final void split(Sphere sphere) {
         // lists cannot be changed directly therefore we need the phyiscsmanager here
-        currentTurn = () -> physMgr.split(sphereMap.filter(p -> p.getFirst() == sphere)
-                                                   .findFirst().get().getSecond(),
-                                          ownAI);
+        currentTurn = () -> physMgr.split(sphereMap.get(sphere), ownAI);
     }
 
     /**
@@ -98,10 +91,8 @@ public abstract class SphereMiners2015 {
      */
     protected final void merge(Sphere sphere1, Sphere sphere2) {
         // lists cannot be changed directly therefore we need the phyiscsmanager here
-        currentTurn = () -> physMgr.merge(sphereMap.filter(p -> p.getFirst() == sphere1)
-                                                   .findFirst().get().getSecond(),
-                                          sphereMap.filter(p -> p.getFirst() == sphere2)
-                                                   .findFirst().get().getSecond(),
+        currentTurn = () -> physMgr.merge(sphereMap.get(sphere1),
+                                          sphereMap.get(sphere2),
                                           ownAI);
     }
 
@@ -145,8 +136,8 @@ public abstract class SphereMiners2015 {
         physMgr = mgr;
         allSpheres = mgr.getAISpheres();
         sphereMap = allSpheres.get(ownAI).stream()
-                              .map(sphere -> Pair.of(sphere.toImmutableSphere(), sphere));
-        ownSpheres = sphereMap.map(p -> p.getFirst());
+                              .collect(Collectors.toMap(s -> s.toImmutableSphere(), s -> s));
+        ownSpheres = sphereMap.keySet();
     }
 
     /**

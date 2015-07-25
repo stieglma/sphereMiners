@@ -16,13 +16,13 @@ public class Physics {
     private final Map<Player, List<MutableSphere>> spheresPerPlayer = new HashMap<>();
 
     private final Constants constants;
-    private final double tick;
+    private final double tickLength;
     private final double partialTick;
 
     public Physics(Constants constants) {
         this.constants = constants;
-        tick = constants.getFramesPerSecond();
-        partialTick = tick / constants.getCalcsPerTick();
+        tickLength = 1.0 / constants.getFramesPerSecond();
+        partialTick = tickLength / constants.getCalcsPerTick();
     }
 
     public Tick createInitialTick(List<Player> playingAIs) {
@@ -90,8 +90,10 @@ public class Physics {
         }
         for (List<MutableSphere> spheres : spheresPerPlayer.values()) {
             for (MutableSphere sphere : spheres) {
-                double speed = (maxSize - sphere.getSize()) / maxSize * constants.getMaxSpeed() * partialTick;
+                // TODO speed should be lower for bigger spheres
+                double speed = constants.getMaxSpeed() * partialTick;
                 Position tmpPos = sphere.getPosition().add(sphere.getDirection().normalize().mult(speed));
+                // TODO should we have an infinite field? if not rearrange this code and check the borders
                 double x = tmpPos.getX() % constants.getFieldWidth();
                 double y = tmpPos.getY() % constants.getFieldHeight();
                 sphere.setPosition(new Position(x, y));
