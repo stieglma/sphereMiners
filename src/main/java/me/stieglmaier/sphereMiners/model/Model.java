@@ -42,7 +42,6 @@ public class Model extends Observable {
         this.ais = ai;
 
         ais.setPhysics(physics);
-        physics.setAIManager(ais);
     }
 
     /**
@@ -149,9 +148,10 @@ public class Model extends Observable {
                  }
 
                 try {
+                    ais.applyMoves();
                     simulationView.addInstance(physMgr.applyPhysics());
                 } catch (IllegalArgumentException | InterruptedException e) {
-                    // whis will most likely be a programming error,
+                    // this will most likely be a programming error,
                     // rethrow and hope it doesn't occur
                     throw new RuntimeException(e);
                 }

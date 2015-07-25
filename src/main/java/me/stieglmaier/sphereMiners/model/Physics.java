@@ -14,7 +14,6 @@ import me.stieglmaier.sphereMiners.main.Constants;
 public class Physics {
 
     private final Map<Player, List<MutableSphere>> spheresPerPlayer = new HashMap<>();
-    private AIs ais;
 
     private final Constants constants;
     private final double tick;
@@ -24,10 +23,6 @@ public class Physics {
         this.constants = constants;
         tick = constants.getFramesPerSecond();
         partialTick = tick / constants.getCalcsPerTick();
-    }
-
-    public void setAIManager(AIs mgr) {
-        ais = mgr;
     }
 
     public Tick createInitialTick(List<Player> playingAIs) {
@@ -59,13 +54,10 @@ public class Physics {
 
     public Tick applyPhysics() throws IllegalArgumentException, InterruptedException {
         for (int i = 0; i <  constants.getCalcsPerTick(); i++) {
-            // 1. let ais do ther moves
-            ais.applyMoves();
-
-            // 2. move all spheres
+            // 1. move all spheres
             moveSpheres();
 
-            // 3. merge overlapping spheres of opponent ais
+            // 2. merge overlapping spheres of opponent ais
             mergeSpheres();
         }
         for (Player p : spheresPerPlayer.keySet()) {
