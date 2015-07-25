@@ -145,9 +145,9 @@ public class Position {
     }
 
     /**
-     * Returns the normalized-vector of this {@link Vector}.
+     * Returns the normalized-vector of this {@link Position}.
      *
-     * @return the normalized-vector of this {@link Vector}.
+     * @return the normalized-vector of this {@link Position}.
      */
     public Position normalize() {
         double len = length();
@@ -269,7 +269,7 @@ public class Position {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     *
      * This equals method compares two Positions in a defined epsilon environment.
      */
     @Override

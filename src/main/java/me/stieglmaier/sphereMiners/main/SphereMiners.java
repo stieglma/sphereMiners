@@ -31,10 +31,7 @@ public class SphereMiners extends Application {
     /**
      * Launches the application.
      *
-     * @param args
-     *            command line parameters are unused
-     * @throws IOException
-     * @throws InvalidConfigurationException
+     * @param args used for either printing or setting configuration options
      */
     public static void main(final String[] args) {
         launch(args);

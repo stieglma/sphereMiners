@@ -68,7 +68,7 @@ public interface Sphere {
      * Merges two spheres of the same player two one big sphere.
      * Should only be called by the Framework, no AI interaction permitted.
      *
-     * @param the sphere that should be merged into the caller sphere
+     * @param sphere the sphere that should be merged into the caller sphere
      */
     void merge(Sphere sphere);
 
@@ -76,6 +76,7 @@ public interface Sphere {
      * Checks if a sphere can be merged with another.
      *
      * @param sphere the sphere that should be merge into the caller sphere
+     * @return indicates if the this merge is possible
      */
     boolean canBeMergedWidth(Sphere sphere);
 

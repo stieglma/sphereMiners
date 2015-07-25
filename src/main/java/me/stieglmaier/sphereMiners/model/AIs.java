@@ -213,10 +213,10 @@ public final class AIs {
      * This method initializes the AIs which should play against each other in
      * the next simulation.
      *
-     * @param ai2 The list of AI's that should play against each other
+     * @param aisToPlay The list of AI's that should play against each other
      * @throws InstantiationException     If the method is not able to initialize the given two AIs,
      *                                    this exception will be thrown.
-     * @throws InvalidAiLocationException If the aiLocations are invalid
+     * @throws InvalidAILocationException If the aiLocations are invalid
      */
     public void initializeGameAIs(final List<Player> aisToPlay)
             throws InstantiationException, InvalidAILocationException {
@@ -320,7 +320,7 @@ public final class AIs {
      * moves until the termination are given to the Physics.
      *
      * @throws IllegalArgumentException if the tick-parameter is invalid (e.g. null).
-     * @throws InterruptedException
+     * @throws InterruptedException this should not happen
      */
     public void applyMoves() throws IllegalArgumentException, InterruptedException {
 

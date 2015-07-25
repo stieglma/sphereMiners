@@ -22,13 +22,10 @@ public class Model extends Observable {
     private Simulation simulation;
 
     /**
-     * Creates a new {@link CommunicationLayer}.
+     * Creates a new {@link Model}.
      *
      * @param phys    The {@link Physics} to use for the simulation.
      * @param ai      The {@link AIs} to use for the simulation.
-     * @param simView The {@link SimulationToViewManager} to use for the simulation.
-     * @throws IllegalArgumentException if a reference of the given managers is null an exception
-     *                                  will be thrown to prevent an illegal state.
      */
     public Model(final Physics phys, final AIs ai) {
         this.physics = phys;
@@ -41,7 +38,7 @@ public class Model extends Observable {
      * Simulates a game and returns the simulation object where the ticks
      * are saved into.
      *
-     * @param the list of players that should play a game
+     * @param aisToPlay the list of players that should play a game
      * @return the SimulationObject that can be viewed
      */
     public GameSimulation simulateGame(final List<Player> aisToPlay) {
@@ -82,6 +79,8 @@ public class Model extends Observable {
 
     /**
      * Returns the list of AIs that can be used for playing
+     *
+     * @return the list of ais that can be used for playing
      */
     public ObservableList<String> getAIList() {
         return ais.getAIList();

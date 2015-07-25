@@ -147,6 +147,8 @@ public class Physics {
 
     /**
      * Returns an unmodifiable view of the map with all spheres per player.
+     *
+     * @return the map of players to their list of spheres
      */
     public Map<Player, List<MutableSphere>> getAISpheres() {
         return Collections.unmodifiableMap(spheresPerPlayer);

@@ -20,7 +20,6 @@ import javafx.scene.layout.StackPane;
  * If the content contains FX Controls then these get magnified rather than
  * resized, that is all text and graphics are scaled (this might be desired for
  * Point of Sale full screen applications)
- * <p>
  * <h3>Known Limitations</h3>
  * Rescaling occurs only when the AutoScalingStackPane is resized, it does not
  * occur automatically if and when the content changes size.
@@ -71,7 +70,7 @@ public class AutoScalingStackPane extends StackPane {
     /**
      * Convenience constructor that takes a content Node.
      *
-     * @param content
+     * @param content The content of this pane
      */
     public AutoScalingStackPane(Node content) {
         super(content);
@@ -125,7 +124,7 @@ public class AutoScalingStackPane extends StackPane {
     /**
      * Set the AutoScale option
      *
-     * @param newAutoScale
+     * @param newAutoScale the AutoScale option to use
      * @see AutoScale
      *
      */

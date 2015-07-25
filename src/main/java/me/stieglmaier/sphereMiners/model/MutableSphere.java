@@ -19,6 +19,11 @@ public class MutableSphere implements Sphere {
     private Position direction = new Position();
     private int size;
 
+    /**
+     * Creatae a new Mutable sphere with the relevant constants
+     *
+     * @param constants the constants to use for this sphere
+     */
     public MutableSphere(Constants constants) {
         this.constants = constants;
         size = constants.getInitialSphereSize();
@@ -120,6 +125,8 @@ public class MutableSphere implements Sphere {
 
     /**
      * Create an immutable view of this sphere object;
+     *
+     * @return an immutable view of the sphere
      */
     public Sphere toImmutableSphere() {
         return new ImmutableSphere(this);
