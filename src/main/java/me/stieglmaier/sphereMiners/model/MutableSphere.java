@@ -68,7 +68,7 @@ public class MutableSphere implements Sphere {
      */
     @Override
     public double getRadius() {
-        return Math.sqrt(size);
+        return Math.sqrt(size/Math.PI);
     }
 
     /**

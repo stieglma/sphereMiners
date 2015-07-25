@@ -74,10 +74,13 @@ public class DisplayGameHandler {
             //do drawing on graphics object
             for (Entry<Player, List<Sphere>> e : tick.getSpheresMap().entrySet()) {
                 graphicsContext.setFill(e.getKey().getColor());
+                int size = 0;
                 for (Sphere s : e.getValue()) {
+                    size += s.getSize();
                     double radius = s.getRadius();
                     graphicsContext.fillOval(s.getPosition().getX()-radius, s.getPosition().getY()-radius, radius, radius);
                 }
+                e.getKey().getSizeProperty().set(size);
             }
 
             for (Sphere s : tick.getDots()) {

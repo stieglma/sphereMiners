@@ -57,8 +57,6 @@ public class Physics {
 
         int i = 0;
         for (Player ai : playingAIs) {
-            ai.setSize(10); // TODO should'nt be hardcoded...
-
             // create new sphere for current player
             List<MutableSphere> sphereList = new ArrayList<>();
             MutableSphere sphere = new MutableSphere(constants);
@@ -103,11 +101,6 @@ public class Physics {
 
         // refill dots
         createDots(constants.getDotAmount() - dots.size());
-
-        // update sizes of players
-        for (Player p : spheresPerPlayer.keySet()) {
-            p.setSize(spheresPerPlayer.get(p).stream().map(s -> s.getSize()).reduce(0, (a, b) -> a + b));
-        }
 
         return snapshot();
     }

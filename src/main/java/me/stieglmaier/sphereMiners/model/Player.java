@@ -18,7 +18,7 @@ public class Player {
 
     private final String internalAIName;
     private StringProperty displayName;
-    private final IntegerProperty aiSize;
+    private final IntegerProperty displayedOverallSize;
     private Color color;
 
     /**
@@ -32,7 +32,7 @@ public class Player {
      */
     public Player(String internalAiName, int aiSize) {
         this.internalAIName = internalAiName;
-        this.aiSize = new SimpleIntegerProperty(aiSize);
+        displayedOverallSize = new SimpleIntegerProperty(aiSize);
         color = Color.BLACK;
         displayName = new SimpleStringProperty(internalAiName);
     }
@@ -90,24 +90,14 @@ public class Player {
      *
      * @return The current size of the ai.
      */
-    public ReadOnlyIntegerProperty getSizeProperty() {
-        return aiSize;
-    }
-
-    /**
-     * package private such that only model and the aimanager
-     * may call this method
-     *
-     * @param the new size this player should have
-     */
-    void setSize(int newSize) {
-        aiSize.set(newSize);
+    public IntegerProperty getSizeProperty() {
+        return displayedOverallSize;
     }
 
     /**
      * {@inheritDoc}
      */
     public String toString() {
-        return displayName.get() + " (" + aiSize.get() + ", " + color + ")";
+        return displayName.get() + " (" + color + ")";
     }
 }
