@@ -50,9 +50,11 @@ public class SphereMiners extends Application {
 
         final Model model;
         final AIs ais;
+        final Constants constants;
         try {
-            ais = new AIs(config.get());
-            model = new Model(new Physics(config.get()), ais);
+            constants = new Constants(config.get());
+            ais = new AIs(constants);
+            model = new Model(new Physics(constants), ais);
         } catch (ClassNotFoundException | MalformedURLException | InvalidConfigurationException e) {
             System.err.println("Model could not be created, shutting down.");
             e.printStackTrace(System.err);
@@ -66,6 +68,7 @@ public class SphereMiners extends Application {
         primaryStage.setMinHeight(900);
         ViewController controller = (ViewController)loader.getController();
 
+        controller.setConstants(constants);
         controller.setAIList(model.getAIList());
         controller.setAIListListeners(() -> ais.reloadAIList());
         controller.setSimulateListeners(aisToPlay -> model.simulateGame(aisToPlay),

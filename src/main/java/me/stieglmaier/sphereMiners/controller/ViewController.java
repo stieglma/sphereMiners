@@ -16,8 +16,9 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+
+import me.stieglmaier.sphereMiners.main.Constants;
 import me.stieglmaier.sphereMiners.model.GameSimulation;
-import me.stieglmaier.sphereMiners.model.Physics;
 import me.stieglmaier.sphereMiners.model.Player;
 import me.stieglmaier.sphereMiners.view.DisplayGameHandler;
 
@@ -62,6 +63,8 @@ public class ViewController implements Initializable{
     private GameSimulation gameSimulation = null;
     private DisplayGameHandler displayGameHandler = null;
 
+    private Constants constants;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         allAIs.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -83,6 +86,10 @@ public class ViewController implements Initializable{
         allAIs.setItems(aiList);
     }
 
+    public void setConstants(Constants constants) {
+        this.constants = constants;
+    }
+
     public void setSimulateListeners(final Function<List<Player>, GameSimulation> startMethod,
                                      final Runnable pauseMethod,
                                      final Runnable deleteMethod) {
@@ -90,7 +97,7 @@ public class ViewController implements Initializable{
             if (gameSimulation == null) {
                 try {
                     gameSimulation = startMethod.apply(playingAIs.getItems());
-                    gameSimulation.addObserver(t -> progressBar.setMax(gameSimulation.getSize()/Physics.getFPS()));
+                    gameSimulation.addObserver(t -> progressBar.setMax(gameSimulation.getSize()/constants.getFramesPerSecond()));
                     simulateButton.setText("Pause");
                     deleteSimulationButton.setDisable(false);
                     playButton.setDisable(false);
@@ -188,7 +195,7 @@ public class ViewController implements Initializable{
                 }
             } else {
                 playButton.setText("pause");
-                displayGameHandler = new DisplayGameHandler(viewGameCanvas.getGraphicsContext2D(), gameSimulation, progressBar, playButton);
+                displayGameHandler = new DisplayGameHandler(viewGameCanvas.getGraphicsContext2D(), gameSimulation, progressBar, playButton, constants);
                 displayGameHandler.startAnimation();
             }
         });

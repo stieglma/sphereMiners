@@ -8,8 +8,9 @@ import java.util.concurrent.TimeUnit;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+
+import me.stieglmaier.sphereMiners.main.Constants;
 import me.stieglmaier.sphereMiners.model.GameSimulation;
-import me.stieglmaier.sphereMiners.model.Physics;
 import me.stieglmaier.sphereMiners.model.Tick;
 
 public class DisplayGameHandler {
@@ -17,11 +18,13 @@ public class DisplayGameHandler {
     private int currentTick = 0;
     private final Runnable playTick;
     private final Slider progressBar;
+    private final Constants constants;
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> future;
     private boolean isPaused = false;
 
-    public DisplayGameHandler(GraphicsContext graphicsContext, GameSimulation simulation, Slider progressBar, Button playButton) {
+    public DisplayGameHandler(GraphicsContext graphicsContext, GameSimulation simulation, Slider progressBar, Button playButton, Constants constants) {
+        this.constants = constants;
         this.progressBar = progressBar;
         playTick = () -> {
             // check if current tick is available before retrieving it
@@ -30,13 +33,13 @@ public class DisplayGameHandler {
                 playButton.setText("pause");
             }
             Tick tick = simulation.getTick(currentTick++);
-            progressBar.setValue(((double)currentTick)/Physics.getFPS());
+            progressBar.setValue(((double)currentTick)/constants.getFramesPerSecond());
             //do drawing on graphics object
         };
     }
 
     public void startAnimation() {
-        future = scheduler.scheduleAtFixedRate(playTick, 0, Physics.getFPS(), TimeUnit.MILLISECONDS);
+        future = scheduler.scheduleAtFixedRate(playTick, 0, constants.getFramesPerSecond(), TimeUnit.MILLISECONDS);
     }
 
     public void pauseAnimation() {
@@ -45,7 +48,7 @@ public class DisplayGameHandler {
             future.cancel(true);
         } else {
             currentTick = (int) progressBar.getValue();
-            future = scheduler.scheduleAtFixedRate(playTick, 0, Physics.getFPS(), TimeUnit.MILLISECONDS);
+            future = scheduler.scheduleAtFixedRate(playTick, 0, constants.getFramesPerSecond(), TimeUnit.MILLISECONDS);
         }
     }
 

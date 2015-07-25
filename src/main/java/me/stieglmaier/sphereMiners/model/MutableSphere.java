@@ -4,10 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.sosy_lab.common.configuration.Configuration;
-import org.sosy_lab.common.configuration.InvalidConfigurationException;
-import org.sosy_lab.common.configuration.Option;
-import org.sosy_lab.common.configuration.Options;
+import me.stieglmaier.sphereMiners.main.Constants;
 
 
 /**
@@ -15,28 +12,17 @@ import org.sosy_lab.common.configuration.Options;
  * immutable view should be passed to AIs.
  * 
  */
-@Options(prefix="sphere")
 public class MutableSphere implements Sphere {
 
+    private final Constants constants;
     private Position position;
     private Position direction = new Position();
+    private int size;
 
-    @Option(name="initialSize", description="The initial size for a sphere "
-            + "with which a player starts.")
-    private int size = 10;
-
-    @Option(description="The minimal size a sphere has to have before it can be splitted")
-    private int minSplittingsize = size * 2;
-
-    @Option(description="The maximal distance between two spheres that should be merged")
-    private int maxMergeDist = 1;
-
-    public MutableSphere(Configuration config) throws InvalidConfigurationException {
-        config.inject(this);
+    public MutableSphere(Constants constants) {
+        this.constants = constants;
+        size = constants.getInitialSphereSize();
     }
-
-    /** Constructor for using it internally only */
-    private MutableSphere() {}
 
     /**
      * {@inheritDoc}
@@ -92,13 +78,11 @@ public class MutableSphere implements Sphere {
      */
     @Override
     public List<MutableSphere> split() {
-        if (size >= minSplittingsize) {
-            MutableSphere newSphere = new MutableSphere();
+        if (size >= constants.getMinSplittingsize()) {
+            MutableSphere newSphere = new MutableSphere(constants);
             newSphere.size = size/2;
             newSphere.direction = direction;
             newSphere.position = position;
-            newSphere.maxMergeDist = maxMergeDist;
-            newSphere.minSplittingsize = minSplittingsize;
             size = (size+1)/2;
             return Arrays.asList(this, newSphere);
 
@@ -123,7 +107,7 @@ public class MutableSphere implements Sphere {
      */
     @Override
     public boolean canBeMergedWidth(Sphere otherSphere) {
-        return position.dist(otherSphere.getPosition()) <= maxMergeDist
+        return position.dist(otherSphere.getPosition()) <= constants.getMaxMergeDist()
                 // TODO more constraints on size?
                 && size > otherSphere.getSize();
     }
@@ -136,12 +120,10 @@ public class MutableSphere implements Sphere {
     }
 
     public Sphere immutableCopy() {
-        MutableSphere newSphere = new MutableSphere();
+        MutableSphere newSphere = new MutableSphere(constants);
         newSphere.size = size;
         newSphere.direction = direction;
         newSphere.position = position;
-        newSphere.maxMergeDist = maxMergeDist;
-        newSphere.minSplittingsize = minSplittingsize;
         return newSphere.toImmutableSphere();
     }
 

@@ -27,11 +27,7 @@ import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
-
-import org.sosy_lab.common.configuration.Configuration;
-import org.sosy_lab.common.configuration.InvalidConfigurationException;
-import org.sosy_lab.common.configuration.Option;
-import org.sosy_lab.common.configuration.Options;
+import me.stieglmaier.sphereMiners.main.Constants;
 
 
 /**
@@ -41,7 +37,6 @@ import org.sosy_lab.common.configuration.Options;
  * AI. For example if the calculation of an AI takes too much time, the AI is
  * terminated by the AI Manager and initialized again.
  */
-@Options(prefix="ai")
 public final class AIs {
 
     /**
@@ -69,13 +64,7 @@ public final class AIs {
      * path to location with stored ais.
      */
     private final String AI_FILELOCATION;
-
-    @Option(name="location", description="In which folder should the framework search for ais?"
-            + " (Base is the root of the project/ the folder where the jar file is located)")
-    private String AI_FOLDER_NAME = "ais";
-
-    @Option(name="timeout", description="Timeout for the computation done by the ais in milliseconds")
-    private int AI_TIME = 10;
+    private final int AI_TIME;
 
     /**
      * The constructor of this class. It is responsible for listing the possible
@@ -85,11 +74,10 @@ public final class AIs {
      *                                in the runtime of this method
      * @throws MalformedURLException  Could appear if the Constants.AI_LOCATION
      *                                was malformed
-     * @throws InvalidConfigurationException 
      */
-    public AIs(Configuration config) throws ClassNotFoundException, MalformedURLException, InvalidConfigurationException {
-        config.inject(this);
-        AI_FILELOCATION = getAIPath();
+    public AIs(Constants constants) throws ClassNotFoundException, MalformedURLException {
+        AI_FILELOCATION = getAIPath(constants.getAILocation());
+        AI_TIME = constants.getAIComputationTime();
         initalizeClassloader();
         makeAiList();
     }
@@ -108,7 +96,7 @@ public final class AIs {
      *                                      (Will never happen a standard java charset is used)
      * @ return The file location of the ai.
      */
-    private String getAIPath() {
+    private String getAIPath(String aiFolderName) {
         String fileLoc = null;
         try {
             fileLoc = URLDecoder.decode(AIs.class.getProtectionDomain()
@@ -123,11 +111,11 @@ public final class AIs {
         // if everything is packaged in a jar file remove the last part and add the ai folder
         if (fileLoc.endsWith(".jar")) {
             int index = fileLoc.lastIndexOf("/");
-            fileLoc = fileLoc.substring(0, index + 1) + AI_FOLDER_NAME;
+            fileLoc = fileLoc.substring(0, index + 1) + aiFolderName;
 
             // if the program is run without jar file just append the ai folder one step over in the hierarchy
         } else {
-            fileLoc += AI_FOLDER_NAME;
+            fileLoc += aiFolderName;
         }
 
         return fileLoc;
