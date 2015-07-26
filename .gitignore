@@ -5,7 +5,7 @@ bin/
 build/
 .gradle/
 .idea/
-.settings/gradle/
+.settings/
 out/
 lib/
 ConfigurationOptions.txt
