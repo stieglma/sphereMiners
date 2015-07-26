@@ -1,8 +1,10 @@
 package me.stieglmaier.sphereMiners.model;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -11,6 +13,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javafx.scene.paint.Color;
 import me.stieglmaier.sphereMiners.main.Constants;
@@ -26,6 +29,8 @@ public abstract class SphereMiners2015 {
     private Player ownAI;
     private Map<Player, List<MutableSphere>> allSpheres;
     private Map<Sphere, MutableSphere> sphereMap;
+    private Map<Sphere, MutableSphere> allSphereMap;
+    private Turn currentMine;
     private Turn currentChangeDest;
     private Turn currentSplit;
     private Turn currentMerge;
@@ -75,71 +80,109 @@ public abstract class SphereMiners2015 {
     }
 
     /**
-     * Changes the moving direction of a Sphere instantly, there is no kind of
-     * friction or acceleration in between. However the speed cannot be changed
+     * Changes the moving direction of a (own) Sphere instantly, there is no kind
+     * of friction or acceleration in between. However the speed cannot be changed
      * with this method, as it is dependant on the size of the Sphere and cannot
      * be set by a player.
      *
      * Execution order of merging, splitting and changing direction is at first
-     * merge, then split, then change directions. All steps are independant and
-     * need not to be set in every turn. Also splitting can not be done on just
-     * merged spheres, as well as new spheres (by splitting) cannot change direction
-     * in this turn.
+     * mine, then merge, then split and then change directions. All steps are
+     * independant and need not to be set in every turn. Also splitting can not
+     * be done on just merged spheres, as well as new spheres (by splitting)
+     * cannot change direction in this turn.
      *
      * @param spheres The map of spheres to their new (relative) moving directions
      *                (does not need to include all spheres you own)
      */
     protected final void changeMoveDirection(final Map<Sphere, Position> spheres) {
-        currentChangeDest = () -> spheres.forEach((sphere, dir) -> sphereMap.get(sphere).setDirection(dir.normalize()));
+        Stream<Entry<Sphere, Position>> tmp = spheres.entrySet()
+                                         .stream()
+                                         .filter(e -> ownSpheres.contains(e.getKey()));
+
+        currentChangeDest = () -> tmp.forEach(e -> sphereMap.get(e.getKey()).setDirection(e.getValue().normalize()));
     }
 
     /**
-     * Splits the given sphere to two equally (half) sized ones. This works only
-     * if the maximal amount of spheres at the same time is not already reached
+     * Splits the given (own) sphere to two equally (half) sized ones. This works
+     * only if the maximal amount of spheres at the same time is not already reached
      * and will not be overflown with the given map of spheres to be splitted.
      * Otherwise this will simply do nothing.
      *
      * Execution order of merging, splitting and changing direction is at first
-     * merge, then split, then change directions. All steps are independant and
-     * need not to be set in every turn. Also splitting can not be done on just
-     * merged spheres, as well as new spheres (by splitting) cannot change direction
-     * in this turn.
+     * mine, then merge, then split and then change directions. All steps are
+     * independant and need not to be set in every turn. Also splitting can not
+     * be done on just merged spheres, as well as new spheres (by splitting)
+     * cannot change direction in this turn.
      *
-     * @param sphere The spheres you want to split into two parts
+     * @param spheres The spheres you want to split into two parts
      */
-    protected final void split(Collection<Sphere> sphere) {
-        if (sphereMap.size() + sphere.size() <= constants.getMaxSphereAmount()) {
+    protected final void split(Collection<Sphere> spheres) {
+        Stream<Sphere> tmp = spheres.stream().filter(s -> ownSpheres.contains(s));
+
+        // use old list size for comparison
+        if (sphereMap.size() + spheres.size() <= constants.getMaxSphereAmount()) {
             // lists cannot be changed directly therefore we need the phyiscsmanager here
-            currentSplit = () -> sphere.forEach(s -> physics.split(sphereMap.get(s), ownAI));
+            currentSplit = () -> tmp.forEach(s -> physics.split(sphereMap.get(s), ownAI));
         }
     }
 
     /**
-     * Merges the given spheres to one that has the accumulated size of both.
+     * Merges the given (own) spheres to one that has the accumulated size of both.
      *
      * Execution order of merging, splitting and changing direction is at first
-     * merge, then split, then change directions. All steps are independant and
-     * need not to be set in every turn. Also splitting can not be done on just
-     * merged spheres, as well as new spheres (by splitting) cannot change direction
-     * in this turn.
+     * mine, then merge, then split and then change directions. All steps are
+     * independant and need not to be set in every turn. Also splitting can not
+     * be done on just merged spheres, as well as new spheres (by splitting)
+     * cannot change direction in this turn.
      *
      * @param spheres The map of spheres that should grow to spheres that should vanish
      */
     protected final void merge(Map<Sphere, Sphere> spheres) {
+        Stream<Entry<Sphere, Sphere>> tmp = spheres.entrySet()
+                                                   .stream()
+                                                   .filter(e -> ownSpheres.contains(e.getKey())
+                                                                && ownSpheres.contains(e.getValue()));
+
         // lists cannot be changed directly therefore we need the phyiscsmanager here
-        currentMerge = () -> spheres.forEach((s1, s2) -> physics.merge(sphereMap.get(s1),
-                                                                       sphereMap.get(s2),
-                                                                       ownAI));
+        currentMerge = () -> tmp.forEach(e -> physics.merge(sphereMap.get(e.getKey()),
+                                                            sphereMap.get(e.getValue()),
+                                                            ownAI));
     }
 
     /**
-     * Returns the enemies surrounding the given sphere in a certain distance.
+     * Mines the given sphere (value) with the other given sphere (key). A sphere
+     * can be mined if it is an enemy and only if it is smaller than oneself. If
+     * these constraints are not hold this method has no effect for the certain
+     * sphere.
+     *
+     * Execution order of merging, splitting and changing direction is at first
+     * mine, then merge, then split and then change directions. All steps are
+     * independant and need not to be set in every turn. Also splitting can not
+     * be done on just merged spheres, as well as new spheres (by splitting)
+     * cannot change direction in this turn.
+     *
+     * @param spheres The map of (own) spheres to (enemy) spheres that should be mined 
+     */
+    protected final void mine(Map<Sphere, Sphere> spheres) {
+        Stream<Entry<Sphere, Sphere>> tmp = spheres.entrySet().stream()
+                                                   .filter(e -> ownSpheres.contains(e.getKey())
+                                                                 && !ownSpheres.contains(e.getValue()));
+        currentMine = () -> tmp.forEach(e -> physics.mine(sphereMap.get(e.getKey()),
+                                                          allSphereMap.get(e.getValue())));
+    }
+
+    /**
+     * Returns the enemies surrounding the given (owned!) sphere in a certain distance.
      *
      * @param sphere The sphere you want to find the surrounding enemies for
      * @return the sourrounding enemies of the given sphere
      */
     protected final Set<Sphere> getSurroundingEnemies(Sphere sphere) {
-         return allSpheres.entrySet()
+        if (!ownSpheres.contains(sphere)) {
+            return Collections.emptySet();
+        }
+
+        return allSpheres.entrySet()
                   .stream()
                   .filter(e -> e.getKey() != ownAI)
                   .flatMap(l -> l.getValue().stream())
@@ -163,6 +206,8 @@ public abstract class SphereMiners2015 {
             // TODO proved exception information in logger (introduce logging first)
             return false;
         }
+
+        currentMine.apply();
         currentMerge.apply();
         currentSplit.apply();
         currentChangeDest.apply();
@@ -174,10 +219,16 @@ public abstract class SphereMiners2015 {
         currentChangeDest = () -> {};
         currentMerge = () -> {};
         currentSplit = () -> {};
+        currentMine = () -> {};
 
         // reset all sphere related variables
         dots = physics.getDots();
         allSpheres = physics.getAISpheres();
+        allSphereMap = physics.getAISpheres()
+                            .values()
+                            .stream()
+                            .flatMap(s -> s.stream())
+                            .collect(Collectors.toMap(k -> k.toImmutableSphere(), k -> k));
         sphereMap = allSpheres.get(ownAI).stream()
                               .collect(Collectors.toMap(s -> s.toImmutableSphere(), s -> s));
         ownSpheres = sphereMap.keySet();

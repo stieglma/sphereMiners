@@ -143,8 +143,12 @@ public class Model extends Observable {
                  }
 
                 try {
+                    long time = System.currentTimeMillis();
                     ais.applyMoves();
+                    System.out.print("ai time: " +(System.currentTimeMillis() - time));
+                    time = System.currentTimeMillis();
                     simulationView.addInstance(physMgr.applyPhysics());
+                    System.out.println(" physics time: " + (System.currentTimeMillis() - time));
                 } catch (IllegalArgumentException | InterruptedException e) {
                     // this will most likely be a programming error,
                     // rethrow and hope it doesn't occur

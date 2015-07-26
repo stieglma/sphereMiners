@@ -61,7 +61,7 @@ public class Physics {
         for (Player ai : playingAIs) {
             // create new sphere for current player
             List<MutableSphere> sphereList = new ArrayList<>();
-            MutableSphere sphere = new MutableSphere(constants);
+            MutableSphere sphere = new MutableSphere(constants, ai);
             Position addPos = new Position(radius * Math.cos(i * 2 * Math.PI / playingAIs.size()),
                                            radius * Math.sin(i * 2 * Math.PI / playingAIs.size()));
 
@@ -106,8 +106,8 @@ public class Physics {
             // 1. move all spheres
             moveSpheres();
 
-            // 2. merge overlapping spheres of opponent ais
-            mergeSpheres();
+            // 2. merge dots into spheres
+            mergeDots();
         }
 
         // refill dots
@@ -165,45 +165,14 @@ public class Physics {
         }
     }
 
-    private void mergeSpheres() {
-        for(Entry<Player, List<MutableSphere>> entry : spheresPerPlayer.entrySet()) {
-            Player player = entry.getKey();
-            Iterator<MutableSphere> playerIt = entry.getValue().iterator();
-            while (playerIt.hasNext()) {
-                MutableSphere playerSphere = playerIt.next();
-                boolean playerMerged = false;
-                // check collisions with players
-                for(Entry<Player, List<MutableSphere>> enemies : spheresPerPlayer.entrySet()) {
-                    if (enemies.getKey().equals(player)) continue;
-                    Iterator<MutableSphere> it = enemies.getValue().iterator();
-                    while (it.hasNext()) {
-                        MutableSphere enemySphere = it.next();
-                        if (playerSphere.canBeMergedWidth(enemySphere)) {
-                            it.remove();
-                            playerSphere.merge(enemySphere);
-                            // only one merging process per partial tick
-                            playerMerged = true;
-                        } else if (enemySphere.canBeMergedWidth(playerSphere)) {
-                            playerIt.remove();
-                            enemySphere.merge(playerSphere);
-                            playerMerged = true;
-                            break;
-                        }
-                    }
- 
-                    // when the player got merged into an enemy we can skip this loop
-                    if (playerMerged) break;
-                }
-
-                // when the player got merged into an enemy we can start over with the next sphere
-                if (playerMerged) continue;
-
-                // check collisions with dots
+    private void mergeDots() {
+        for(List<MutableSphere> lists : spheresPerPlayer.values()) {
+            for (Sphere sphere : lists) {
                 Iterator<MutableSphere> dotsIt = dots.iterator();
                 while(dotsIt.hasNext()) {
                     Sphere dot = dotsIt.next();
-                    if (playerSphere.canBeMergedWidth(dot)) {
-                        playerSphere.merge(dot);
+                    if (sphere.canBeMergedWidth(dot)) {
+                        sphere.merge(dot);
                         dotsIt.remove();
                     }
                 }
@@ -254,4 +223,10 @@ public class Physics {
         }
     }
 
+    public void mine(MutableSphere minerSphere, MutableSphere minedSphere) {
+        if (minerSphere.canBeMergedWidth(minedSphere)) {
+            spheresPerPlayer.get(minedSphere.getOwner()).remove(minedSphere);
+            minerSphere.merge(minedSphere);
+        }
+    }
 }

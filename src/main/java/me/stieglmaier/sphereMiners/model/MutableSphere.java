@@ -20,15 +20,38 @@ public class MutableSphere implements Sphere {
     private Position direction = new Position();
     private int size;
     private Color color;
+    private final Player owner;
 
     /**
      * Creatae a new Mutable sphere with the relevant constants
      *
+     * @param owner the player who owns this sphere
+     * @param constants the constants to use for this sphere
+     */
+    public MutableSphere(Constants constants, Player owner) {
+        this.constants = constants;
+        this.owner = owner;
+        size = constants.getInitialSphereSize();
+    }
+
+    /**
+     * Creatae a new Mutable sphere with the relevant constants
+     *
+     * @param owner the player who owns this sphere
      * @param constants the constants to use for this sphere
      */
     public MutableSphere(Constants constants) {
         this.constants = constants;
+        this.owner = null;
         size = constants.getInitialSphereSize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Player getOwner() {
+        return owner;
     }
 
     /**
@@ -109,7 +132,7 @@ public class MutableSphere implements Sphere {
     @Override
     public List<MutableSphere> split() {
         if (size >= constants.getMinSplittingsize()) {
-            MutableSphere newSphere = new MutableSphere(constants);
+            MutableSphere newSphere = new MutableSphere(constants, owner);
             newSphere.size = size/2;
             newSphere.direction = direction;
             newSphere.position = position;
@@ -157,7 +180,7 @@ public class MutableSphere implements Sphere {
      * @return an immutable copy of this sphere
      */
     public Sphere immutableCopy() {
-        MutableSphere newSphere = new MutableSphere(constants);
+        MutableSphere newSphere = new MutableSphere(constants, owner);
         newSphere.size = size;
         newSphere.direction = direction;
         newSphere.position = position;
@@ -177,6 +200,14 @@ public class MutableSphere implements Sphere {
 
         private ImmutableSphere(Sphere sphere) {
             this.sphere = sphere;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Player getOwner() {
+            return sphere.getOwner();
         }
 
         /**

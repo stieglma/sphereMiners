@@ -15,6 +15,14 @@ public interface Sphere {
     void setDirection(Position direction);
 
     /**
+     * Returns the owner of this sphere and null if this is a dot and thus
+     * has no owner.
+     *
+     * @return the owner of the sphere or null
+     */
+    Player getOwner();
+
+    /**
      * Returns the direction in which the Sphere is moving.
      *
      * @return the direction the sphere is moving
