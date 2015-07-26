@@ -168,7 +168,10 @@ public class Physics {
     private void mergeSpheres() {
         for(Entry<Player, List<MutableSphere>> entry : spheresPerPlayer.entrySet()) {
             Player player = entry.getKey();
-            for (MutableSphere playerSphere : entry.getValue()) {
+            Iterator<MutableSphere> playerIt = entry.getValue().iterator();
+            while (playerIt.hasNext()) {
+                MutableSphere playerSphere = playerIt.next();
+                boolean playerMerged = false;
                 // check collisions with players
                 for(Entry<Player, List<MutableSphere>> enemies : spheresPerPlayer.entrySet()) {
                     if (enemies.getKey().equals(player)) continue;
@@ -178,9 +181,22 @@ public class Physics {
                         if (playerSphere.canBeMergedWidth(enemySphere)) {
                             it.remove();
                             playerSphere.merge(enemySphere);
+                            // only one merging process per partial tick
+                            playerMerged = true;
+                        } else if (enemySphere.canBeMergedWidth(playerSphere)) {
+                            playerIt.remove();
+                            enemySphere.merge(playerSphere);
+                            playerMerged = true;
+                            break;
                         }
                     }
+ 
+                    // when the player got merged into an enemy we can skip this loop
+                    if (playerMerged) break;
                 }
+
+                // when the player got merged into an enemy we can start over with the next sphere
+                if (playerMerged) continue;
 
                 // check collisions with dots
                 Iterator<MutableSphere> dotsIt = dots.iterator();
