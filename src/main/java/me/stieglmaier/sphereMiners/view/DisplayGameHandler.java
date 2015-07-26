@@ -57,15 +57,17 @@ public class DisplayGameHandler {
         this.progressBar = progressBar;
 
         playTick = () -> {
-            // check if current tick is available before retrieving it
-            if (currentTick >= simulation.getSize()) {
-                future.cancel(true);
-                playButton.setText("pause");
-            }
             progressBar.increment();
         };
 
         showCurrentTick = () -> {
+            // check if current tick is available before retrieving it
+            if (currentTick >= simulation.getSize()) {
+                future.cancel(true);
+                playButton.setText("pause");
+                return;
+            }
+
             // clear drawing area
             graphicsContext.clearRect(0, 0, constants.getFieldWidth(), constants.getFieldHeight());
 
