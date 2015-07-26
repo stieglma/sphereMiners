@@ -20,14 +20,13 @@ public abstract class SphereMiners2015 {
     protected Set<Sphere> ownSpheres;
     /** All dots on the playground*/
     protected Set<Sphere> dots;
-    /** The constants used for this game */
-    protected Constants constants;
 
     private Physics physics;
     private Player ownAI;
     private Map<Player, List<MutableSphere>> allSpheres;
     private Map<Sphere, MutableSphere> sphereMap;
     private Turn currentTurn;
+    private Constants constants;
     private ExecutorService threadExecutor = Executors.newSingleThreadExecutor();
 
     /**
