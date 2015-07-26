@@ -1,7 +1,9 @@
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javafx.scene.paint.Color;
@@ -18,19 +20,19 @@ public class DumbAI extends SphereMiners2015 {
 
     @Override
     protected void playTurn() {
+        // first check if we could split
+        List<Sphere> splits = new ArrayList<>();
+        for(Sphere s : ownSpheres) {
+            if (s.getSize() > getConstants().getMinSplittingsize()) {
+                splits.add(s);
+            }
+        }
+        split(splits);
+
+        // then change directions
         Sphere ownSphere = null;
         Iterator<Sphere> ownIt = ownSpheres.iterator();
         Map<Sphere, Position> newDirections = new HashMap<>();
-
-        // first check if we could split
-        for(Sphere s : ownSpheres) {
-            if (s.getSize() > getConstants().getMinSplittingsize()) {
-                split(s);
-                return;
-            }
-        }
-
-        // if no split occured we change directions
         while (ownIt.hasNext()) {
             ownSphere = ownIt.next();
             Iterator<Sphere> dotsIt = dots.iterator();
