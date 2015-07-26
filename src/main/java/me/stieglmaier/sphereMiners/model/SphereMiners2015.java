@@ -102,7 +102,7 @@ public abstract class SphereMiners2015 {
      * merged spheres, as well as new spheres (by splitting) cannot change direction
      * in this turn.
      *
-     * @param sphere The sphere you want to split into two parts
+     * @param sphere The spheres you want to split into two parts
      */
     protected final void split(Collection<Sphere> sphere) {
         // lists cannot be changed directly therefore we need the phyiscsmanager here
@@ -118,8 +118,7 @@ public abstract class SphereMiners2015 {
      * merged spheres, as well as new spheres (by splitting) cannot change direction
      * in this turn.
      *
-     * @param sphere1 The sphere that should grow
-     * @param sphere2 The sphere that should be merged into the other one
+     * @param spheres The map of spheres that should grow to spheres that should vanish
      */
     protected final void merge(Map<Sphere, Sphere> spheres) {
         // lists cannot be changed directly therefore we need the phyiscsmanager here
