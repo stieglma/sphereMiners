@@ -15,17 +15,7 @@ repositories {
     mavenCentral()
 }
 
-task copyToLib << {
-    configurations.runtime.getResolvedConfiguration().getResolvedArtifacts().each { artifact ->
-        project.copy {
-            from artifact.file
-            into "lib"
-            rename { "${artifact.name}.${artifact.extension}" }
-        }
-    }
-}
-
-task buildDocumentation (type:JavaExec) {
+task getConfigOptions(type:JavaExec) {
     main = mainClassName
     classpath = sourceSets.main.runtimeClasspath
     args("--printOptionsTo=ConfigurationOptions.txt")
@@ -45,14 +35,15 @@ jar {
                    'Implementation-Version': version,
                    'Main-Class': 'me.stieglmaier.sphereMiners.main.SphereMiners'
     }
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
-uploadArchives {
-    repositories {
-        flatDir {
-            dirs 'repos'
-        }
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Sphere Miners',
+                   'Implementation-Version': version,
+                   'Main-Class': 'me.stieglmaier.sphereMiners.main.SphereMiners'
     }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
