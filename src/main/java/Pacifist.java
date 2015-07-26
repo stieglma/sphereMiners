@@ -11,7 +11,7 @@ import me.stieglmaier.sphereMiners.model.Position;
 import me.stieglmaier.sphereMiners.model.Sphere;
 import me.stieglmaier.sphereMiners.model.SphereMiners2015;
 
-public class DumbAI extends SphereMiners2015 {
+public class Pacifist extends SphereMiners2015 {
 
     @Override
     protected void init() {
