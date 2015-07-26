@@ -150,8 +150,9 @@ public class Physics {
                                         / Math.log(sphere.getSize())
                                         * (constants.getMaxSpeed() - constants.getMinSpeed())
                                + constants.getMinSpeed()) * partialTick;
-                Position tmpPos = sphere.getPosition().add(sphere.getDirection().normalize().mult(speed));
-                // TODO should we have an infinite field? 
+
+                Position tmpPos = sphere.getPosition().add(sphere.getDirection().mult(speed));
+
                 double x = tmpPos.getX() > constants.getFieldWidth() ? constants.getFieldWidth() : 
                                 (tmpPos.getX() < 0 ? 0 : tmpPos.getX());
                 double y = tmpPos.getY() > constants.getFieldHeight() ? constants.getFieldHeight() : 

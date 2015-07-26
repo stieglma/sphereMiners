@@ -81,12 +81,11 @@ public abstract class SphereMiners2015 {
      * and {@link SphereMiners2015#merge(Sphere, Sphere)} in this turn. The last
      * called method of these will be executed.
      *
-     * @param spheres The map of spheres to their new positions (does not need to
-     *                include all spheres you own)
+     * @param spheres The map of spheres to their new (relative) moving directions
+     *                (does not need to include all spheres you own)
      */
     protected final void changeMoveDirection(final Map<Sphere, Position> spheres) {
-        currentTurn = () -> spheres.forEach((sphere, dir) -> sphereMap.get(sphere)
-                                                                      .setDirection(dir));
+        currentTurn = () -> spheres.forEach((sphere, dir) -> sphereMap.get(sphere).setDirection(dir.normalize()));
     }
 
     /**
@@ -143,6 +142,7 @@ public abstract class SphereMiners2015 {
      */
     boolean evaluateTurn() {
         currentTurn = () -> {};
+        dots = physics.getDots();
         Future<?> future = threadExecutor.submit(() -> playTurn());
         try {
             future.get(constants.getAIComputationTime(), TimeUnit.MILLISECONDS);
@@ -175,7 +175,6 @@ public abstract class SphereMiners2015 {
         sphereMap = allSpheres.get(ownAI).stream()
                               .collect(Collectors.toMap(s -> s.toImmutableSphere(), s -> s));
         ownSpheres = sphereMap.keySet();
-        dots = physics.getDots();
     }
 
     /**

@@ -12,7 +12,7 @@ public class Constants {
 
     @Option(description="In which folder should the framework search for ais?"
             + " (Base is the root of the project/ the folder where the jar file is located)")
-    private String aiFolderName = "ais";
+    private String aiFolderName = "";
 
     @Option(description="Timeout for the computation done by the ais in milliseconds")
     private int aiComputationTime = 50;
