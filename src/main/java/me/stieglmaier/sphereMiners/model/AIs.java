@@ -35,7 +35,7 @@ import me.stieglmaier.sphereMiners.main.Constants;
 /**
  * This class manages all AIs. It handles the calls for the AIs and submits
  * changes made by the AIs to the physics. It also initializes the AIs and
- * checks if the AI behaves correctly and reinitialise an abnormally behaving
+ * checks if the AI behaves correctly and reinitialize an abnormally behaving
  * AI. For example if the calculation of an AI takes too much time, the AI is
  * terminated by the AI Manager and initialized again.
  */
