@@ -39,7 +39,7 @@ public class Constants {
 
     @Option(description="The amount of calculations that should be done per tick."
             + " Changing this changes the granularity of the calculations")
-    private int calcsPerTick = 10;
+    private int calcsPerTick = 2;
 
     @Option(description="The maximum speed a sphere may have in meter/tick")
     private double maxSpeed = 20.0;
