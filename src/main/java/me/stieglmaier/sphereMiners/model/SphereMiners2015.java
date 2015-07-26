@@ -94,7 +94,10 @@ public abstract class SphereMiners2015 {
     }
 
     /**
-     * Splits the given sphere to two equally (half) sized ones.
+     * Splits the given sphere to two equally (half) sized ones. This works only
+     * if the maximal amount of spheres at the same time is not already reached
+     * and will not be overflown with the given map of spheres to be splitted.
+     * Otherwise this will simply do nothing.
      *
      * Execution order of merging, splitting and changing direction is at first
      * merge, then split, then change directions. All steps are independant and
@@ -105,8 +108,10 @@ public abstract class SphereMiners2015 {
      * @param sphere The spheres you want to split into two parts
      */
     protected final void split(Collection<Sphere> sphere) {
-        // lists cannot be changed directly therefore we need the phyiscsmanager here
-        currentSplit = () -> sphere.forEach(s -> physics.split(sphereMap.get(s), ownAI));
+        if (sphereMap.size() + sphere.size() <= constants.getMaxSphereAmount()) {
+            // lists cannot be changed directly therefore we need the phyiscsmanager here
+            currentSplit = () -> sphere.forEach(s -> physics.split(sphereMap.get(s), ownAI));
+        }
     }
 
     /**

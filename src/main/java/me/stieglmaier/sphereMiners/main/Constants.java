@@ -20,6 +20,9 @@ public class Constants {
     @Option(description="How far can a sphere see other enemies?")
     private int sightDistance = 50;
 
+    @Option(description="How many spheres may an AI control at the same time")
+    private int maxSphereAmount = 50;
+
     /* Physics related constants */
 
     @Option(description="The initial distance between the spheres of all ais")
@@ -95,6 +98,14 @@ public class Constants {
      */
     public int getSightDistance() {
         return sightDistance;
+    }
+
+    /**
+     * The maximal amount of spheres an AI is able to control at the same time.
+     * @return the maximal amount of spheres per AI at the same time
+     */
+    public int getMaxSphereAmount() {
+        return maxSphereAmount;
     }
 
     /**
