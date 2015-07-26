@@ -1,5 +1,6 @@
 package me.stieglmaier.sphereMiners.model;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,8 +11,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
-import javafx.scene.paint.Color;
 
+import javafx.scene.paint.Color;
 import me.stieglmaier.sphereMiners.main.Constants;
 
 
@@ -25,7 +26,9 @@ public abstract class SphereMiners2015 {
     private Player ownAI;
     private Map<Player, List<MutableSphere>> allSpheres;
     private Map<Sphere, MutableSphere> sphereMap;
-    private Turn currentTurn;
+    private Turn currentChangeDest;
+    private Turn currentSplit;
+    private Turn currentMerge;
     private Constants constants;
     private ExecutorService threadExecutor = Executors.newSingleThreadExecutor();
 
@@ -77,46 +80,52 @@ public abstract class SphereMiners2015 {
      * with this method, as it is dependant on the size of the Sphere and cannot
      * be set by a player.
      *
-     * Executing this method prevents you from executing {@link SphereMiners2015#split(Sphere)}
-     * and {@link SphereMiners2015#merge(Sphere, Sphere)} in this turn. The last
-     * called method of these will be executed.
+     * Execution order of merging, splitting and changing direction is at first
+     * merge, then split, then change directions. All steps are independant and
+     * need not to be set in every turn. Also splitting can not be done on just
+     * merged spheres, as well as new spheres (by splitting) cannot change direction
+     * in this turn.
      *
      * @param spheres The map of spheres to their new (relative) moving directions
      *                (does not need to include all spheres you own)
      */
     protected final void changeMoveDirection(final Map<Sphere, Position> spheres) {
-        currentTurn = () -> spheres.forEach((sphere, dir) -> sphereMap.get(sphere).setDirection(dir.normalize()));
+        currentChangeDest = () -> spheres.forEach((sphere, dir) -> sphereMap.get(sphere).setDirection(dir.normalize()));
     }
 
     /**
      * Splits the given sphere to two equally (half) sized ones.
      *
-     * Executing this method prevents you from executing {@link SphereMiners2015#changeMoveDirection(Map)}
-     * and {@link SphereMiners2015#merge(Sphere, Sphere)} in this turn. The last
-     * called method of these will be executed.
+     * Execution order of merging, splitting and changing direction is at first
+     * merge, then split, then change directions. All steps are independant and
+     * need not to be set in every turn. Also splitting can not be done on just
+     * merged spheres, as well as new spheres (by splitting) cannot change direction
+     * in this turn.
      *
      * @param sphere The sphere you want to split into two parts
      */
-    protected final void split(Sphere sphere) {
+    protected final void split(Collection<Sphere> sphere) {
         // lists cannot be changed directly therefore we need the phyiscsmanager here
-        currentTurn = () -> physics.split(sphereMap.get(sphere), ownAI);
+        currentSplit = () -> sphere.forEach(s -> physics.split(sphereMap.get(s), ownAI));
     }
 
     /**
      * Merges the given spheres to one that has the accumulated size of both.
      *
-     * Executing this method prevents you from executing {@link SphereMiners2015#changeMoveDirection(Map)}
-     * and {@link SphereMiners2015#split(Sphere)} in this turn. The last
-     * called method of these will be executed.
+     * Execution order of merging, splitting and changing direction is at first
+     * merge, then split, then change directions. All steps are independant and
+     * need not to be set in every turn. Also splitting can not be done on just
+     * merged spheres, as well as new spheres (by splitting) cannot change direction
+     * in this turn.
      *
      * @param sphere1 The sphere that should grow
      * @param sphere2 The sphere that should be merged into the other one
      */
-    protected final void merge(Sphere sphere1, Sphere sphere2) {
+    protected final void merge(Map<Sphere, Sphere> spheres) {
         // lists cannot be changed directly therefore we need the phyiscsmanager here
-        currentTurn = () -> physics.merge(sphereMap.get(sphere1),
-                                          sphereMap.get(sphere2),
-                                          ownAI);
+        currentMerge = () -> spheres.forEach((s1, s2) -> physics.merge(sphereMap.get(s1),
+                                                                       sphereMap.get(s2),
+                                                                       ownAI));
     }
 
     /**
@@ -141,8 +150,7 @@ public abstract class SphereMiners2015 {
      *         or not
      */
     boolean evaluateTurn() {
-        currentTurn = () -> {};
-        dots = physics.getDots();
+        setUpTurn();
         Future<?> future = threadExecutor.submit(() -> playTurn());
         try {
             future.get(constants.getAIComputationTime(), TimeUnit.MILLISECONDS);
@@ -151,8 +159,24 @@ public abstract class SphereMiners2015 {
             // TODO proved exception information in logger (introduce logging first)
             return false;
         }
-        currentTurn.apply();
+        currentMerge.apply();
+        currentSplit.apply();
+        currentChangeDest.apply();
         return true;
+    }
+
+    private void setUpTurn() {
+        // reset turns to evaluate
+        currentChangeDest = () -> {};
+        currentMerge = () -> {};
+        currentSplit = () -> {};
+
+        // reset all sphere related variables
+        dots = physics.getDots();
+        allSpheres = physics.getAISpheres();
+        sphereMap = allSpheres.get(ownAI).stream()
+                              .collect(Collectors.toMap(s -> s.toImmutableSphere(), s -> s));
+        ownSpheres = sphereMap.keySet();
     }
 
     /**
@@ -171,10 +195,6 @@ public abstract class SphereMiners2015 {
      */
     void setPhysics(Physics physics) {
         this.physics = physics;
-        allSpheres = physics.getAISpheres();
-        sphereMap = allSpheres.get(ownAI).stream()
-                              .collect(Collectors.toMap(s -> s.toImmutableSphere(), s -> s));
-        ownSpheres = sphereMap.keySet();
     }
 
     /**

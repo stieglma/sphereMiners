@@ -157,6 +157,9 @@ public class Physics {
                                 (tmpPos.getX() < 0 ? 0 : tmpPos.getX());
                 double y = tmpPos.getY() > constants.getFieldHeight() ? constants.getFieldHeight() : 
                     (tmpPos.getY() < 0 ? 0 : tmpPos.getY());
+                if (x != tmpPos.getX() || y != tmpPos.getY()) {
+                    System.out.println("oldPos: " + tmpPos + " -- newPos: (" + x + ", " + y + ")");
+                }
                 sphere.setPosition(new Position(x, y));
             }
         }
