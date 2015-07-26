@@ -9,7 +9,8 @@ This is currently a very early alpha version, it has not much features and is al
 
 #### Installation
 After checking out the project you're almost done, just call `gradle build` to download all needed dependencies
-from the Maven Central Repositry and Ivy.
+from the Maven Central Repositry and Ivy. If you do not have gradle installed use `./gradlew`. It will install
+the necessary gradle version and delegate all further commands to it.
 
 For an easy integration into IntelliJ IDEA or Eclipse use `gradle idea` or `gradle eclipse`.
 
