@@ -1,20 +1,21 @@
 package me.stieglmaier.sphereMiners.main;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.Map;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import me.stieglmaier.sphereMiners.controller.ViewController;
 import me.stieglmaier.sphereMiners.model.AIs;
 import me.stieglmaier.sphereMiners.model.Model;
 import me.stieglmaier.sphereMiners.model.Physics;
+import me.stieglmaier.sphereMiners.view.ErrorPopup;
 
 import org.sosy_lab.common.configuration.Configuration;
 import org.sosy_lab.common.configuration.InvalidConfigurationException;
@@ -23,14 +24,6 @@ import org.sosy_lab.common.log.BasicLogManager;
 import org.sosy_lab.common.log.LogManager;
 
 import com.google.common.base.Optional;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.util.Map;
 
 /**
  * Main class of the program. Creates the model and the View in a new Thread and
@@ -45,36 +38,6 @@ public class SphereMiners extends Application {
      */
     public static void main(final String[] args) {
         launch(args);
-    }
-
-    private void createErrorDialog(String titleText, String longMessage, Throwable t) {
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle("Sphere Miners could not be started");
-        alert.setHeaderText(titleText);
-        alert.setContentText(longMessage);
-        Label label = new Label("The exception stacktrace was:");
-
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        t.printStackTrace(pw);
-        TextArea textArea = new TextArea(sw.toString());
-        textArea.setEditable(false);
-        textArea.setWrapText(true);
-
-        textArea.setMaxWidth(Double.MAX_VALUE);
-        textArea.setMaxHeight(Double.MAX_VALUE);
-        GridPane.setVgrow(textArea, Priority.ALWAYS);
-        GridPane.setHgrow(textArea, Priority.ALWAYS);
-
-        GridPane expContent = new GridPane();
-        expContent.setMaxWidth(Double.MAX_VALUE);
-        expContent.add(label, 0, 0);
-        expContent.add(textArea, 0, 1);
-
-        // Set expandable Exception into the dialog pane.
-        alert.getDialogPane().setExpandableContent(expContent);
-
-        alert.showAndWait();
     }
 
     @Override
@@ -93,12 +56,12 @@ public class SphereMiners extends Application {
             logger = new BasicLogManager(config.get());
             constants = new Constants(config.get(), logger);
             ais = new AIs(constants);
-            model = new Model(new Physics(constants), ais);
+            model = new Model(new Physics(constants), ais, constants);
         } catch (MalformedURLException e) {
-            createErrorDialog("AI Location is invalid please check your config file!", e.getMessage(), e);
+            ErrorPopup.create("AI Location is invalid please check your config file!", e.getMessage(), e);
             return;
         } catch (InvalidConfigurationException e) {
-            createErrorDialog("Configuration is invalid, please check your config file!", e.getMessage(), e);
+            ErrorPopup.create("Configuration is invalid, please check your config file!", e.getMessage(), e);
             return;
         }
 

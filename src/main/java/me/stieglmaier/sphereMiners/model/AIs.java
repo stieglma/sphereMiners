@@ -24,6 +24,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
@@ -186,9 +187,7 @@ public final class AIs {
             // without proceeding the check
             validAi = loadedAI.getSuperclass().getName().equals(SphereMiners2015.class.getName());
 
-        } catch (ClassFormatError
-                | NoClassDefFoundError
-                | ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             // do not throw an exception this method should check if the ai
             // is valid, so if not its not necessary to throw an exception
             validAi = false;
@@ -231,9 +230,10 @@ public final class AIs {
         try {
             aiLoader.invokeAll(aisToPlay.stream().map(ai -> loadAI(ai, loader)).collect(Collectors.toList()));
 
-            // pretty bad something interrupted our loading process...
+        // this will never happen, but just to be sure, throw an instantiation exception
+        // which will be handled elsewhere
         } catch (InterruptedException e1) {
-            throw new RuntimeException(); // TODO investigate if this is really necessary
+            throw new InstantiationException("Loading AI's was interrupted");
         }
 
         // wait for ailoader to finish or kill it in case of too long computation times
@@ -277,9 +277,7 @@ public final class AIs {
                 Class<?> cl;
                 try {
                     cl = loader.loadClass(ai.getInternalName());
-                } catch (ClassFormatError
-                        | NoClassDefFoundError
-                        | ClassNotFoundException e) {
+                } catch (ClassNotFoundException e) {
                     // do nothing, exception is handled in another method
                     return null;
                 }
@@ -295,8 +293,7 @@ public final class AIs {
                         } catch (InstantiationException
                                 | IllegalAccessException
                                 | IllegalArgumentException
-                                | InvocationTargetException
-                                | VerifyError e) {
+                                | InvocationTargetException e) {
                             // if any of these errors occured the ai could not
                             // be loaded properly, so the method returns without
                             // doing anything
@@ -316,22 +313,28 @@ public final class AIs {
      * finished their calculation all their moves are given to the Physics. If
      * a Thread is terminated before it could finish its calculations all its
      * moves until the termination are given to the Physics.
-     *
-     * @throws IllegalArgumentException if the tick-parameter is invalid (e.g. null).
-     * @throws InterruptedException this should not happen
      */
-    public void applyMoves() throws IllegalArgumentException, InterruptedException {
+    public void applyMoves() {
 
         ais.values().stream().forEach(ai -> requireNonNull(ai));
 
         // execute AIs and Launcher
         ExecutorService threadpool = Executors.newCachedThreadPool();
-        List<Future<Boolean>> retvals = threadpool.invokeAll(ais.values().stream()
-            .map(ai -> (Callable<Boolean>)(() -> ai.evaluateTurn()))
-            .collect(Collectors.toList()));
+        List<Future<Boolean>> retvals = null;
+        try {
+            // compute AI turns
+            retvals = threadpool.invokeAll(ais.values().stream()
+                                                .map(ai -> (Callable<Boolean>)(() -> ai.evaluateTurn()))
+                                                .collect(Collectors.toList()));
 
-        threadpool.shutdown();
-        threadpool.awaitTermination(AI_TIME*ais.size(), TimeUnit.MILLISECONDS);
+            // shutdown the pool and await the termination for the given maximum time
+            threadpool.shutdown();
+            threadpool.awaitTermination(AI_TIME*ais.size(), TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            // this should never happen if it does we throw a runtime exception
+            constants.getLogger().log(Level.SEVERE, "Ai computation steps were interrupted");
+            throw new RuntimeException("Error during ai computation step");
+        }
 
         // only iterate, otherwise this could lead to concurrent modification exceptions
         int counter = 0;
@@ -341,7 +344,7 @@ public final class AIs {
             boolean shouldReinitialize = ret.isCancelled();
             try {
                 shouldReinitialize = shouldReinitialize || !ret.get();
-            } catch (ExecutionException e) {
+            } catch (ExecutionException | InterruptedException e) {
                 // another exception just reinitialize as intended
                 shouldReinitialize = true;
             }
@@ -352,38 +355,35 @@ public final class AIs {
         }
 
         // now reinitialize all necessary ais
-        toReinitialize.forEach(ai -> {
-            try {
-                reinitializeAi(ai);
-            } catch (ClassNotFoundException
-                    | IllegalAccessException
-                    | InstantiationException e1) {
-                throw new Error("Reinitialization of "
-                        + ais.get(ai).getClass().getName() + " FAILED!");
-            }
-        });
+        if (!toReinitialize.isEmpty()) {
+            constants.getLogger().log(Level.INFO, "Reinitializing ais: " + toReinitialize.stream().map(p -> p.getInternalName()).reduce((a,b) -> a + ", " + b));
+        }
+        toReinitialize.forEach(ai -> reinitializeAi(ai));
     }
 
     /**
      * This method reinitializes an AI.
      *
      * @param ai determinate which AI should be reinitialized.
-     * @throws ClassNotFoundException Could appear if a class file is deleted in the runtime of
-     *                                this method
-     * @throws InstantiationException if the class can't be instantiated anymore.
-     * @throws IllegalAccessException if the class could not be accessed.
      */
-    private void reinitializeAi(Player ai) throws ClassNotFoundException,
-            IllegalAccessException, InstantiationException {
-
-        Class<?> cl = loader.loadClass(ais.get(ai).getClass().getName());
-        ais.remove(ai);
-        SphereMiners2015 newAi = (SphereMiners2015) cl.newInstance();
-        newAi.setPlayer(ai);
-        newAi.setPhysics(physics);
-        newAi.setConstants(constants);
-        newAi.init();
-        ais.put(ai, newAi);
+    private void reinitializeAi(Player ai) {
+        try {
+            Class<?> cl = loader.loadClass(ais.get(ai).getClass().getName());
+            ais.remove(ai);
+            SphereMiners2015 newAi = (SphereMiners2015) cl.newInstance();
+            newAi.setPlayer(ai);
+            newAi.setPhysics(physics);
+            newAi.setConstants(constants);
+            newAi.init();
+            ais.put(ai, newAi);
+        } catch (ClassNotFoundException
+                | IllegalAccessException
+                | InstantiationException e1) {
+            constants.getLogger().log(Level.SEVERE, "AI " + ai.getInternalName() + " could not be reinitialized, ai is removed from the game");
+            ais.remove(ai);
+            throw new Error("Reinitialization of "
+                    + ais.get(ai).getClass().getName() + " FAILED!");
+        }
     }
 
 }

@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -196,11 +197,13 @@ public abstract class SphereMiners2015 {
         Future<?> future = threadExecutor.submit(() -> playTurn());
         try {
             future.get(constants.getAIComputationTime(), TimeUnit.MILLISECONDS);
-        } catch (ExecutionException | TimeoutException | InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             future.cancel(true);
-            // TODO proved exception information in logger (introduce logging first)
-            System.out.println("could not compute whole turn for: " + ownAI);
-         //   e.printStackTrace();
+            constants.getLogger().logException(Level.SEVERE, e, "Unexpected exception during turn of AI " + ownAI.getInternalName());
+            return false;
+        } catch (TimeoutException e) {
+            future.cancel(true);
+            constants.getLogger().log(Level.INFO, "Computation took too long for AI " + ownAI.getInternalName());
             return false;
         }
 

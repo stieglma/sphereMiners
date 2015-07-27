@@ -18,6 +18,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
+
 import me.stieglmaier.sphereMiners.main.Constants;
 import me.stieglmaier.sphereMiners.model.GameSimulation;
 import me.stieglmaier.sphereMiners.model.Player;
@@ -133,7 +134,6 @@ public class ViewController implements Initializable{
                                      final Runnable reloadAIList) {
         simulateButton.setOnAction(e -> {
             if (gameSimulation == null) {
-                try {
                     gameSimulation = startMethod.apply(playingAIs.getItems());
                     gameSimulation.addObserver(t -> progressBar.setMax(gameSimulation.getSize()/constants.getFramesPerSecond()));
                     simulateButton.setText("Pause");
@@ -142,10 +142,6 @@ public class ViewController implements Initializable{
                     addAIButton.setDisable(true);
                     removeAIButton.setDisable(true);
                     reloadAIButton.setDisable(true);
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                    throw new RuntimeException("Error during starting Simulation");
-                }
             } else {
                 if (isSimulationPaused) {
                     simulateButton.setText("Pause");

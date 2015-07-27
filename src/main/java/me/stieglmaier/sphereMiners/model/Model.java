@@ -2,9 +2,13 @@ package me.stieglmaier.sphereMiners.model;
 
 import java.util.List;
 import java.util.Observable;
+import java.util.logging.Level;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
+import me.stieglmaier.sphereMiners.main.Constants;
+import me.stieglmaier.sphereMiners.view.ErrorPopup;
 
 
 /**
@@ -20,6 +24,7 @@ public class Model extends Observable {
     private final AIs ais;
     private static GameSimulation simulationView;
     private Simulation simulation;
+    private final Constants constants;
 
     /**
      * Creates a new {@link Model}.
@@ -27,9 +32,10 @@ public class Model extends Observable {
      * @param phys    The {@link Physics} to use for the simulation.
      * @param ai      The {@link AIs} to use for the simulation.
      */
-    public Model(final Physics phys, final AIs ai) {
+    public Model(final Physics phys, final AIs ai, final Constants constants) {
         this.physics = phys;
         this.ais = ai;
+        this.constants = constants;
 
         ais.setPhysics(physics);
     }
@@ -47,7 +53,7 @@ public class Model extends Observable {
             simulationView = new GameSimulation();
             simulationView.addInstance(physics.createInitialTick(aisToPlay));
 
-            simulation = new Simulation(ais, physics, aisToPlay);
+            simulation = new Simulation(ais, physics, aisToPlay, constants);
             simulation.start();
         }
 
@@ -92,11 +98,13 @@ public class Model extends Observable {
         private final Physics physMgr;
         private final AIs ais;
         private final List<Player> aisToPlay;
+        private final Constants constants;
 
-        public Simulation(AIs ais, Physics physics, List<Player> aisToPlay) {
+        public Simulation(AIs ais, Physics physics, List<Player> aisToPlay, Constants constants) {
             this.ais = ais;
             this.physMgr = physics;
             this.aisToPlay = aisToPlay;
+            this.constants = constants;
             setName("[sphereMiners][simulationThread]");
         }
 
@@ -111,20 +119,19 @@ public class Model extends Observable {
             stopSimulation = true;
         }
 
+        @Override
         public void run() {
             isRunning = true;
 
-         // now try to initialize a game with the given AIs.
-            // this needs the physMgr with a new simulation do
-            // not change the order
             try {
                 ais.initializeGameAIs(aisToPlay);
 
                 // a given AI could not be initialized or found at the
                 // given location
             } catch (InstantiationException | InvalidAILocationException e) {
-                // TODO populate this error to view, no crash necessary
-                throw new RuntimeException("Error while loading AIs", e);
+                Platform.runLater(() -> ErrorPopup.create("Error while initializing AIs",
+                                  "Please reload the list of AIs that can be used for playing", e));
+                return;
             }
 
             // let the AIs apply their moves and
@@ -135,21 +142,14 @@ public class Model extends Observable {
                     while (!isRunning) {
                        try {
                           wait();
-                       } catch (Exception e) {
-                          e.printStackTrace();
-                          // TODO what to do here? Just ignore probably
+                       } catch (InterruptedException e) {
+                          constants.getLogger().logException(Level.WARNING, e, "");
                        }
                     }
                  }
 
-                try {
-                    ais.applyMoves();
-                    simulationView.addInstance(physMgr.applyPhysics());
-                } catch (IllegalArgumentException | InterruptedException e) {
-                    // this will most likely be a programming error,
-                    // rethrow and hope it doesn't occur
-                    throw new RuntimeException(e);
-                }
+                ais.applyMoves();
+                simulationView.addInstance(physMgr.applyPhysics());
             }
         }
     }

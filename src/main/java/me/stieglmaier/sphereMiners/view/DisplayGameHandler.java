@@ -70,7 +70,7 @@ public class DisplayGameHandler {
             // check if current tick is available before retrieving it
             if (currentTick >= simulation.getSize()) {
                 future.cancel(true);
-                playButton.setText("pause");
+                playButton.setText("play");
                 return;
             }
 
