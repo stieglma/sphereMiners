@@ -19,6 +19,8 @@ import me.stieglmaier.sphereMiners.model.Physics;
 import org.sosy_lab.common.configuration.Configuration;
 import org.sosy_lab.common.configuration.InvalidConfigurationException;
 import org.sosy_lab.common.configuration.OptionCollector;
+import org.sosy_lab.common.log.BasicLogManager;
+import org.sosy_lab.common.log.LogManager;
 
 import com.google.common.base.Optional;
 
@@ -86,8 +88,10 @@ public class SphereMiners extends Application {
         final Model model;
         final AIs ais;
         final Constants constants;
+        final LogManager logger;
         try {
-            constants = new Constants(config.get());
+            logger = new BasicLogManager(config.get());
+            constants = new Constants(config.get(), logger);
             ais = new AIs(constants);
             model = new Model(new Physics(constants), ais);
         } catch (MalformedURLException e) {

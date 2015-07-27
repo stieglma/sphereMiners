@@ -4,6 +4,7 @@ import org.sosy_lab.common.configuration.Configuration;
 import org.sosy_lab.common.configuration.InvalidConfigurationException;
 import org.sosy_lab.common.configuration.Option;
 import org.sosy_lab.common.configuration.Options;
+import org.sosy_lab.common.log.LogManager;
 
 @Options(prefix="constants")
 public class Constants {
@@ -64,6 +65,8 @@ public class Constants {
     @Option(description="The number of dots on the playground")
     private int dotAmount = 800;
 
+    private LogManager logger;
+
     /**
      * Create the Constants object. It only consists of configurable constants
      * that are used in the whole framework. These constants are private and
@@ -72,8 +75,9 @@ public class Constants {
      * @param configuration The configuration object to set the values of all constants
      * @throws InvalidConfigurationException if the configuration is invalid
      */
-    public Constants(Configuration configuration) throws InvalidConfigurationException {
+    public Constants(Configuration configuration, LogManager logger) throws InvalidConfigurationException {
         configuration.inject(this);
+        this.logger = logger;
     }
 
     /**
@@ -203,5 +207,13 @@ public class Constants {
      */
     public int getDotAmount() {
         return dotAmount;
+    }
+
+    /**
+     * The LogManager used throughout the project.
+     * @return the logger
+     */
+    public LogManager getLogger() {
+        return logger;
     }
 }
