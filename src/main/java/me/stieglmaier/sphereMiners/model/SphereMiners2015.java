@@ -183,7 +183,7 @@ public abstract class SphereMiners2015 {
                          .filter(s -> s.getOwner() != ownAI
                                       && s.getPosition().dist(sphere.getPosition())
                                               <= 
-                                          constants.getSightDistance())
+                                          constants.getSightDistance() + sphere.getRadius())
                          .collect(Collectors.toSet());
     }
 
