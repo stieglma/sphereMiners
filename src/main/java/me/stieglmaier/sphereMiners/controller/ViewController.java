@@ -163,6 +163,7 @@ public class ViewController implements Initializable{
             progressBar.setValue(0);
             progressBar.valueProperty().removeListener(displayGameHandler.getSliderChangedListener());
             displayGameHandler.stopAnimation();
+            displayGameHandler = null;
             addAIButton.setDisable(false);
             removeAIButton.setDisable(false);
             reloadAIButton.setDisable(false);

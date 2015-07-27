@@ -127,6 +127,8 @@ public class DisplayGameHandler {
                                               constants.getFieldHeight()/2);
                 }
                 future.cancel(true);
+                playButton.setText("play");
+                return;
             }
         };
 
