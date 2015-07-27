@@ -74,12 +74,10 @@ public final class AIs {
      * AIs, so they can be displayed in the View and chosen to simulate games.
      *
      * @param constants The constants that should be used for the AIs class
-     * @throws ClassNotFoundException Could appear if a class file is deleted
-     *                                in the runtime of this method
      * @throws MalformedURLException  Could appear if the Constants.AI_LOCATION
      *                                was malformed
      */
-    public AIs(Constants constants) throws ClassNotFoundException, MalformedURLException {
+    public AIs(Constants constants) throws MalformedURLException {
         this.constants = constants;
         AI_FILELOCATION = getAIPath();
         AI_TIME = constants.getAIComputationTime();
