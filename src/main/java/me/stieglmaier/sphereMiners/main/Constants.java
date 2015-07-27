@@ -56,7 +56,7 @@ public class Constants {
     private int minSplittingsize = 100;
 
     @Option(description="The minimal overlapping area between two spheres that should be merged")
-    private int minMergeDist = 1;
+    private int minMergeDist = -1;
 
     @Option(description="The size of the dots spawing randomly.")
     private int dotSize = 10;
