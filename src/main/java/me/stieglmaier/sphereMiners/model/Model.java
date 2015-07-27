@@ -8,6 +8,10 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
 import me.stieglmaier.sphereMiners.main.Constants;
+import me.stieglmaier.sphereMiners.model.ai.AIManager;
+import me.stieglmaier.sphereMiners.model.ai.Player;
+import me.stieglmaier.sphereMiners.model.physics.Physics;
+import me.stieglmaier.sphereMiners.model.util.GameSimulation;
 import me.stieglmaier.sphereMiners.view.ErrorPopup;
 
 
@@ -21,7 +25,7 @@ import me.stieglmaier.sphereMiners.view.ErrorPopup;
 public class Model extends Observable {
 
     private final Physics physics;
-    private final AIs ais;
+    private final AIManager ais;
     private static GameSimulation simulationView;
     private Simulation simulation;
     private final Constants constants;
@@ -30,9 +34,9 @@ public class Model extends Observable {
      * Creates a new {@link Model}.
      *
      * @param phys    The {@link Physics} to use for the simulation.
-     * @param ai      The {@link AIs} to use for the simulation.
+     * @param ai      The {@link AIManager} to use for the simulation.
      */
-    public Model(final Physics phys, final AIs ai, final Constants constants) {
+    public Model(final Physics phys, final AIManager ai, final Constants constants) {
         this.physics = phys;
         this.ais = ai;
         this.constants = constants;
@@ -96,11 +100,11 @@ public class Model extends Observable {
         private boolean isRunning = false;
         private boolean stopSimulation = false;
         private final Physics physMgr;
-        private final AIs ais;
+        private final AIManager ais;
         private final List<Player> aisToPlay;
         private final Constants constants;
 
-        public Simulation(AIs ais, Physics physics, List<Player> aisToPlay, Constants constants) {
+        public Simulation(AIManager ais, Physics physics, List<Player> aisToPlay, Constants constants) {
             this.ais = ais;
             this.physMgr = physics;
             this.aisToPlay = aisToPlay;

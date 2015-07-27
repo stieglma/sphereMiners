@@ -1,4 +1,4 @@
-package me.stieglmaier.sphereMiners.model;
+package me.stieglmaier.sphereMiners.model.ai;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -17,6 +17,9 @@ import java.util.stream.Stream;
 
 import javafx.scene.paint.Color;
 import me.stieglmaier.sphereMiners.main.Constants;
+import me.stieglmaier.sphereMiners.model.physics.Physics;
+import me.stieglmaier.sphereMiners.model.util.Position;
+import me.stieglmaier.sphereMiners.model.util.Sphere;
 
 
 public abstract class SphereMiners2015 {

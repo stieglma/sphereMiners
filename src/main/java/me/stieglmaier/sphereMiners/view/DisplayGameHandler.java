@@ -14,10 +14,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableView;
 import me.stieglmaier.sphereMiners.main.Constants;
-import me.stieglmaier.sphereMiners.model.GameSimulation;
-import me.stieglmaier.sphereMiners.model.Player;
-import me.stieglmaier.sphereMiners.model.Sphere;
-import me.stieglmaier.sphereMiners.model.Tick;
+import me.stieglmaier.sphereMiners.model.ai.Player;
+import me.stieglmaier.sphereMiners.model.util.GameSimulation;
+import me.stieglmaier.sphereMiners.model.util.Sphere;
+import me.stieglmaier.sphereMiners.model.util.Tick;
 
 /**
  * This class handles the drawing on the canvas, such that the simulation

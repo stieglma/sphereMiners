@@ -1,4 +1,4 @@
-package me.stieglmaier.sphereMiners.model;
+package me.stieglmaier.sphereMiners.model.physics;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
@@ -14,6 +15,11 @@ import com.google.common.collect.ImmutableList.Builder;
 
 import javafx.scene.paint.Color;
 import me.stieglmaier.sphereMiners.main.Constants;
+import me.stieglmaier.sphereMiners.model.ai.Player;
+import me.stieglmaier.sphereMiners.model.util.MutableSphere;
+import me.stieglmaier.sphereMiners.model.util.Position;
+import me.stieglmaier.sphereMiners.model.util.Sphere;
+import me.stieglmaier.sphereMiners.model.util.Tick;
 
 /**
  * This class handles all the physical computations such as moving and "eating"

@@ -1,5 +1,6 @@
-package me.stieglmaier.sphereMiners.model;
+package me.stieglmaier.sphereMiners.model.util;
 
+import me.stieglmaier.sphereMiners.model.ai.Player;
 import javafx.scene.paint.Color;
 
 public interface Sphere {

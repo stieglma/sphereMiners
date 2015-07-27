@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.Set;
 
 import javafx.scene.paint.Color;
-import me.stieglmaier.sphereMiners.model.Position;
-import me.stieglmaier.sphereMiners.model.Sphere;
-import me.stieglmaier.sphereMiners.model.SphereMiners2015;
+import me.stieglmaier.sphereMiners.model.ai.SphereMiners2015;
+import me.stieglmaier.sphereMiners.model.util.Position;
+import me.stieglmaier.sphereMiners.model.util.Sphere;
 
 public class DumbMiner extends SphereMiners2015 {
 

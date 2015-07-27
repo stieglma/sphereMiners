@@ -1,4 +1,4 @@
-package me.stieglmaier.sphereMiners.model;
+package me.stieglmaier.sphereMiners.model.util;
 
 import java.util.List;
 

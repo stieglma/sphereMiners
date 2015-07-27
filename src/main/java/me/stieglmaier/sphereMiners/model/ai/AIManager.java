@@ -1,4 +1,4 @@
-package me.stieglmaier.sphereMiners.model;
+package me.stieglmaier.sphereMiners.model.ai;
 
 import static java.util.Objects.requireNonNull;
 
@@ -31,6 +31,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
 import me.stieglmaier.sphereMiners.main.Constants;
+import me.stieglmaier.sphereMiners.model.physics.Physics;
 
 
 /**
@@ -40,7 +41,7 @@ import me.stieglmaier.sphereMiners.main.Constants;
  * AI. For example if the calculation of an AI takes too much time, the AI is
  * terminated by the AI Manager and initialized again.
  */
-public final class AIs {
+public final class AIManager {
 
     /**
      * 
@@ -78,7 +79,7 @@ public final class AIs {
      * @throws MalformedURLException  Could appear if the Constants.AI_LOCATION
      *                                was malformed
      */
-    public AIs(Constants constants) throws MalformedURLException {
+    public AIManager(Constants constants) throws MalformedURLException {
         this.constants = constants;
         AI_FILELOCATION = getAIPath();
         AI_TIME = constants.getAIComputationTime();
@@ -103,7 +104,7 @@ public final class AIs {
     private String getAIPath() {
         String fileLoc = null;
         try {
-            fileLoc = URLDecoder.decode(AIs.class.getProtectionDomain()
+            fileLoc = URLDecoder.decode(AIManager.class.getProtectionDomain()
                                 .getCodeSource()
                                 .getLocation().getPath(), "UTF-8");
         } catch (UnsupportedEncodingException e) {

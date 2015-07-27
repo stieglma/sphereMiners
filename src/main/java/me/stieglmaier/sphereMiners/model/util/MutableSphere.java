@@ -1,7 +1,8 @@
-package me.stieglmaier.sphereMiners.model;
+package me.stieglmaier.sphereMiners.model.util;
 
 import javafx.scene.paint.Color;
 import me.stieglmaier.sphereMiners.main.Constants;
+import me.stieglmaier.sphereMiners.model.ai.Player;
 
 
 /**

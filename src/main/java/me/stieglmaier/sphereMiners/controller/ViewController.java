@@ -18,10 +18,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
-
 import me.stieglmaier.sphereMiners.main.Constants;
-import me.stieglmaier.sphereMiners.model.GameSimulation;
-import me.stieglmaier.sphereMiners.model.Player;
+import me.stieglmaier.sphereMiners.model.ai.Player;
+import me.stieglmaier.sphereMiners.model.util.GameSimulation;
 import me.stieglmaier.sphereMiners.view.DisplayGameHandler;
 
 

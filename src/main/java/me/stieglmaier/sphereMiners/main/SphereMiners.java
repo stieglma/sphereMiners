@@ -12,9 +12,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import me.stieglmaier.sphereMiners.controller.ViewController;
-import me.stieglmaier.sphereMiners.model.AIs;
 import me.stieglmaier.sphereMiners.model.Model;
-import me.stieglmaier.sphereMiners.model.Physics;
+import me.stieglmaier.sphereMiners.model.ai.AIManager;
+import me.stieglmaier.sphereMiners.model.physics.Physics;
 import me.stieglmaier.sphereMiners.view.ErrorPopup;
 
 import org.sosy_lab.common.configuration.Configuration;
@@ -49,13 +49,13 @@ public class SphereMiners extends Application {
         }
 
         final Model model;
-        final AIs ais;
+        final AIManager ais;
         final Constants constants;
         final LogManager logger;
         try {
             logger = new BasicLogManager(config.get());
             constants = new Constants(config.get(), logger);
-            ais = new AIs(constants);
+            ais = new AIManager(constants);
             model = new Model(new Physics(constants), ais, constants);
         } catch (MalformedURLException e) {
             ErrorPopup.create("AI Location is invalid please check your config file!", e.getMessage(), e);
