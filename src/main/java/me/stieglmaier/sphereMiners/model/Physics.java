@@ -186,7 +186,10 @@ public class Physics {
     }
 
     public void changeDirection(Sphere sphere, Position direction) {
-        aiSpheres.inverse().get(sphere).setDirection(direction.normalize());
+        // perhaps a sphere was mined and therefore is no longer available
+        if (aiSpheres.values().contains(sphere)) {
+            aiSpheres.inverse().get(sphere).setDirection(direction.normalize());
+        }
     }
 
     /**
@@ -194,10 +197,13 @@ public class Physics {
      * @param sphere the sphere to split
      */
     public void split(Sphere sphere) {
-        MutableSphere s = aiSpheres.inverse().get(sphere);
-        MutableSphere newSphere = s.split();
-        if (newSphere != null) {
-            aiSpheres.put(newSphere, newSphere.toImmutableSphere());
+        // perhaps a sphere was mined and therefore is no longer available
+        if (aiSpheres.values().contains(sphere)) {
+            MutableSphere s = aiSpheres.inverse().get(sphere);
+            MutableSphere newSphere = s.split();
+            if (newSphere != null) {
+                aiSpheres.put(newSphere, newSphere.toImmutableSphere());
+            }
         }
     }
 
@@ -207,7 +213,9 @@ public class Physics {
      * @param small the sphere that should be merged into the other one
      */
     public void merge(Sphere big, Sphere small) {
-        if (big.canBeMergedWidth(small)) {
+        // perhaps a sphere was mined and therefore is no longer available
+        if (aiSpheres.values().contains(big) && aiSpheres.values().contains(small)
+              && big.canBeMergedWidth(small)) {
             MutableSphere bigger = aiSpheres.inverse().get(big);
             MutableSphere smaller = aiSpheres.inverse().get(small);
             aiSpheres.remove(smaller);
@@ -216,7 +224,9 @@ public class Physics {
     }
 
     public void mine(Sphere minerSphere, Sphere minedSphere) {
-        if (minerSphere.canBeMergedWidth(minedSphere)) {
+        // perhaps a sphere was mined and therefore is no longer available
+        if (aiSpheres.values().contains(minerSphere) && aiSpheres.values().contains(minedSphere)
+              && minerSphere.canBeMergedWidth(minedSphere)) {
             MutableSphere miner = aiSpheres.inverse().get(minerSphere);
             MutableSphere mined = aiSpheres.inverse().get(minedSphere);
             aiSpheres.remove(mined);
