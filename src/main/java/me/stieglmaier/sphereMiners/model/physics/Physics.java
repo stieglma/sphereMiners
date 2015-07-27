@@ -51,11 +51,15 @@ public class Physics {
     }
 
     /**
-     * Creates the initial tick for a simulation.
+     * Creates the initial tick for a simulation. This also deletes the previously
+     * done simulation.
+     *
      * @param playingAIs the list of players that should take part
      * @return the computed initial tick
      */
     public Tick createInitialTick(List<Player> playingAIs) {
+        aiSpheres.clear();
+        spheresForAisNextTurn.clear();
         Position initalPos = new Position(constants.getFieldWidth()/2, constants.getFieldHeight()/2);
         double angle = 360.0/playingAIs.size();
         

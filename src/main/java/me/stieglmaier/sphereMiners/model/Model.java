@@ -54,14 +54,12 @@ public class Model extends Observable {
      * @return the SimulationObject that can be viewed
      */
     public GameSimulation simulateGame(final List<Player> aisToPlay) {
-        if (simulationView == null) {
             // create new Simulation
-            simulationView = new GameSimulation();
-            simulationView.addInstance(physics.createInitialTick(aisToPlay));
+        simulationView = new GameSimulation();
+        simulationView.addInstance(physics.createInitialTick(aisToPlay));
 
-            simulation = new Simulation(ais, physics, aisToPlay, constants);
-            simulation.start();
-        }
+        simulation = new Simulation(ais, physics, aisToPlay, constants);
+        simulation.start();
 
         return simulationView;
     }
