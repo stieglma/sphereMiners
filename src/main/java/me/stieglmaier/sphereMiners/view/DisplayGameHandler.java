@@ -89,7 +89,7 @@ public class DisplayGameHandler {
                 graphicsContext.setFill(owner.getColor());
                 playerSizes.replace(owner, playerSizes.get(owner) + s.getSize());
                 double radius = s.getRadius();
-                graphicsContext.fillOval(s.getPosition().getX()-radius, s.getPosition().getY()-radius, radius, radius);
+                graphicsContext.fillOval(s.getPosition().getX()-radius, s.getPosition().getY()-radius, radius*2, radius*2);
             }
             playerSizes.forEach((a, b) -> a.getSizeProperty().set(b));
             playingAIs.sort();
