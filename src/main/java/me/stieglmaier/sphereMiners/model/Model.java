@@ -6,12 +6,14 @@ import java.util.logging.Level;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+
 import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
 import me.stieglmaier.sphereMiners.main.Constants;
 import me.stieglmaier.sphereMiners.model.ai.AIManager;
 import me.stieglmaier.sphereMiners.model.ai.Player;
 import me.stieglmaier.sphereMiners.model.physics.Physics;
 import me.stieglmaier.sphereMiners.model.util.GameSimulation;
+import me.stieglmaier.sphereMiners.model.util.Tick;
 import me.stieglmaier.sphereMiners.view.ErrorPopup;
 
 
@@ -153,7 +155,18 @@ public class Model extends Observable {
                  }
 
                 ais.applyMoves();
-                simulationView.addInstance(physMgr.applyPhysics());
+                Tick nextTick = physMgr.applyPhysics();
+
+                // is the game over?
+                boolean isEnded = constants.getWinningRule().hasGameEnded(simulationView, constants);
+                if (isEnded) {
+                    nextTick = nextTick.toWinningTick(constants.getWinningRule().getWinner());
+                }
+                simulationView.addInstance(nextTick);
+                // end this thread if game is finished
+                if (isEnded) {
+                    return;
+                }
             }
         }
     }

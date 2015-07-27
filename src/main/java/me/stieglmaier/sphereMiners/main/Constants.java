@@ -1,5 +1,7 @@
 package me.stieglmaier.sphereMiners.main;
 
+import me.stieglmaier.sphereMiners.model.winningRules.WinningRules;
+
 import org.sosy_lab.common.configuration.Configuration;
 import org.sosy_lab.common.configuration.InvalidConfigurationException;
 import org.sosy_lab.common.configuration.Option;
@@ -64,6 +66,19 @@ public class Constants {
 
     @Option(description="The number of dots on the playground")
     private int dotAmount = 800;
+
+    /* Rule related constants */
+
+    @Option(description="Who should the game be won?")
+    private WinningRules winningRule = WinningRules.BIGGEST_AFTER_TIME;
+
+    @Option(description="Total time in seconds the game should last, this option is only used"
+            + " with the appropriate winning rule")
+    private int totalGameTime = 10;
+
+    @Option(description="Size an AI has to reach overall to win the game, this option is only"
+            + " used with the appropriate winning rule")
+    private int totalSizeToReach = 10000;
 
     private LogManager logger;
 
@@ -207,6 +222,31 @@ public class Constants {
      */
     public int getDotAmount() {
         return dotAmount;
+    }
+
+    /**
+     * The rule how the game can be won.
+     * @return the rule how the game can be won
+     */
+    public WinningRules getWinningRule() {
+        return winningRule;
+    }
+
+    /**
+     * The total time a game should last, when the appropriate winning rule is used
+     * @return the total time a game should last in seconds
+     */
+    public int getTotalGameTime() {
+        return totalGameTime;
+    }
+
+    /**
+     * The total size an AI has to reach in order to win, when the appropriate
+     * winning rule is used
+     * @return the total size an AI has to reach
+     */
+    public int getTotalSizeToReach() {
+        return totalSizeToReach;
     }
 
     /**

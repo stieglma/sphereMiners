@@ -1,6 +1,7 @@
 package me.stieglmaier.sphereMiners.view;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -9,15 +10,20 @@ import java.util.concurrent.TimeUnit;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableView;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import me.stieglmaier.sphereMiners.main.Constants;
 import me.stieglmaier.sphereMiners.model.ai.Player;
 import me.stieglmaier.sphereMiners.model.util.GameSimulation;
 import me.stieglmaier.sphereMiners.model.util.Sphere;
 import me.stieglmaier.sphereMiners.model.util.Tick;
+import me.stieglmaier.sphereMiners.model.util.Tick.WinningTick;
 
 /**
  * This class handles the drawing on the canvas, such that the simulation
@@ -98,6 +104,29 @@ public class DisplayGameHandler {
                 graphicsContext.setFill(s.getColor());
                 double radius = s.getRadius();
                 graphicsContext.fillOval(s.getPosition().getX()-radius, s.getPosition().getY()-radius, radius, radius);
+            }
+
+            if (tick instanceof WinningTick) {
+                graphicsContext.clearRect(0, 0, constants.getFieldWidth(), constants.getFieldHeight());
+                graphicsContext.setTextAlign(TextAlignment.CENTER);
+                graphicsContext.setTextBaseline(VPos.CENTER);
+                graphicsContext.setFont(Font.font(null, FontWeight.BOLD, 20));
+                List<Player> winners = ((WinningTick) tick).getWinners();
+                if (winners.size() > 2) {
+                    graphicsContext.fillText("Game Finished\n\n the winners are:\n\n"
+                                                 + winners
+                                                    .stream()
+                                                    .map(p -> p.getNameProperty().get())
+                                                    .reduce((a,b) -> a + "\n" + b).get(),
+                                             constants.getFieldWidth()/2,
+                                             constants.getFieldHeight()/2);
+                } else {
+                    graphicsContext.fillText("Game Finished\n\n the winner is:\n\n"
+                                                 + winners.get(0).getNameProperty().get(),
+                                              constants.getFieldWidth()/2,
+                                              constants.getFieldHeight()/2);
+                }
+                future.cancel(true);
             }
         };
 
