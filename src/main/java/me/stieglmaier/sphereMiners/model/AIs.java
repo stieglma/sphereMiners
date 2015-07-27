@@ -346,6 +346,7 @@ public final class AIs {
                 shouldReinitialize = shouldReinitialize || !ret.get();
             } catch (ExecutionException | InterruptedException e) {
                 // another exception just reinitialize as intended
+                constants.getLogger().logException(Level.INFO, e, ai.getInternalName() + " has to be reinitialized");
                 shouldReinitialize = true;
             }
             if (shouldReinitialize) {
@@ -356,7 +357,7 @@ public final class AIs {
 
         // now reinitialize all necessary ais
         if (!toReinitialize.isEmpty()) {
-            constants.getLogger().log(Level.INFO, "Reinitializing ais: " + toReinitialize.stream().map(p -> p.getInternalName()).reduce((a,b) -> a + ", " + b));
+            constants.getLogger().log(Level.INFO, "Reinitializing ais: " + toReinitialize.stream().map(p -> p.getInternalName()).reduce((a,b) -> a + ", " + b).get());
         }
         toReinitialize.forEach(ai -> reinitializeAi(ai));
     }
