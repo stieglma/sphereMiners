@@ -1,7 +1,5 @@
 package me.stieglmaier.sphereMiners.model;
 
-import java.util.List;
-
 import javafx.scene.paint.Color;
 
 public interface Sphere {
@@ -83,9 +81,9 @@ public interface Sphere {
      * Splits the sphere into two equal sized (smaller) parts.
      * Should only be called by the Framework, no AI interaction permitted.
      *
-     * @return the list of sphere resulting from splitting the caller sphere
+     * @return the new sphere resulting from splitting the caller sphere
      */
-    List<MutableSphere> split();
+    MutableSphere split();
 
     /**
      * Merges two spheres of the same player two one big sphere.

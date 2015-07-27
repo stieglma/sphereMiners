@@ -1,16 +1,16 @@
 package me.stieglmaier.sphereMiners.model;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 import javafx.scene.paint.Color;
 import me.stieglmaier.sphereMiners.main.Constants;
@@ -25,7 +25,7 @@ import me.stieglmaier.sphereMiners.main.Constants;
  */
 public class Physics {
 
-    private final Map<Player, List<MutableSphere>> spheresPerPlayer = new HashMap<>();
+    private final BiMap<MutableSphere, Sphere> spheresPerPlayer = HashBiMap.create();
     private final Set<MutableSphere> dots = new HashSet<>();
 
     private final Constants constants;
@@ -60,7 +60,6 @@ public class Physics {
         int i = 0;
         for (Player ai : playingAIs) {
             // create new sphere for current player
-            List<MutableSphere> sphereList = new ArrayList<>();
             MutableSphere sphere = new MutableSphere(constants, ai);
             Position addPos = new Position(radius * Math.cos(i * 2 * Math.PI / playingAIs.size()),
                                            radius * Math.sin(i * 2 * Math.PI / playingAIs.size()));
@@ -74,9 +73,8 @@ public class Physics {
             }
 
             sphere.setPosition(spherePos);
-            sphereList.add(sphere);
 
-            spheresPerPlayer.put(ai, sphereList);
+            spheresPerPlayer.put(sphere, sphere.toImmutableSphere());
             i++;
         }
         createDots(constants.getDotAmount());
@@ -117,74 +115,58 @@ public class Physics {
     }
 
     private Tick snapshot() {
-        Map<Player, List<Sphere>> newMap = new HashMap<>();
-        for (Entry<Player, List<MutableSphere>> entry : spheresPerPlayer.entrySet()) {
-            ArrayList<Sphere> newList = new ArrayList<>();
-            for (MutableSphere sphere : entry.getValue()) {
-                newList.add(sphere.immutableCopy());
+        Builder<Sphere> sphereCopy = ImmutableList.builder();
+        for (MutableSphere sphere : spheresPerPlayer.keySet()) {{
+                sphereCopy.add(sphere.immutableCopy());
             }
-            newMap.put(entry.getKey(), Collections.unmodifiableList(newList));
         }
 
-        List<Sphere> newDots = new ArrayList<>(constants.getDotAmount());
+        Builder<Sphere> dotsCopy = ImmutableList.builder();
         for (MutableSphere dot : dots) {
-            newDots.add(dot.immutableCopy());
+            dotsCopy.add(dot.immutableCopy());
         }
 
-        return new Tick(Collections.unmodifiableMap(newMap), newDots);
+        return new Tick(sphereCopy.build(), dotsCopy.build());
     }
 
     private void moveSpheres() {
-        // get size of biggest sphere
-        int maxSize = 0;
-        for (List<MutableSphere> spheres : spheresPerPlayer.values()) {
-            for (MutableSphere sphere : spheres) {
-                if (sphere.getSize() > maxSize) {
-                    maxSize = sphere.getSize();
-                }
-            }
-        }
-        for (List<MutableSphere> spheres : spheresPerPlayer.values()) {
-            for (MutableSphere sphere : spheres) {
-                double speed = (Math.log(constants.getInitialSphereSize())
-                                        / Math.log(sphere.getSize())
-                                        * (constants.getMaxSpeed() - constants.getMinSpeed())
-                               + constants.getMinSpeed()) * partialTick;
+        for (MutableSphere sphere : spheresPerPlayer.keySet()) {
+            double speed = (Math.log(constants.getInitialSphereSize())
+                                    / Math.log(sphere.getSize())
+                                    * (constants.getMaxSpeed() - constants.getMinSpeed())
+                           + constants.getMinSpeed()) * partialTick;
 
-                Position tmpPos = sphere.getPosition().add(sphere.getDirection().mult(speed));
+            Position tmpPos = sphere.getPosition().add(sphere.getDirection().mult(speed));
 
-                double x = tmpPos.getX() > constants.getFieldWidth() ? constants.getFieldWidth() : 
-                                (tmpPos.getX() < 0 ? 0 : tmpPos.getX());
-                double y = tmpPos.getY() > constants.getFieldHeight() ? constants.getFieldHeight() : 
-                    (tmpPos.getY() < 0 ? 0 : tmpPos.getY());
+            double x = tmpPos.getX() > constants.getFieldWidth() ? constants.getFieldWidth() : 
+                            (tmpPos.getX() < 0 ? 0 : tmpPos.getX());
+            double y = tmpPos.getY() > constants.getFieldHeight() ? constants.getFieldHeight() : 
+                (tmpPos.getY() < 0 ? 0 : tmpPos.getY());
 
-                sphere.setPosition(new Position(x, y));
-            }
+            sphere.setPosition(new Position(x, y));
         }
     }
 
     private void mergeDots() {
-        for(List<MutableSphere> lists : spheresPerPlayer.values()) {
-            for (Sphere sphere : lists) {
-                Iterator<MutableSphere> dotsIt = dots.iterator();
-                while(dotsIt.hasNext()) {
-                    Sphere dot = dotsIt.next();
-                    if (sphere.canBeMergedWidth(dot)) {
-                        sphere.merge(dot);
-                        dotsIt.remove();
-                    }
+        for(MutableSphere sphere : spheresPerPlayer.keySet()) {
+            Iterator<MutableSphere> dotsIt = dots.iterator();
+            while(dotsIt.hasNext()) {
+                Sphere dot = dotsIt.next();
+                if (sphere.canBeMergedWidth(dot)) {
+                    sphere.merge(dot);
+                    dotsIt.remove();
                 }
             }
         }
     }
 
     /**
-     * Returns an unmodifiable view of the map with all spheres per player.
+     * Returns a set of the map with all spheres per player.
      *
-     * @return the map of players to their list of spheres
+     * @return a set of all spheres owned by AIs
      */
-    public Map<Player, List<MutableSphere>> getAISpheres() {
-        return Collections.unmodifiableMap(spheresPerPlayer);
+    public Set<Sphere> getAISpheres() {
+        return spheresPerPlayer.values();
     }
 
     /**
@@ -196,35 +178,42 @@ public class Physics {
         return Collections.unmodifiableSet(dots.stream().map(s -> s.toImmutableSphere()).collect(Collectors.toSet()));
     }
 
+    public void changeDirection(Sphere sphere, Position direction) {
+        spheresPerPlayer.inverse().get(sphere).setDirection(direction.normalize());
+    }
+
     /**
      * Splits a sphere into two smaller parts
      * @param sphere the sphere to split
-     * @param player the player who owns the sphere
      */
-    public void split(MutableSphere sphere, Player player) {
-        List<MutableSphere> spheres = spheresPerPlayer.get(player);
-        spheres.remove(sphere);
-        spheres.addAll(sphere.split());
+    public void split(Sphere sphere) {
+        MutableSphere s = spheresPerPlayer.inverse().get(sphere);
+        MutableSphere newSphere = s.split();
+        if (newSphere != null) {
+            spheresPerPlayer.put(newSphere, newSphere.toImmutableSphere());
+        }
     }
 
     /**
      * Merges two spheres if they are in the necessary range to do that.
-     * @param sphere1 the sphere that should grow
-     * @param sphere2 the sphere that should be merged into the other one
-     * @param player the player who owns the spheres
+     * @param big the sphere that should grow
+     * @param small the sphere that should be merged into the other one
      */
-    public void merge(MutableSphere sphere1, MutableSphere sphere2, Player player) {
-        if (sphere1.canBeMergedWidth(sphere2)) {
-            List<MutableSphere> spheres = spheresPerPlayer.get(player);
-            spheres.remove(sphere2);
-            sphere1.merge(sphere2);
+    public void merge(Sphere big, Sphere small) {
+        if (big.canBeMergedWidth(small)) {
+            MutableSphere bigger = spheresPerPlayer.inverse().get(big);
+            MutableSphere smaller = spheresPerPlayer.inverse().get(small);
+            spheresPerPlayer.remove(smaller);
+            bigger.merge(smaller);
         }
     }
 
-    public void mine(MutableSphere minerSphere, MutableSphere minedSphere) {
+    public void mine(Sphere minerSphere, Sphere minedSphere) {
         if (minerSphere.canBeMergedWidth(minedSphere)) {
-            spheresPerPlayer.get(minedSphere.getOwner()).remove(minedSphere);
-            minerSphere.merge(minedSphere);
+            MutableSphere miner = spheresPerPlayer.inverse().get(minerSphere);
+            MutableSphere mined = spheresPerPlayer.inverse().get(minedSphere);
+            spheresPerPlayer.remove(mined);
+            miner.merge(mined);
         }
     }
 }

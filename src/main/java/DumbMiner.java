@@ -1,5 +1,4 @@
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,6 +13,11 @@ import me.stieglmaier.sphereMiners.model.SphereMiners2015;
 
 public class DumbMiner extends SphereMiners2015 {
 
+    private Map<Sphere, Position> newDirections = new HashMap<>();
+    private Map<Sphere, Sphere> mining = new HashMap<>();
+    private List<Sphere> splits = new ArrayList<>();
+    private Map<Sphere, Sphere> alreadyTargetedDots = new HashMap<>();
+
     @Override
     protected void init() {
        setColor(Color.CADETBLUE);
@@ -21,22 +25,84 @@ public class DumbMiner extends SphereMiners2015 {
 
     @Override
     protected void playTurn() {
-        // first check if we could split
-        List<Sphere> splits = new ArrayList<>();
-        for(Sphere s : ownSpheres) {
-            if (s.getSize() > getConstants().getMinSplittingsize()) {
-                splits.add(s);
+        newDirections.clear();
+        mining.clear();
+        splits.clear();
+        updateTargetedDots();
+
+        if (ownSpheres.size() < getConstants().getMaxSphereAmount()) {
+            growGame();
+        } else {
+            endGame();
+        }
+
+        mine(mining);
+        split(splits);
+        changeMoveDirection(newDirections);
+    }
+
+    private void updateTargetedDots() {
+        Iterator<Sphere> it = alreadyTargetedDots.keySet().iterator();
+        while (it.hasNext()) {
+            Sphere dot = it.next();
+            if (!dots.contains(dot)) {
+                it.remove();
             }
         }
-        split(splits);
+    }
 
-        // then change directions
-        Sphere ownSphere = null;
+    private void fetchDots(Sphere ownSphere) {
+        // don't change direction if already on the way
+        if (alreadyTargetedDots.containsValue(ownSphere)) {
+            return;
+        }
+
+        Iterator<Sphere> dotsIt = dots.iterator();
+        Sphere nextDot = dotsIt.next();
+        double minDist = ownSphere.getPosition().dist(nextDot.getPosition());
+        while (dotsIt.hasNext()) {
+            Sphere dot = dotsIt.next();
+            // only go to dots that are not already targeted
+            if (!alreadyTargetedDots.containsKey(dot)) {
+                double tmpDist = ownSphere.getPosition().dist(dot.getPosition());
+                if (tmpDist < minDist) {
+                    minDist = tmpDist;
+                    nextDot = dot;
+                }
+            }
+        }
+        final Position moveTo = nextDot.getPosition().sub(ownSphere.getPosition());
+        alreadyTargetedDots.put(nextDot, ownSphere);
+        newDirections.put(ownSphere, moveTo);
+    }
+
+    private void growGame() {
         Iterator<Sphere> ownIt = ownSpheres.iterator();
-        Map<Sphere, Position> newDirections = new HashMap<>();
-        Map<Sphere, Sphere> mining = new HashMap<>();
+
         while (ownIt.hasNext()) {
-            ownSphere = ownIt.next();
+            Sphere ownSphere = ownIt.next();
+
+            // split if possible
+            if (ownSphere.getSize() > getConstants().getMinSplittingsize()) {
+                splits.add(ownSphere);
+            }
+
+            // mine if possible
+            Set<Sphere> enemySpheres = getSurroundingEnemies(ownSphere);
+            for (Sphere enemy : enemySpheres){
+                if (ownSphere.canBeMergedWidth(enemy)) {
+                    mining.put(ownSphere, enemy);
+                    break;
+                }
+            }
+
+            // fetch dots
+            fetchDots(ownSphere);
+        }
+    }
+
+    private void endGame() {
+        for (Sphere ownSphere : ownSpheres) {
             Position ownPos = ownSphere.getPosition();
             Position nextEnemy = null;
 
@@ -48,7 +114,8 @@ public class DumbMiner extends SphereMiners2015 {
                     if (ownSphere.canBeMergedWidth(enemy)) {
                         mining.put(ownSphere, enemy);
                         break;
-                    } else if (minDist > ownPos.dist(enemy.getPosition())){
+                    } else if (minDist > ownPos.dist(enemy.getPosition())
+                               && ownSphere.getSize() > enemy.getSize() + 30){
                         nextEnemy = enemy.getPosition();
                         minDist = ownPos.dist(nextEnemy);
                     }
@@ -62,23 +129,8 @@ public class DumbMiner extends SphereMiners2015 {
 
             // no enemy in sight so just fetch some dots
             } else {
-                Iterator<Sphere> dotsIt = dots.iterator();
-                Sphere nextDot = dotsIt.next();
-                double minDist = ownSphere.getPosition().dist(nextDot.getPosition());
-                while (dotsIt.hasNext()) {
-                    Sphere tmpSphere = dotsIt.next();
-                    double tmpDist = ownSphere.getPosition().dist(tmpSphere.getPosition());
-                    if (tmpDist < minDist) {
-                        minDist = tmpDist;
-                        nextDot = tmpSphere;
-                    }
-                }
-                final Position moveTo = nextDot.getPosition().sub(ownSphere.getPosition());
-                newDirections.put(ownSphere, moveTo);
+                fetchDots(ownSphere);
             }
         }
-        changeMoveDirection(newDirections);
-        mine(mining);
     }
-
 }

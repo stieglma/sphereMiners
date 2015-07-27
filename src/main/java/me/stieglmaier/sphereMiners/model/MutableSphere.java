@@ -1,9 +1,5 @@
 package me.stieglmaier.sphereMiners.model;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import javafx.scene.paint.Color;
 import me.stieglmaier.sphereMiners.main.Constants;
 
@@ -130,17 +126,17 @@ public class MutableSphere implements Sphere {
      * {@inheritDoc}
      */
     @Override
-    public List<MutableSphere> split() {
+    public MutableSphere split() {
         if (size >= constants.getMinSplittingsize()) {
             MutableSphere newSphere = new MutableSphere(constants, owner);
             newSphere.size = size/2;
             newSphere.direction = direction;
             newSphere.position = position;
             size = (size+1)/2;
-            return Arrays.asList(this, newSphere);
+            return newSphere;
 
         } else {
-            return Collections.singletonList(this);
+            return null;
         }
     }
 
@@ -285,7 +281,7 @@ public class MutableSphere implements Sphere {
          * {@inheritDoc}
          */
         @Override
-        public List<MutableSphere> split() {
+        public MutableSphere split() {
             throw new UnsupportedOperationException("This object is immutable!");
         }
 

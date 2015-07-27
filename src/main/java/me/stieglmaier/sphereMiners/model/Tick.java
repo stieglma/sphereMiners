@@ -1,8 +1,6 @@
 package me.stieglmaier.sphereMiners.model;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Tick objects represent the information for one tick (aka frame).
@@ -12,27 +10,27 @@ import java.util.Map;
  */
 public class Tick {
 
-    Map<Player, List<Sphere>> allSpheres;
-    List<Sphere> dots;
+    private List<Sphere> allSpheres;
+    private List<Sphere> dots;
 
     /**
      * Create a new Tick.
      *
-     * @param map the map of players to their list of spheres for the tick
+     * @param map the list of spheres for the tick
      * @param dots the list of dots on the playground
      */
-    public Tick(Map<Player, List<Sphere>> map, List<Sphere> dots) {
-        this.allSpheres = map;
+    public Tick(List<Sphere> spheres, List<Sphere> dots) {
+        this.allSpheres = spheres;
         this.dots = dots;
     }
 
     /**
-     * Returns the map of players to their list of spheres for this tick.
+     * Returns the list of spheres for this tick.
      *
-     * @return the spheresmap
+     * @return the list of spheres
      */
-    public Map<Player, List<Sphere>> getSpheresMap() {
-        return Collections.unmodifiableMap(allSpheres);
+    public List<Sphere> getSpheresMap() {
+        return allSpheres;
     }
 
     /**
@@ -41,6 +39,6 @@ public class Tick {
      * @return the list of dots
      */
     public List<Sphere> getDots() {
-        return Collections.unmodifiableList(dots);
+        return dots;
     }
 }

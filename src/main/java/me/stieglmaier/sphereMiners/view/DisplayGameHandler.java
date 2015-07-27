@@ -1,7 +1,7 @@
 package me.stieglmaier.sphereMiners.view;
 
-import java.util.List;
-import java.util.Map.Entry;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -38,6 +38,7 @@ public class DisplayGameHandler {
     private boolean isPaused = false;
 
     private final ChangeListener<Number> currentSliderTickListener;
+    private final Map<Player, Integer> playerSizes = new HashMap<>();
 
     /**
      * The constructor creates the handler and some listeners that are attached
@@ -55,6 +56,11 @@ public class DisplayGameHandler {
                               Constants constants) {
         this.constants = constants;
         this.progressBar = progressBar;
+
+        // this will be filled and used during showCurrentTick
+        for (Player p : playingAIs.getItems()) {
+            playerSizes.put(p, 0);
+        }
 
         playTick = () -> {
             progressBar.increment();
@@ -74,17 +80,18 @@ public class DisplayGameHandler {
             // retrieve tick
             Tick tick = simulation.getTick(currentTick);
 
+            // reset playersizes
+            playerSizes.replaceAll((a,b) -> 0);
+
             //do drawing on graphics object
-            for (Entry<Player, List<Sphere>> e : tick.getSpheresMap().entrySet()) {
-                graphicsContext.setFill(e.getKey().getColor());
-                int size = 0;
-                for (Sphere s : e.getValue()) {
-                    size += s.getSize();
-                    double radius = s.getRadius();
-                    graphicsContext.fillOval(s.getPosition().getX()-radius, s.getPosition().getY()-radius, radius, radius);
-                }
-                e.getKey().getSizeProperty().set(size);
+            for (Sphere s : tick.getSpheresMap()) {
+                Player owner = s.getOwner();
+                graphicsContext.setFill(owner.getColor());
+                playerSizes.replace(owner, playerSizes.get(owner) + s.getSize());
+                double radius = s.getRadius();
+                graphicsContext.fillOval(s.getPosition().getX()-radius, s.getPosition().getY()-radius, radius, radius);
             }
+            playerSizes.forEach((a, b) -> a.getSizeProperty().set(b));
             playingAIs.sort();
 
             for (Sphere s : tick.getDots()) {

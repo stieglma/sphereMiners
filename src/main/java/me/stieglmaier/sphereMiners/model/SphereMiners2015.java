@@ -2,7 +2,6 @@ package me.stieglmaier.sphereMiners.model;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -27,9 +26,7 @@ public abstract class SphereMiners2015 {
 
     private Physics physics;
     private Player ownAI;
-    private Map<Player, List<MutableSphere>> allSpheres;
-    private Map<Sphere, MutableSphere> sphereMap;
-    private Map<Sphere, MutableSphere> allSphereMap;
+    private Set<Sphere> allSpheres;
     private Turn currentMine;
     private Turn currentChangeDest;
     private Turn currentSplit;
@@ -99,7 +96,7 @@ public abstract class SphereMiners2015 {
                                          .stream()
                                          .filter(e -> ownSpheres.contains(e.getKey()));
 
-        currentChangeDest = () -> tmp.forEach(e -> sphereMap.get(e.getKey()).setDirection(e.getValue().normalize()));
+        currentChangeDest = () -> tmp.forEach(e -> physics.changeDirection(e.getKey(), e.getValue()));
     }
 
     /**
@@ -119,10 +116,9 @@ public abstract class SphereMiners2015 {
     protected final void split(Collection<Sphere> spheres) {
         Stream<Sphere> tmp = spheres.stream().filter(s -> ownSpheres.contains(s));
 
-        // use old list size for comparison
-        if (sphereMap.size() + spheres.size() <= constants.getMaxSphereAmount()) {
+        if (ownSpheres.size() + spheres.size() <= constants.getMaxSphereAmount()) {
             // lists cannot be changed directly therefore we need the phyiscsmanager here
-            currentSplit = () -> tmp.forEach(s -> physics.split(sphereMap.get(s), ownAI));
+            currentSplit = () -> tmp.forEach(s -> physics.split(s));
         }
     }
 
@@ -144,9 +140,8 @@ public abstract class SphereMiners2015 {
                                                                 && ownSpheres.contains(e.getValue()));
 
         // lists cannot be changed directly therefore we need the phyiscsmanager here
-        currentMerge = () -> tmp.forEach(e -> physics.merge(sphereMap.get(e.getKey()),
-                                                            sphereMap.get(e.getValue()),
-                                                            ownAI));
+        currentMerge = () -> tmp.forEach(e -> physics.merge(e.getKey(),
+                                                            e.getValue()));
     }
 
     /**
@@ -167,8 +162,9 @@ public abstract class SphereMiners2015 {
         Stream<Entry<Sphere, Sphere>> tmp = spheres.entrySet().stream()
                                                    .filter(e -> ownSpheres.contains(e.getKey())
                                                                  && !ownSpheres.contains(e.getValue()));
-        currentMine = () -> tmp.forEach(e -> physics.mine(sphereMap.get(e.getKey()),
-                                                          allSphereMap.get(e.getValue())));
+       // tmp.forEach(e -> System.out.println(e));
+        currentMine = () -> tmp.forEach(e -> physics.mine(e.getKey(),
+                                                          e.getValue()));
     }
 
     /**
@@ -182,13 +178,12 @@ public abstract class SphereMiners2015 {
             return Collections.emptySet();
         }
 
-        return allSpheres.entrySet()
-                  .stream()
-                  .filter(e -> e.getKey() != ownAI)
-                  .flatMap(l -> l.getValue().stream())
-                  .filter(s -> s.getPosition().dist(sphere.getPosition()) <= constants.getSightDistance())
-                  .map(s -> s.toImmutableSphere())
-                  .collect(Collectors.toSet());
+        return allSpheres.stream()
+                         .filter(s -> s.getOwner() != ownAI
+                                      && s.getPosition().dist(sphere.getPosition())
+                                              <= 
+                                          constants.getSightDistance())
+                         .collect(Collectors.toSet());
     }
 
     /**
@@ -204,6 +199,8 @@ public abstract class SphereMiners2015 {
         } catch (ExecutionException | TimeoutException | InterruptedException e) {
             future.cancel(true);
             // TODO proved exception information in logger (introduce logging first)
+            System.out.println("could not compute whole turn for: " + ownAI);
+         //   e.printStackTrace();
             return false;
         }
 
@@ -224,14 +221,7 @@ public abstract class SphereMiners2015 {
         // reset all sphere related variables
         dots = physics.getDots();
         allSpheres = physics.getAISpheres();
-        allSphereMap = physics.getAISpheres()
-                            .values()
-                            .stream()
-                            .flatMap(s -> s.stream())
-                            .collect(Collectors.toMap(k -> k.toImmutableSphere(), k -> k));
-        sphereMap = allSpheres.get(ownAI).stream()
-                              .collect(Collectors.toMap(s -> s.toImmutableSphere(), s -> s));
-        ownSpheres = sphereMap.keySet();
+        ownSpheres = allSpheres.stream().filter(p -> p.getOwner() == ownAI).collect(Collectors.toSet());
     }
 
     /**
