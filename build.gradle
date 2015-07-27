@@ -43,6 +43,7 @@ task fatJar(type: Jar) {
                    'Implementation-Version': version,
                    'Main-Class': 'me.stieglmaier.sphereMiners.main.SphereMiners'
     }
+    from sourceSets.main.allSource
     baseName = project.name + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
