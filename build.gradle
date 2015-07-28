@@ -9,7 +9,7 @@ repositories {
     ivy {
         url "http://www.sosy-lab.org/ivy"
         layout "pattern", {
-            artifact "[organisation]/[module]/[artifact]-[revision].[ext]"
+            artifact "[organisation]/[module]/[artifact]-[revision](-[classifier]).[ext]"
         }
     }
     mavenCentral()
