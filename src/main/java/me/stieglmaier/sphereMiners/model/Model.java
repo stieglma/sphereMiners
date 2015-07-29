@@ -156,9 +156,9 @@ public class Model extends Observable {
                 Tick nextTick = physMgr.applyPhysics();
 
                 // is the game over?
-                boolean isEnded = constants.getWinningRule().hasGameEnded(simulationView, constants);
+                boolean isEnded = constants.getWinningCondition().hasGameEnded(simulationView, constants);
                 if (isEnded) {
-                    nextTick = nextTick.toWinningTick(constants.getWinningRule().getWinner());
+                    nextTick = nextTick.toWinningTick(constants.getWinningCondition().getWinner());
                 }
                 simulationView.addInstance(nextTick);
                 // end this thread if game is finished

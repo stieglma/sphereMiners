@@ -1,4 +1,4 @@
-package me.stieglmaier.sphereMiners.model.winningRules;
+package me.stieglmaier.sphereMiners.model.rules;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +12,7 @@ import me.stieglmaier.sphereMiners.model.ai.Player;
 import me.stieglmaier.sphereMiners.model.util.GameSimulation;
 import me.stieglmaier.sphereMiners.model.util.Sphere;
 
-public enum WinningRules {
+public enum WinningConditions {
 
     /**
      * The game will not end, even if only one AI is left.

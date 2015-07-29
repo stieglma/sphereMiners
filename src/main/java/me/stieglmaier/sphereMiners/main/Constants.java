@@ -1,6 +1,6 @@
 package me.stieglmaier.sphereMiners.main;
 
-import me.stieglmaier.sphereMiners.model.winningRules.WinningRules;
+import me.stieglmaier.sphereMiners.model.rules.WinningConditions;
 
 import org.sosy_lab.common.configuration.Configuration;
 import org.sosy_lab.common.configuration.InvalidConfigurationException;
@@ -70,7 +70,7 @@ public class Constants {
     /* Rule related constants */
 
     @Option(description="Who should the game be won?")
-    private WinningRules winningRule = WinningRules.BIGGEST_AFTER_TIME;
+    private WinningConditions winningRule = WinningConditions.BIGGEST_AFTER_TIME;
 
     @Option(description="Total time in seconds the game should last, this option is only used"
             + " with the appropriate winning rule")
@@ -228,7 +228,7 @@ public class Constants {
      * The rule how the game can be won.
      * @return the rule how the game can be won
      */
-    public WinningRules getWinningRule() {
+    public WinningConditions getWinningCondition() {
         return winningRule;
     }
 
