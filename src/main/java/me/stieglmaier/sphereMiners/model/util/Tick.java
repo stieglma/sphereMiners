@@ -31,7 +31,7 @@ public class Tick {
      *
      * @return the list of spheres
      */
-    public List<Sphere> getSpheresMap() {
+    public List<Sphere> getSpheres() {
         return allSpheres;
     }
 

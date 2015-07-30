@@ -90,7 +90,7 @@ public class DisplayGameHandler {
             playerSizes.replaceAll((a,b) -> 0);
 
             //do drawing on graphics object
-            for (Sphere s : tick.getSpheresMap()) {
+            for (Sphere s : tick.getSpheres()) {
                 Player owner = s.getOwner();
                 graphicsContext.setFill(owner.getColor());
                 playerSizes.replace(owner, playerSizes.get(owner) + s.getSize());

@@ -40,7 +40,7 @@ public enum WinningConditions {
         @Override
         public boolean hasGameEnded(GameSimulation simulation, Constants constants) {
             Player firstpPlayer = null;
-            for (Sphere s : simulation.getTick(simulation.getSize()-1).getSpheresMap()) {
+            for (Sphere s : simulation.getTick(simulation.getSize()-1).getSpheres()) {
                 if (firstpPlayer == null) {
                     firstpPlayer = s.getOwner();
                 } else if (firstpPlayer != s.getOwner()) {
@@ -138,7 +138,7 @@ public enum WinningConditions {
 
     private static Map<Player, Integer> computePlayerSizes(GameSimulation simulation) {
         Map<Player, Integer> sizes = new HashMap<>();
-        for (Sphere s : simulation.getTick(simulation.getSize()-1).getSpheresMap()) {
+        for (Sphere s : simulation.getTick(simulation.getSize()-1).getSpheres()) {
             Player currentPlayer = s.getOwner();
             if (sizes.containsKey(currentPlayer)) {
                 sizes.replace(currentPlayer, sizes.get(currentPlayer) + s.getSize());
