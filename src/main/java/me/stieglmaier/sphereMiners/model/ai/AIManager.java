@@ -1,7 +1,5 @@
 package me.stieglmaier.sphereMiners.model.ai;
 
-import static java.util.Objects.requireNonNull;
-
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
@@ -12,20 +10,18 @@ import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+
+import org.sosy_lab.common.Pair;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -310,57 +306,14 @@ public final class AIManager {
 
     /**
      * This method lets all AIs compute one step. If an AIs calculation lasts
-     * too long, it is terminated and reinitialized again. After the threads
-     * finished their calculation all their moves are given to the Physics. If
-     * a Thread is terminated before it could finish its calculations all its
-     * moves until the termination are given to the Physics.
+     * too long, it is terminated and reinitialized again.
      */
     public void applyMoves() {
-
-        ais.values().forEach(ai -> requireNonNull(ai));
-
-        // execute AIs and Launcher
-        ExecutorService threadpool = Executors.newCachedThreadPool();
-        List<Future<Boolean>> retvals = null;
-        try {
-            // compute AI turns
-            retvals = threadpool.invokeAll(ais.values().stream()
-                                                .map(ai -> (Callable<Boolean>)(() -> ai.evaluateTurn()))
-                                                .collect(Collectors.toList()));
-
-            // shutdown the pool and await the termination for the given maximum time
-            threadpool.shutdown();
-            threadpool.awaitTermination(AI_TIME*ais.size(), TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            // this should never happen if it does we throw a runtime exception
-            constants.getLogger().log(Level.SEVERE, "Ai computation steps were interrupted");
-            throw new RuntimeException("Error during ai computation step");
-        }
-
-        // only iterate, otherwise this could lead to concurrent modification exceptions
-        int counter = 0;
-        List<Player> toReinitialize = new ArrayList<>();
-        for (Player ai : ais.keySet()) {
-            Future<Boolean> ret = retvals.get(counter);
-            boolean shouldReinitialize = ret.isCancelled();
-            try {
-                shouldReinitialize = shouldReinitialize || !ret.get();
-            } catch (ExecutionException | InterruptedException e) {
-                // another exception just reinitialize as intended
-                constants.getLogger().logException(Level.INFO, e, ai.getInternalName() + " has to be reinitialized");
-                shouldReinitialize = true;
-            }
-            if (shouldReinitialize) {
-                toReinitialize.add(ai);
-            }
-            counter++;
-        }
-
-        // now reinitialize all necessary ais
-        if (!toReinitialize.isEmpty()) {
-            constants.getLogger().log(Level.INFO, "Reinitializing ais: " + toReinitialize.stream().map(p -> p.getInternalName()).reduce((a,b) -> a + ", " + b).get());
-        }
-        toReinitialize.forEach(ai -> reinitializeAi(ai));
+        ais.entrySet()
+           .parallelStream() // compute parallely if possible
+           .map(e -> Pair.of(e.getKey(), e.getValue().evaluateTurn())) // evaluate the turns
+           .filter(p -> !p.getSecond()) // get those ais who did not finish sucessfully
+           .forEach(p -> reinitializeAi(p.getFirst())); // and reinitialize them
     }
 
     /**

@@ -74,7 +74,7 @@ public class Constants {
 
     @Option(description="Total time in seconds the game should last, this option is only used"
             + " with the appropriate winning rule")
-    private int totalGameTime = 10;
+    private int totalGameTime = 100;
 
     @Option(description="Size an AI has to reach overall to win the game, this option is only"
             + " used with the appropriate winning rule")
