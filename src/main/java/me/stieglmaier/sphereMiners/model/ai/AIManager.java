@@ -317,7 +317,7 @@ public final class AIManager {
      */
     public void applyMoves() {
 
-        ais.values().stream().forEach(ai -> requireNonNull(ai));
+        ais.values().forEach(ai -> requireNonNull(ai));
 
         // execute AIs and Launcher
         ExecutorService threadpool = Executors.newCachedThreadPool();
