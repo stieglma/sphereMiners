@@ -11,21 +11,23 @@ import java.net.URLDecoder;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import org.sosy_lab.common.Pair;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import me.stieglmaier.sphereMiners.exceptions.InvalidAILocationException;
 import me.stieglmaier.sphereMiners.main.Constants;
 import me.stieglmaier.sphereMiners.model.physics.Physics;
 
@@ -64,7 +66,6 @@ public final class AIManager {
      * path to location with stored ais.
      */
     private final String AI_FILELOCATION;
-    private final int AI_TIME;
     private final Constants constants;
 
     /**
@@ -78,7 +79,6 @@ public final class AIManager {
     public AIManager(Constants constants) throws MalformedURLException {
         this.constants = constants;
         AI_FILELOCATION = getAIPath();
-        AI_TIME = constants.getAIComputationTime();
         initalizeClassloader();
         makeAiList();
     }
@@ -208,100 +208,89 @@ public final class AIManager {
      * the next simulation.
      *
      * @param aisToPlay The list of AI's that should play against each other
-     * @throws InstantiationException     If the method is not able to initialize the given two AIs,
-     *                                    this exception will be thrown.
-     * @throws InvalidAILocationException If the aiLocations are invalid
+     * @return the mapping of ais to their loading status
      */
-    public void initializeGameAIs(final List<Player> aisToPlay)
-            throws InstantiationException, InvalidAILocationException {
+    public Map<Player, LoadingStatus> initializeGameAIs(final List<Player> aisToPlay) {
 
         // cleaning up the list of the last ais.
         ais.clear();
 
-        if (aisToPlay.stream().map(ai -> isValidAi(ai.getInternalName())).anyMatch(p -> !p)) {
-            throw new InvalidAILocationException("Some AIs could not be found.");
-        }
+        Map<Player, LoadingStatus> retVal = new HashMap<>();
 
-        // load ais in discrete thread, so one's able to handle bad constructors.
-        ScheduledExecutorService aiLoader = Executors.newSingleThreadScheduledExecutor();
-        try {
-            aiLoader.invokeAll(aisToPlay.stream().map(ai -> loadAI(ai, loader)).collect(Collectors.toList()));
+        aisToPlay.stream()
+                 .filter(ai -> { if (isValidAi(ai.getInternalName())) return true;
+                                 retVal.put(ai, LoadingStatus.INVALID_LOCATION);
+                                 return false;
+                               })
+                 .parallel()
+                 .forEach(ai -> { if (loadAI(ai, loader)) retVal.put(ai, LoadingStatus.LOADED);
+                                  else retVal.put(ai, LoadingStatus.INITIALIZING_FAILED);
+                                });
 
-        // this will never happen, but just to be sure, throw an instantiation exception
-        // which will be handled elsewhere
-        } catch (InterruptedException e1) {
-            throw new InstantiationException("Loading AI's was interrupted");
-        }
-
-        // wait for ailoader to finish or kill it in case of too long computation times
-        try {
-            if (!aiLoader.awaitTermination(AI_TIME, TimeUnit.MILLISECONDS)) {
-                aiLoader.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            // Do nothing, the ais are instantiated or not at this point, in
-            // case they aren't the next if clause throws an exception
-        }
-
-        // if loading was not successful throw an exception
-        // otherwise set the relevant fields in the ai
-        // and call the init method
-        for (Player player : aisToPlay) {
-            SphereMiners2015 ai = ais.get(player);
-            if (ai == null) {
-                throw new InstantiationException("The Ais could not be loaded properly.");
-            } else {
-                ai.setPlayer(player);
-                ai.setPhysics(physics);
-                ai.setConstants(constants);
-                ai.init();
-            }
-        }
+        return retVal;
     }
 
     /**
-     * This method returns a callable where an ai will be initialized if possible.
+     * This method loads and initializes an AI if possible.
      *
-     * @param ai he player which should be initialized
+     * @param player he player which should be initialized
      * @param loader the loader which is used for initialization
-     * @return the callable that can be used for the initialization
+     * @return indicates if the loading process was successful
      */
-    private Callable<Void> loadAI(final Player ai, final URLClassLoader loader) {
+    private boolean loadAI(final Player player, final URLClassLoader loader) {
 
-        return new Callable<Void>() {
-            @Override
-            public Void call() throws Exception {
-                Class<?> cl;
-                try {
-                    cl = loader.loadClass(ai.getInternalName());
-                } catch (ClassNotFoundException e) {
-                    // do nothing, exception is handled in another method
-                    return null;
-                }
+        ExecutorService exec = Executors.newSingleThreadExecutor();
+        Future<Boolean> future = exec.submit((Callable<Boolean>)() -> {
+            Class<?> cl;
+            try {
+                cl = loader.loadClass(player.getInternalName());
+            } catch (ClassNotFoundException e) {
+                // do nothing, exception is handled in another method
+                return false;
+            }
 
-                // search for constructor with zero arguments, and make it
-                // accessible
-                for (Constructor<?> ct : cl.getConstructors()) {
-                    if (ct.getParameterTypes().length == 0) {
-                        ct.setAccessible(true);
-                        try {
-                            ais.put(ai, (SphereMiners2015) ct.newInstance());
+            // search for constructor with zero arguments, and make it
+            // accessible
+            for (Constructor<?> ct : cl.getConstructors()) {
+                if (ct.getParameterTypes().length == 0) {
+                    ct.setAccessible(true);
+                    try {
+                        SphereMiners2015 loaded = (SphereMiners2015) ct.newInstance();
+                        loaded.setPlayer(player);
+                        loaded.setPhysics(physics);
+                        loaded.setConstants(constants);
+                        loaded.init();
+                        ais.put(player, loaded);
+                        return true;
 
-                        } catch (InstantiationException
-                                | IllegalAccessException
-                                | IllegalArgumentException
-                                | InvocationTargetException e) {
-                            // if any of these errors occured the ai could not
-                            // be loaded properly, so the method returns without
-                            // doing anything
-                            return null;
-                        }
-                        break;
+                    } catch (InstantiationException
+                            | IllegalAccessException
+                            | IllegalArgumentException
+                            | InvocationTargetException e) {
+                        // if any of these errors occured the ai could not
+                        // be loaded properly, so the method returns without
+                        // doing anything
                     }
                 }
-                return null;
             }
-        };
+            return false;
+        });
+
+        try {
+            if (future.get(constants.getAIComputationTime(), TimeUnit.MILLISECONDS)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            // nothing special to do here, just ignore the exceptions and cancel
+            // the task
+            future.cancel(true);
+            ais.remove(player);
+            constants.getLogger().log(Level.INFO, "AI " + player.getInternalName() + " could not be initialized properly.");
+        }
+
+        return false;
     }
 
     /**
@@ -310,9 +299,9 @@ public final class AIManager {
      */
     public void applyMoves() {
         ais.entrySet()
-           .parallelStream() // compute parallely if possible
+           .parallelStream() // compute in parallel if possible
            .map(e -> Pair.of(e.getKey(), e.getValue().evaluateTurn())) // evaluate the turns
-           .filter(p -> !p.getSecond()) // get those ais who did not finish sucessfully
+           .filter(p -> !p.getSecond()) // get those ais who did not finish successfully
            .forEach(p -> reinitializeAi(p.getFirst())); // and reinitialize them
     }
 
@@ -341,4 +330,7 @@ public final class AIManager {
         }
     }
 
+    public enum LoadingStatus {
+        INVALID_LOCATION, INITIALIZING_FAILED, LOADED;
+    }
 }

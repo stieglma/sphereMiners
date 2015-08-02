@@ -96,6 +96,10 @@ public class ViewController implements Initializable{
         });
     }
 
+    public void removeBadAis(List<Player> badAIs) {
+        playingAIs.getItems().removeAll(badAIs);
+    }
+
     /**
      * Set the list containing all AIs that could be used for playing.
      * @param aiList the list containting all ais

@@ -48,6 +48,13 @@ public class SphereMiners extends Application {
             return;
         }
 
+        primaryStage.setTitle("Sphere Miners");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Overview.fxml"));
+        primaryStage.setScene(new Scene(loader.load()));
+        primaryStage.setMinWidth(1280);
+        primaryStage.setMinHeight(900);
+        ViewController controller = (ViewController)loader.getController();
+
         final Model model;
         final AIManager ais;
         final Constants constants;
@@ -56,7 +63,7 @@ public class SphereMiners extends Application {
             logger = new BasicLogManager(config.get());
             constants = new Constants(config.get(), logger);
             ais = new AIManager(constants);
-            model = new Model(new Physics(constants), ais, constants);
+            model = new Model(new Physics(constants), ais, constants, (l -> controller.removeBadAis(l)));
         } catch (MalformedURLException e) {
             ErrorPopup.create("AI Location is invalid please check your config file!", e.getMessage(), e);
             return;
@@ -64,13 +71,6 @@ public class SphereMiners extends Application {
             ErrorPopup.create("Configuration is invalid, please check your config file!", e.getMessage(), e);
             return;
         }
-
-        primaryStage.setTitle("Sphere Miners");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Overview.fxml"));
-        primaryStage.setScene(new Scene(loader.load()));
-        primaryStage.setMinWidth(1280);
-        primaryStage.setMinHeight(900);
-        ViewController controller = (ViewController)loader.getController();
 
         controller.setConstants(constants);
         controller.setAIList(model.getAIList());
