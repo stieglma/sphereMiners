@@ -13,8 +13,9 @@ from the Maven Central Repositry and Ivy. If you do not have gradle installed us
 the necessary gradle version and delegate all further commands to it.
 
 For an easy integration into IntelliJ IDEA or Eclipse use `gradle idea` or `gradle eclipse`.
+* * *
 
-##### Useful Commands
+#### Useful Commands
 * With `gradle run` the application can be started.
 * With `gradle getConfigOptions` the configuration options that can be specified are saved into the file 
 `ConfigurationOptions.txt`
