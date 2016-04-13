@@ -2,6 +2,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
+apply plugin: 'com.github.sherter.google-java-format'
 
 mainClassName = 'me.stieglmaier.sphereMiners.main.SphereMiners'
 
@@ -13,6 +14,17 @@ repositories {
         }
     }
     mavenCentral()
+}
+
+buildscript {
+    repositories {
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath group: "com.github.sherter.googlejavaformatgradleplugin", name: "google-java-format-gradle-plugin", version: "0.3-SNAPSHOT"
+    }
 }
 
 task getConfigOptions(type:JavaExec) {

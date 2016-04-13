@@ -31,83 +31,88 @@ import com.google.common.base.Optional;
  */
 public class SphereMiners extends Application {
 
-    /**
-     * Launches the application.
-     *
-     * @param args used for either printing or setting configuration options
-     */
-    public static void main(final String[] args) {
-        launch(args);
+  /**
+   * Launches the application.
+   *
+   * @param args used for either printing or setting configuration options
+   */
+  public static void main(final String[] args) {
+    launch(args);
+  }
+
+  @Override
+  public void start(Stage primaryStage) throws IOException {
+    Optional<Configuration> config = handleOptions();
+    if (!config.isPresent()) {
+      // platform should be exited by handleOptions anyway
+      return;
     }
 
-    @Override
-    public void start(Stage primaryStage) throws IOException {
-        Optional<Configuration> config = handleOptions();
-        if (!config.isPresent()) {
-            // platform should be exited by handleOptions anyway
-            return;
-        }
+    primaryStage.setTitle("Sphere Miners");
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("Overview.fxml"));
+    primaryStage.setScene(new Scene(loader.load()));
+    primaryStage.setMinWidth(1280);
+    primaryStage.setMinHeight(900);
+    ViewController controller = (ViewController) loader.getController();
 
-        primaryStage.setTitle("Sphere Miners");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Overview.fxml"));
-        primaryStage.setScene(new Scene(loader.load()));
-        primaryStage.setMinWidth(1280);
-        primaryStage.setMinHeight(900);
-        ViewController controller = (ViewController)loader.getController();
-
-        final Model model;
-        final AIManager ais;
-        final Constants constants;
-        final LogManager logger;
-        try {
-            logger = new BasicLogManager(config.get());
-            constants = new Constants(config.get(), logger);
-            ais = new AIManager(constants);
-            model = new Model(new Physics(constants), ais, constants, (l -> controller.removeBadAis(l)));
-        } catch (MalformedURLException e) {
-            ErrorPopup.create("AI Location is invalid please check your config file!", e.getMessage(), e);
-            return;
-        } catch (InvalidConfigurationException e) {
-            ErrorPopup.create("Configuration is invalid, please check your config file!", e.getMessage(), e);
-            return;
-        }
-
-        controller.setConstants(constants);
-        controller.setAIList(model.getAIList());
-        controller.setListeners(aisToPlay -> model.simulateGame(aisToPlay),
-                                ()  -> model.pauseSimulation(),
-                                ()  -> model.deleteSimulation(),
-                                () -> ais.reloadAIList());
-        primaryStage.show();
+    final Model model;
+    final AIManager ais;
+    final Constants constants;
+    final LogManager logger;
+    try {
+      logger = new BasicLogManager(config.get());
+      constants = new Constants(config.get(), logger);
+      ais = new AIManager(constants);
+      model = new Model(new Physics(constants), ais, constants, (l -> controller.removeBadAis(l)));
+    } catch (MalformedURLException e) {
+      ErrorPopup.create("AI Location is invalid please check your config file!", e.getMessage(), e);
+      return;
+    } catch (InvalidConfigurationException e) {
+      ErrorPopup.create(
+          "Configuration is invalid, please check your config file!", e.getMessage(), e);
+      return;
     }
 
-    private Optional<Configuration> handleOptions() {
-        Map<String, String>  params = getParameters().getNamed();
-        Configuration config;
+    controller.setConstants(constants);
+    controller.setAIList(model.getAIList());
+    controller.setListeners(
+        aisToPlay -> model.simulateGame(aisToPlay),
+        () -> model.pauseSimulation(),
+        () -> model.deleteSimulation(),
+        () -> ais.reloadAIList());
+    primaryStage.show();
+  }
 
-        // cmdline parameter to retrieve configuration options
-        if (params.containsKey("printOptionsTo")) {
-            try {
-                new FileWriter(new File(params.get("printOptionsTo")), false).append(OptionCollector.getCollectedOptions(false)).close();
-            } catch (IOException e) {
-                System.err.println("Configuration Options file could not be written please recheck the given path.");
-            }
-            Platform.exit();
-            return Optional.absent();
+  private Optional<Configuration> handleOptions() {
+    Map<String, String> params = getParameters().getNamed();
+    Configuration config;
 
-        } else if (params.containsKey("config")) {
-            try {
-                config = Configuration.builder().loadFromFile(params.get("config")).build();
-            } catch (InvalidConfigurationException | IOException e) {
-                System.err.println("Given configuration could not be parsed, now falling back to standard configuration." +
-                                   "\n See the stacktrace for more information:");
-                e.printStackTrace(System.err);
-                config = Configuration.defaultConfiguration();
-            }
-        } else {
-            config = Configuration.defaultConfiguration();
-        }
-        return Optional.of(config);
+    // cmdline parameter to retrieve configuration options
+    if (params.containsKey("printOptionsTo")) {
+      try {
+        new FileWriter(new File(params.get("printOptionsTo")), false)
+            .append(OptionCollector.getCollectedOptions(false))
+            .close();
+      } catch (IOException e) {
+        System.err.println(
+            "Configuration Options file could not be written please recheck the given path.");
+      }
+      Platform.exit();
+      return Optional.absent();
+
+    } else if (params.containsKey("config")) {
+      try {
+        config = Configuration.builder().loadFromFile(params.get("config")).build();
+      } catch (InvalidConfigurationException | IOException e) {
+        System.err.println(
+            "Given configuration could not be parsed, now falling back to standard configuration."
+                + "\n See the stacktrace for more information:");
+        e.printStackTrace(System.err);
+        config = Configuration.defaultConfiguration();
+      }
+    } else {
+      config = Configuration.defaultConfiguration();
     }
-
+    return Optional.of(config);
+  }
 }
